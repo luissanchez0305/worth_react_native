@@ -29,7 +29,6 @@ export const Container = styled.TouchableOpacity`
 
 export const ContainerText = styled.View`
   flex: 1;
-  flex-wrap: "wrap";
 `;
 
 export const Image = styled.Image`
