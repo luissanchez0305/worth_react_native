@@ -14,6 +14,22 @@ export const HeadText = styled.Text`
   padding-horizontal: 16px;
 `;
 
+export const HeadImage = styled.Image`
+  width: 120px;
+  height: 45px;
+  margin-top: 16px;
+  margin-right: 8px;
+  margin-bottom: 10px;
+`;
+
+export const NavIcon = styled.Image`
+  width: 35px;
+  height: 35px;
+  margin-top: 16px;
+  margin-right: 16px;
+  margin-bottom: 10px;
+`;
+
 export const SubHeadText = styled.Text`
   color: #8b8c97;
   font-size: 16px;

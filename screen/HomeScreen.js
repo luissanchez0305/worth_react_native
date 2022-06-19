@@ -1,18 +1,60 @@
 import React from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeadSection from "../components/HeadSection";
 import ListMedia from "../components/list/ListMedia";
 import ListNews from "../components/list/ListNews";
-import { Layout, HeadText, SubHeadText, CardContainer } from "../globalStyle";
+import { useNavigation } from "@react-navigation/native";
+import {
+  Layout,
+  HeadText,
+  SubHeadText,
+  CardContainer,
+  HeadImage,
+  NavIcon,
+} from "../globalStyle";
 
 export default function HomeScreen() {
+  const navigation = useNavigation();
+
   return (
     <Layout>
       <ScrollView>
         <SafeAreaView>
-          <HeadText>Worth</HeadText>
-          <SubHeadText>Bienvenido</SubHeadText>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <View>
+              <HeadImage source={require("../assets/worth-home.png")} />
+              <SubHeadText>Bienvenido</SubHeadText>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignContent: "flex-end",
+                alignSelf: "flex-end",
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  /* 1. Navigate to the Details route with params */
+                  navigation.navigate("Notification");
+                }}
+              >
+                <NavIcon source={require("../assets/campana.png")} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  /* 1. Navigate to the Details route with params */
+                  navigation.navigate("Profile", {
+                    itemId: 86,
+                  });
+                }}
+              >
+                <NavIcon source={require("../assets/perfil.png")} />
+              </TouchableOpacity>
+            </View>
+          </View>
           <CardContainer>
             <HeadSection
               icon={headSection.charts.icon}

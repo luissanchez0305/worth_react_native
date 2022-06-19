@@ -68,7 +68,8 @@ const ContainerForm = styled.View`
 
 const Label = styled.Text`
   color: white;
-  font-size: 13px;
+  font-size: 14px;
+  margin-top: 8px;
   font-weight: 700;
   margin-horizontal: 3%;
 `;
@@ -93,7 +94,7 @@ const TextInfo = styled.Text`
 `;
 
 const Input = styled.TextInput`
-  height: 45px;
+  height: 48px;
   margin-top: 8px;
   border-width: 1px;
   border-color: #4c4f63;
@@ -102,7 +103,7 @@ const Input = styled.TextInput`
   color: white;
   border-radius: 8px;
   margin-horizontal: 3%;
-  margin-bottom: 6;
+  margin-bottom: 6px;
   min-width: 43%;
 `;
 
