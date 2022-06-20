@@ -27,10 +27,6 @@ export default function RegistreForm() {
           <Input placeholder="useless placeholder" />
         </InputGroup>
         <InputGroup>
-          <Label>Repetir Contraseña</Label>
-          <Input placeholder="useless placeholder" />
-        </InputGroup>
-        <InputGroup>
           <ButtonLogin onPress={() => navigation.navigate("Home")}>
             <Text style={{ color: "black", textAlign: "center", fontSize: 16 }}>
               Crear cuenta

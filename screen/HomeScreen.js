@@ -104,7 +104,7 @@ const headSection = {
 const videos = [
   {
     image: require("../assets/image-video.png"),
-    title: "Titulo del video API desde youtube",
+    title: "Titulo del video API desde youtuasdas",
     tag: "#tag #tag",
     channel: "Canal Youtube",
   },
