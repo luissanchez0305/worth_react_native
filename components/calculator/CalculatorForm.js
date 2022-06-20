@@ -76,7 +76,6 @@ const Label = styled.Text`
 
 const Row = styled.View`
   flex-direction: row;
-  flex-wrap: "wrap";
   margin-horizontal: 1%;
 `;
 
