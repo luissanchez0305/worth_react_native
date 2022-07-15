@@ -77,7 +77,7 @@ export const Channel = styled.Text`
   padding-top: 4px;
   font-size: 13px;
   font-weight: 400;
-  color: #8b8c97;
+  color: #aaabb5;
 `;
 
 export const Tag = styled.Text`

@@ -1,11 +1,21 @@
+
 import React, { useContext, useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeadSection from "../components/HeadSection";
 import ListMedia from "../components/list/ListMedia";
 import ListNews from "../components/list/ListNews";
+import { useNavigation } from "@react-navigation/native";
+import {
+  Layout,
+  HeadText,
+  SubHeadText,
+  CardContainer,
+  HeadImage,
+  NavIcon,
+} from "../globalStyle";
+
 import Marquee from "../components/MarqueeHSNZ/Marquee";
-import { Layout, HeadText, SubHeadText, CardContainer } from "../globalStyle";
 import polygonDB, { endpoints as epPolygon } from "../api/polygonDB";
 import worthDB, { endpoints as epWorth } from "../api/localDB";
 import youtubeDB, {endpoints as epYoutube} from "../api/youtubeDB";
@@ -14,6 +24,7 @@ import VideoContext from "../context/VideoContext";
 import { GradientBackground } from "../components/GradientBackground";
 
 export default function HomeScreen() {
+  const navigation = useNavigation();
   const context = useContext(VideoContext)
   const [loadingMarquee, setLoadingMarquee] = useState(true);
   const [loadingVideos, setLoadingVideos] = useState(true);
@@ -86,14 +97,43 @@ export default function HomeScreen() {
     getVideos();
   }, [])
   return (
-    <GradientBackground
-      start={{x: 0.1, y: 0.1}}
-      end={{x: 0.5, y: 0.8}}
-    >
+    <GradientBackground>
       <Layout>
         <SafeAreaView>
-          <HeadText>Worth</HeadText>
-          <SubHeadText>Bienvenido</SubHeadText>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <View>
+              <HeadImage source={require("../assets/worth-home.png")} />
+              <SubHeadText>Bienvenido</SubHeadText>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignContent: "flex-end",
+                alignSelf: "flex-end",
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  /* 1. Navigate to the Details route with params */
+                  navigation.navigate("Notification");
+                }}
+              >
+                <NavIcon source={require("../assets/campana.png")} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  /* 1. Navigate to the Details route with params */
+                  navigation.navigate("Profile", {
+                    itemId: 86,
+                  });
+                }}
+              >
+                <NavIcon source={require("../assets/perfil.png")} />
+              </TouchableOpacity>
+            </View>
+          </View>
           <CardContainer>
             <HeadSection
               icon={headSection.charts.icon}
