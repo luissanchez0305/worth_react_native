@@ -1,14 +1,18 @@
 import { ScrollView, View } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeadSection from "../components/HeadSection";
 import ListNews from "../components/list/ListNews";
 import ListMedia from "../components/list/ListMedia";
 import { Layout, HeadText, SubHeadText, CardContainer } from "../globalStyle";
 import FilterButton from "../components/FilterButton";
+import VideoContext from "../context/VideoContext";
+import { GradientBackground } from "../components/GradientBackground";
 
 export default function NewsScreen() {
+  const context = useContext(VideoContext)
   const [filter, setFilter] = useState("video");
+  const videos = context.videos
 
   const video = () => {
     setFilter("video");
@@ -19,8 +23,11 @@ export default function NewsScreen() {
   };
 
   return (
-    <Layout>
-      <ScrollView>
+    <GradientBackground
+      start={{x: 0.1, y: 0.1}}
+      end={{x: 0.5, y: 0.8}}
+    >
+      <Layout>
         <SafeAreaView>
           <HeadText>Contenido</HeadText>
           <SubHeadText>Lo mas reciente</SubHeadText>
@@ -36,7 +43,7 @@ export default function NewsScreen() {
                   icon={headSection.video.icon}
                   title={headSection.video.title}
                 />
-                <ListMedia datas={videos} />
+                <ListMedia videos={videos} />
               </View>
             ) : (
               <View>
@@ -49,8 +56,8 @@ export default function NewsScreen() {
             )}
           </CardContainer>
         </SafeAreaView>
-      </ScrollView>
-    </Layout>
+      </Layout>
+    </GradientBackground>
   );
 }
 
@@ -64,41 +71,6 @@ const headSection = {
     icon: require("../assets/headIcons/content.png"),
   },
 };
-
-// Datos de relleno
-
-const videos = [
-  {
-    image: require("../assets/image-video.png"),
-    title: "Titulo del video API desde youtube",
-    tag: "#tag #tag",
-    channel: "Canal Youtube",
-  },
-  {
-    image: require("../assets/image-video.png"),
-    title: "Titulo del video API desde youtube",
-    tag: "#tag #tag",
-    channel: "Canal Youtube",
-  },
-  {
-    image: require("../assets/image-video.png"),
-    title: "Titulo del video API desde youtube",
-    tag: "#tag #tag",
-    channel: "Canal Youtube",
-  },
-  {
-    image: require("../assets/image-video.png"),
-    title: "Titulo del video API desde youtube",
-    tag: "#tag #tag",
-    channel: "Canal Youtube",
-  },
-  {
-    image: require("../assets/image-video.png"),
-    title: "Titulo del video API desde youtube",
-    tag: "#tag #tag",
-    channel: "Canal Youtube",
-  },
-];
 
 const blogs = [
   {

@@ -1,74 +1,51 @@
-import { ScrollView, View, Alert, TouchableOpacity, Text } from "react-native";
-import React, { useState, useCallback, useRef } from "react";
+import { ScrollView, View, Alert, TouchableOpacity, Text, Pressable } from "react-native";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ListMedia from "../components/list/ListMedia";
 import { Layout, HeadText, SubHeadText, CardContainer } from "../globalStyle";
 import YoutubePlayer from "react-native-youtube-iframe";
 import ButtonBack from "../components/ButtonBack";
+import { useRoute } from "@react-navigation/native";
+import { GradientBackground } from "../components/GradientBackground";
 
 export default function DetailVideoScreen() {
   const [playing, setPlaying] = useState(false);
+  const route = useRoute();
+  const {videoId, videos} = route.params;
 
   const onStateChange = useCallback((state) => {
-    if (state === "ended") {
-      setPlaying(false);
-      Alert.alert("video has finished playing!");
+    switch(state){
+      case "ended":
+        setPlaying(false);
+        break;
+      case "playing":
+        setPlaying(true);
+        break;
     }
+
   }, []);
 
   return (
-    <Layout>
-      <ScrollView>
+    <GradientBackground
+      start={{x: 0.1, y: 0.1}}
+      end={{x: 0.5, y: 0.8}}
+    >
+      <Layout>
         <SafeAreaView>
           <ButtonBack />
-          <View>
-            <YoutubePlayer
-              height={250}
-              play={playing}
-              videoId={"iee2TATGMyI"}
-              onChangeState={onStateChange}
-            />
-          </View>
+            <View>
+              <YoutubePlayer
+                height={250}
+                play={playing}
+                videoId={videoId}
+                onChangeState={onStateChange}
+              />
+            </View>
           <CardContainer>
-            <ListMedia datas={videos} />
+            <ListMedia videos={videos} />
           </CardContainer>
         </SafeAreaView>
-      </ScrollView>
-    </Layout>
+      </Layout>
+    </GradientBackground>
   );
 }
-
-// Datos de relleno
-
-const videos = [
-  {
-    image: require("../assets/image-video.png"),
-    title: "Titulo del video API desde youtube",
-    tag: "#tag #tag",
-    channel: "Canal Youtube",
-  },
-  {
-    image: require("../assets/image-video.png"),
-    title: "Titulo del video API desde youtube",
-    tag: "#tag #tag",
-    channel: "Canal Youtube",
-  },
-  {
-    image: require("../assets/image-video.png"),
-    title: "Titulo del video API desde youtube",
-    tag: "#tag #tag",
-    channel: "Canal Youtube",
-  },
-  {
-    image: require("../assets/image-video.png"),
-    title: "Titulo del video API desde youtube",
-    tag: "#tag #tag",
-    channel: "Canal Youtube",
-  },
-  {
-    image: require("../assets/image-video.png"),
-    title: "Titulo del video API desde youtube",
-    tag: "#tag #tag",
-    channel: "Canal Youtube",
-  },
-];

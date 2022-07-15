@@ -1,15 +1,96 @@
-import React from "react";
-import { ScrollView, Text, View } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeadSection from "../components/HeadSection";
 import ListMedia from "../components/list/ListMedia";
 import ListNews from "../components/list/ListNews";
+import Marquee from "../components/MarqueeHSNZ/Marquee";
 import { Layout, HeadText, SubHeadText, CardContainer } from "../globalStyle";
+import polygonDB, { endpoints as epPolygon } from "../api/polygonDB";
+import worthDB, { endpoints as epWorth } from "../api/localDB";
+import youtubeDB, {endpoints as epYoutube} from "../api/youtubeDB";
+import { cleanPrice, cleanVideo, getDateFormat } from "../utils";
+import VideoContext from "../context/VideoContext";
+import { GradientBackground } from "../components/GradientBackground";
 
 export default function HomeScreen() {
+  const context = useContext(VideoContext)
+  const [loadingMarquee, setLoadingMarquee] = useState(true);
+  const [loadingVideos, setLoadingVideos] = useState(true);
+  const [pricesPromiseStatus, setPricesPromiseStatus] = useState('Getting symbols...');
+  const [videosPromiseStatus, setVideosPromiseStatus] = useState('Getting symbols...');
+  const [data, setData] = useState([]);
+  const [videos, setVideos] = useState([]);
+
+  const promises = [];
+  const getPrices = async () => {
+    var today = new Date();
+    var yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    today = getDateFormat(today);
+    yesterday = getDateFormat(yesterday);
+
+    worthDB
+      .get(epWorth.getAllActiveSymbols)
+      .then(async (res) => {
+        setPricesPromiseStatus('Loading values...');
+        const _data = res.data;
+        _data.forEach(element => {
+          const url = element.type === 'crypto' ? 
+            `${epPolygon.openCloseCrypto}/${element.from}/${element.to}/${today}` :
+            `${epPolygon.ticker}/${element.type}:${element.from}${element.to}/prev`;
+          promises.push(
+            polygonDB
+              .get(url)
+              .catch((ex) => {
+                setPricesPromiseStatus(`Error al cargar datos: ${ex}`)
+              }))  
+        });
+  
+        const responses = await Promise.all(promises);
+  
+        const data = [];
+        responses.forEach((res) => {
+          data.push(cleanPrice(res.data));
+        })
+        
+        setData(data)
+        setLoadingMarquee(false);
+      })
+      .catch((ex) => {
+        setPricesPromiseStatus(`Error al cargar symbolos: ${ex}`)
+      });
+  }
+
+  const getVideos = async () => {
+    const res = await youtubeDB
+      .get(epYoutube.search)
+      .catch((ex) => {
+        setVideosPromiseStatus(`Error al cargar videos: ${ex}`)
+        return;
+      })
+    
+    let _videos = res.data['items'];
+    _videos.map((video) => {
+      videos.push(cleanVideo(video))
+    })
+    if(!context.videos.length){
+      context.videos = videos;
+    }
+    setLoadingVideos(false);
+  }
+  
+  useEffect(() => {
+    getPrices();
+    getVideos();
+  }, [])
   return (
-    <Layout>
-      <ScrollView>
+    <GradientBackground
+      start={{x: 0.1, y: 0.1}}
+      end={{x: 0.5, y: 0.8}}
+    >
+      <Layout>
         <SafeAreaView>
           <HeadText>Worth</HeadText>
           <SubHeadText>Bienvenido</SubHeadText>
@@ -18,8 +99,8 @@ export default function HomeScreen() {
               icon={headSection.charts.icon}
               title={headSection.charts.title}
             />
-            <View>
-              <Text style={{ color: "#e3e3e3" }}>Contenido Aquí</Text>
+            <View style={styles.marqueeContainer}>
+              {!loadingMarquee ? (<Marquee key={1} data={data}/>) : (<Text style={{color: "#8b8c97"}}>{pricesPromiseStatus}</Text>)}            
             </View>
           </CardContainer>
           <CardContainer>
@@ -27,18 +108,11 @@ export default function HomeScreen() {
               icon={headSection.video.icon}
               title={headSection.video.title}
             />
-            <ListMedia datas={videos} />
-          </CardContainer>
-          <CardContainer>
-            <HeadSection
-              icon={headSection.content.icon}
-              title={headSection.content.title}
-            />
-            <ListNews datas={blogs} />
+              {!loadingVideos ? (<ListMedia videos={videos} />) : (<Text style={{color: "#8b8c97"}}>{videosPromiseStatus}</Text>)}
           </CardContainer>
         </SafeAreaView>
-      </ScrollView>
-    </Layout>
+      </Layout>
+    </GradientBackground>
   );
 }
 
@@ -57,70 +131,11 @@ const headSection = {
   },
 };
 
-// Datos de relleno
-
-const videos = [
-  {
-    image: require("../assets/image-video.png"),
-    title: "Titulo del video API desde youtube",
-    tag: "#tag #tag",
-    channel: "Canal Youtube",
-  },
-  {
-    image: require("../assets/image-video.png"),
-    title: "Titulo del video API desde youtube",
-    tag: "#tag #tag",
-    channel: "Canal Youtube",
-  },
-  {
-    image: require("../assets/image-video.png"),
-    title: "Titulo del video API desde youtube",
-    tag: "#tag #tag",
-    channel: "Canal Youtube",
-  },
-  {
-    image: require("../assets/image-video.png"),
-    title: "Titulo del video API desde youtube",
-    tag: "#tag #tag",
-    channel: "Canal Youtube",
-  },
-  {
-    image: require("../assets/image-video.png"),
-    title: "Titulo del video API desde youtube",
-    tag: "#tag #tag",
-    channel: "Canal Youtube",
-  },
-];
-
-const blogs = [
-  {
-    image: require("../assets/image-noticia.png"),
-    title: "Titulo del video API desde youtube",
-    topic: "Cripto",
-    channel: "Enlace externo",
-  },
-  {
-    image: require("../assets/image-noticia.png"),
-    title: "Titulo del video API desde youtube",
-    topic: "Economia",
-    channel: "Enlace externo",
-  },
-  {
-    image: require("../assets/image-noticia.png"),
-    title: "Titulo del video API desde youtube",
-    topic: "Bolsa",
-    channel: "Enlace externo",
-  },
-  {
-    image: require("../assets/image-noticia.png"),
-    title: "Titulo del video API desde youtube",
-    topic: "Cripto",
-    channel: "Enlace externo",
-  },
-  {
-    image: require("../assets/image-noticia.png"),
-    title: "Titulo del video API desde youtube",
-    topic: "Cripto",
-    channel: "Enlace externo",
-  },
-];
+const styles = StyleSheet.create({
+  marqueeContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  }
+});

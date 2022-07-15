@@ -2,7 +2,6 @@ import styled from "styled-components/native";
 
 export const Layout = styled.View`
   flex: 1;
-  background-color: black;
   padding-top: 16px;
 `;
 
@@ -24,7 +23,7 @@ export const SubHeadText = styled.Text`
 
 export const CardContainer = styled.View`
   background-color: #202226;
-  padding-top: 16px;
+  padding-top: 10px;
   padding-horizontal: 16px;
   padding-bottom: 16px;
   margin-vertical: 10px;

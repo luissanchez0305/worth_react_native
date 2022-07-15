@@ -1,31 +1,50 @@
-import { View } from "react-native";
+import { Image, ScrollView, View } from "react-native";
 import styled from "styled-components/native";
 import { useNavigation } from "@react-navigation/native";
 
-export default function ListMedia({ datas }) {
+export default function ListMedia({ videos }) {
   const navigation = useNavigation();
+  
+  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 20;
+    return layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom;
+  };
+
+  const showLoadMoreButton = () => {
+
+  }
 
   return (
-    <View>
-      {datas.map((data, index) => (
+    <ScrollView
+      onScroll={({nativeEvent}) => {
+        if (isCloseToBottom(nativeEvent)) {
+          showLoadMoreButton();
+        }
+      }}
+      scrollEventThrottle={400}
+    >
+      {videos.map((data, index) => {
+        const uri = data.image;
+        return (
         <Container
           onPress={() => {
-            /* 1. Navigate to the Details route with params */
             navigation.navigate("DetailVideo", {
-              itemId: 86,
+              videoId: data.videoId,
+              videos: videos
             });
           }}
           key={index}
         >
-          <Image source={data.image} />
+          <VideoImage source={{uri}} />
           <ContainerText>
             <Title>{data.title}</Title>
             <Tag>{data.tag}</Tag>
             <Channel>{data.channel}</Channel>
           </ContainerText>
         </Container>
-      ))}
-    </View>
+      )})}
+    </ScrollView>
   );
 }
 
@@ -42,7 +61,7 @@ export const ContainerText = styled.View`
   flex: 1;
 `;
 
-export const Image = styled.Image`
+export const VideoImage = styled.Image`
   width: 85px;
   height: 55px;
   margin-right: 8px;

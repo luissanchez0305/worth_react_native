@@ -38,7 +38,7 @@ const ContainerFilter = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 60px;
   background-color: #000;
   border-radius: 10px;
 `;
@@ -46,6 +46,8 @@ const ContainerFilter = styled.View`
 const ButtonView = styled.View`
   flex: 1;
   padding: 3px;
+  height: 80px;
+  margin-top: 80px;
 `;
 
 const ButtonFilter = styled.TouchableOpacity`
