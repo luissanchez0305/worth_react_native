@@ -23,10 +23,7 @@ export default function NewsScreen() {
   };
 
   return (
-    <GradientBackground
-      start={{x: 0.1, y: 0.1}}
-      end={{x: 0.5, y: 0.8}}
-    >
+    <GradientBackground>
       <Layout>
         <SafeAreaView>
           <HeadText>Contenido</HeadText>

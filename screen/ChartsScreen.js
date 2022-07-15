@@ -7,10 +7,7 @@ import { GradientBackground } from "../components/GradientBackground";
 
 export default function ChartsScreen() {
   return (
-    <GradientBackground
-      start={{x: 0.1, y: 0.1}}
-      end={{x: 0.5, y: 0.8}}
-    >
+    <GradientBackground>
       <Layout>
         <ScrollView>
           <SafeAreaView>
