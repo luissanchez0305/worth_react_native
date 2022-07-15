@@ -7,6 +7,7 @@ import { Layout, HeadText, SubHeadText } from "../globalStyle";
 export default function CalculatorScreen() {
   return (
     <GradientBackground
+      colors={['#1f1f1f', '#ababab', 'white']}
       start={{x: 0.4, y: 0.6}}
       end={{x: 0.5, y: 0.9}}
     >
