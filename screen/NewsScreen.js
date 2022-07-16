@@ -5,9 +5,9 @@ import HeadSection from "../components/HeadSection";
 import ListNews from "../components/list/ListNews";
 import ListMedia from "../components/list/ListMedia";
 import { Layout, HeadText, SubHeadText, CardContainer } from "../globalStyle";
-import FilterButton from "../components/FilterButton";
 import VideoContext from "../context/VideoContext";
 import { GradientBackground } from "../components/GradientBackground";
+import NewsFilterButton from "../components/NewsFilterButton";
 
 export default function NewsScreen() {
   const context = useContext(VideoContext)
@@ -29,7 +29,7 @@ export default function NewsScreen() {
           <HeadText>Contenido</HeadText>
           <SubHeadText>Lo mas reciente</SubHeadText>
           <CardContainer>
-            <FilterButton
+            <NewsFilterButton
               filterVideo={video}
               filterNews={news}
               statusButton={filter}

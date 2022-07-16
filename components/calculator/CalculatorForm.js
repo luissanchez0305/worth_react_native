@@ -4,7 +4,7 @@ import styled from "styled-components/native";
 import { CardContainer } from "../../globalStyle";
 import DropDownPicker from 'react-native-dropdown-picker';
 import worthDB, { endpoints as epWorth } from "../../api/localDB";
-import alphaAdvantageDB, { endpoints as epAlphaAdvantage } from "../../api/alphaAdvantage";
+import alphaAdvantageDB, { endpoints as epAlphaAdvantage } from "../../api/alphaAdvantageDB";
 
 export default function CalculatorForm() {
   const [lots, setLots] = useState('--');

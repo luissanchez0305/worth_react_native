@@ -1,9 +1,10 @@
 import axios from 'axios';
+import {ALPHAADVANTAGE_KEY} from '@env'
 
 const alphaAdvantageDB = axios.create({
   baseURL: 'https://www.alphavantage.co/query',
   params: {
-    apikey: 'YTKNHWWPRX3K6Q1S',
+    apikey: ALPHAADVANTAGE_KEY,
   },
 });
 

@@ -2,9 +2,9 @@ import styled from "styled-components/native";
 import { Text } from "react-native";
 import React, { useState } from "react";
 
-export default function FilterButton({
-  filterVideo,
-  filterNews,
+export default function ChartsFilterButton({
+  filterTradingView,
+  filterEvents,
   statusButton,
 }) {
   return (
@@ -12,21 +12,21 @@ export default function FilterButton({
       <ButtonView>
         <ButtonFilter
           style={{
-            backgroundColor: statusButton === "video" ? "#3B5998" : "#000",
+            backgroundColor: statusButton === "tradingview" ? "#3B5998" : "#000",
           }}
-          onPress={filterVideo}
+          onPress={filterTradingView}
         >
-          <Text style={{ color: "#fff" }}>Videos</Text>
+          <Text style={{ color: "#fff" }}>Trading View</Text>
         </ButtonFilter>
       </ButtonView>
       <ButtonView>
         <ButtonFilter
           style={{
-            backgroundColor: statusButton === "news" ? "#3B5998" : "#000",
+            backgroundColor: statusButton === "events" ? "#3B5998" : "#000",
           }}
-          onPress={filterNews}
+          onPress={filterEvents}
         >
-          <Text style={{ color: "#fff" }}>Noticias</Text>
+          <Text style={{ color: "#fff" }}>Eventos</Text>
         </ButtonFilter>
       </ButtonView>
     </ContainerFilter>

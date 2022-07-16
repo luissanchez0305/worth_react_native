@@ -1,10 +1,11 @@
 import axios from 'axios';
+import { YOUTUBE_KEY } from '@env';
 
 const channelId = 'UCPFlu0ga-pU8SezS3rl_XnQ';
 const youtubeDB = axios.create({
   baseURL: 'https://www.googleapis.com/youtube/v3',
   params: {
-    key: 'AIzaSyBXYtvK1nGLzR3OSejuKd3fpvHvwVp_b0o',
+    key: YOUTUBE_KEY,
   },
 });
 
