@@ -6,6 +6,18 @@ export const getDateFormat = (date) => {
     return `${yyyy}-${mm}-${dd}`;
 }
 
+export const getDataFormatComplete = (date) => {
+    const _dateObj = new Date(date);
+    const _date = getDateFormat(_dateObj);
+    var hh = String(_dateObj.getHours());
+    var mm = String(_dateObj.getMinutes()).padStart(2, '0');
+
+    return `${_date} ${hh}:${mm}`;
+}
+
+export const formatCurrencyDecimals = (val) => 
+    val ? Number(val).toFixed(2) : '';
+
 export const cleanPrice = (data) => {
     if(data.ticker){
         const change = parseFloat((1 - data.results[0].c / data.results[0].o)*100).toFixed(2);

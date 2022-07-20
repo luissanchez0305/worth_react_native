@@ -1739,6 +1739,11 @@
   dependencies:
     nanoid "^3.1.23"
 
+"@rneui/themed@^4.0.0-rc.5":
+  version "4.0.0-rc.5"
+  resolved "https://registry.npmjs.org/@rneui/themed/-/themed-4.0.0-rc.5.tgz"
+  integrity sha512-JkbnDDQe9uEbgWKsPtmRV68alRNu/YBwScwZbNN5BSBFLOpqXbK6Os11j6UZuZG6AuX+SL+j2wE95JUYlS0reA==
+
 "@segment/loosely-validate-event@^2.0.0":
   version "2.0.0"
   resolved "https://registry.npmjs.org/@segment/loosely-validate-event/-/loosely-validate-event-2.0.0.tgz"
@@ -5538,6 +5543,11 @@ react-native-codegen@^0.0.17:
     flow-parser "^0.121.0"
     jscodeshift "^0.13.1"
     nullthrows "^1.1.1"
+
+react-native-country-flag@^1.1.6:
+  version "1.1.6"
+  resolved "https://registry.npmjs.org/react-native-country-flag/-/react-native-country-flag-1.1.6.tgz"
+  integrity sha512-0PJ8W6o0+fQzDAnT5obzdPh+PsaYWRwRrIvOFwgqhU7Y/nu+Tkp26CSA69CktBJUB+8/JrAQAKqjDqXT/fJ2oQ==
 
 react-native-dotenv@^3.3.1:
   version "3.3.1"

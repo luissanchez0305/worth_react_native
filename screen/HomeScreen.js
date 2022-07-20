@@ -19,7 +19,6 @@ import Marquee from "../components/MarqueeHSNZ/Marquee";
 import polygonDB, { endpoints as epPolygon } from "../api/polygonDB";
 import worthDB, { endpoints as epWorth } from "../api/localDB";
 import youtubeDB, {endpoints as epYoutube} from "../api/youtubeDB";
-import finnhubDB, {endpoints as epFinnhub} from "../api/finnhubDB";
 import { cleanPrice, cleanVideo, getDateFormat } from "../utils";
 import VideoContext from "../context/VideoContext";
 import { GradientBackground } from "../components/GradientBackground";
@@ -36,17 +35,6 @@ export default function HomeScreen() {
 
   const promises = [];
   const getPrices = async () => {
-    console.log('run finnhub');
-    const finnhubRes = await finnhubDB
-      .get(epFinnhub.events, {
-        params : {
-          from: '2022-07-08',
-          to: '2022-07-15',
-      }})
-      .catch((ex) => {
-        console.log(`Error al eventos: ${ex}`);
-      });
-    console.log('finnhubRes', finnhubRes.data['economicCalendar']);
     
     var today = new Date();
     var yesterday = new Date();

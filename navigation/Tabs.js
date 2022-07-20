@@ -6,6 +6,7 @@ import HomeScreen from "../screen/HomeScreen";
 import ChartScreen from "../screen/ChartsScreen";
 import NewsScreen from "../screen/NewsScreen";
 import CalculatorScreen from "../screen/CalculatorScreen";
+import SignalsScreen from "../screen/SignalsScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -59,6 +60,24 @@ export default function Tabs() {
             ),
           }}
           component={ChartScreen}
+        />
+        <Tab.Screen
+          name="Señales"
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <Image
+                source={require("../assets/tabsIcons/charts.png")}
+                resizeMode="contain"
+                style={{
+                  width: 26,
+                  height: 26,
+                  marginBottom: 6,
+                  tintColor: focused ? "#CDA434" : "#96938d",
+                }}
+              />
+            ),
+          }}
+          component={SignalsScreen}
         />
         <Tab.Screen
           name="Contenido"
