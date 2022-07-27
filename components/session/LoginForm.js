@@ -1,10 +1,27 @@
-import { View, Text } from "react-native";
-import styled from "styled-components/native";
+import worthDB, { endpoints as epWorth } from "../../api/localDB";
 import { useNavigation } from "@react-navigation/native";
+import styled from "styled-components/native";
+import { View, Text } from "react-native";
 import HeadDetail from "../HeadDetail";
+import { useState } from "react";
 
 export default function LoginForm() {
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
   const navigation = useNavigation();
+
+  const onSubmit = () =>{
+    worthDB.post(epWorth.login, {
+      user: email,
+      password: password
+    }).then((data)=>{
+      console.log('Succes login ',data.data)
+      navigation.navigate("Home")
+    }).catch((error)=>{
+      console.log('Error login ', error)
+    })
+  }
+
   return (
     <View>
       <ContainerForm>
@@ -14,14 +31,14 @@ export default function LoginForm() {
         />
         <InputGroup>
           <Label>Correo</Label>
-          <Input placeholder="useless placeholder" />
+          <Input placeholder="useless placeholder" value={email} keyboardType="email-address" onChangeText={Email => setEmail(Email)}/>
         </InputGroup>
         <InputGroup>
           <Label>Contraseña</Label>
-          <Input placeholder="useless placeholder" />
+          <Input placeholder="useless placeholder" value={password} secureTextEntry={true} onChangeText={Password => setPassword(Password)}/>
         </InputGroup>
         <InputGroup>
-          <ButtonLogin onPress={() => navigation.navigate("Home")}>
+          <ButtonLogin onPress={onSubmit}>
             <Text style={{ color: "black", textAlign: "center", fontSize: 16 }}>
               Iniciar Sesión
             </Text>

@@ -10,4 +10,6 @@ export const endpoints = {
     getAllActiveSymbols: "/symbols/active",
     getAllUsers: "/users",
     getAllCurrencies: "/currencies",
+    createNewUser: "/users",
+    login: "/auth/login"
 }

@@ -8,10 +8,12 @@ import { Layout, HeadText, SubHeadText, CardContainer } from "../globalStyle";
 import VideoContext from "../context/VideoContext";
 import { GradientBackground } from "../components/GradientBackground";
 import NewsFilterButton from "../components/NewsFilterButton";
+import LoginForm from "../components/session/LoginForm";
 
 export default function NewsScreen() {
   const context = useContext(VideoContext)
   const [filter, setFilter] = useState("video");
+  const [user, setUser] = useState(false);
   const videos = context.videos
 
   const video = () => {
@@ -44,11 +46,17 @@ export default function NewsScreen() {
               </View>
             ) : (
               <View>
-                <HeadSection
-                  icon={headSection.content.icon}
-                  title={headSection.content.title}
-                />
-                <ListNews datas={blogs} />
+                {user === false ? (  
+                    <Login />
+                ) : (   
+                  <>
+                  <HeadSection
+                    icon={headSection.content.icon}
+                    title={headSection.content.title} 
+                  />
+                  <ListNews datas={blogs} />
+                  </>
+                )}
               </View>
             )}
           </CardContainer>
@@ -101,3 +109,7 @@ const blogs = [
     channel: "Enlace externo",
   },
 ];
+
+function Login() {
+  return <LoginForm />;
+}

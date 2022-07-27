@@ -26,7 +26,7 @@ export default function NewsFilterButton({
           }}
           onPress={filterNews}
         >
-          <Text style={{ color: "#fff" }}>Noticias</Text>
+          <Text style={{ color: "#fff" }}>Cursos</Text>
         </ButtonFilter>
       </ButtonView>
     </ContainerFilter>

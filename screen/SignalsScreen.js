@@ -8,15 +8,35 @@ import HeadSection from "../components/HeadSection";
 import ChartsFilterButton from "../components/ChartsFilterButton";
 import ListEvents from "../components/list/ListEvents";
 import finnhubDB, {endpoints as epFinnhub} from "../api/finnhubDB";
+import LoginForm from "../components/session/LoginForm";
+
 
 export default function SignalsScreen() {
-    return (
-        <GradientBackground>
-            <Layout>
-                <SafeAreaView>
-                    <HeadText>Señales</HeadText>
-                </SafeAreaView>
-            </Layout>
-        </GradientBackground>
-    );
+    const [user, setUser] = useState(false);
+
+    if(user){
+        return (
+            <GradientBackground>
+                <Layout>
+                    <SafeAreaView>
+                        <HeadText>Señales</HeadText>
+                    </SafeAreaView>
+                </Layout>
+            </GradientBackground>
+        );
+    }else{
+        return(
+            <GradientBackground>
+                <Layout>
+                    <SafeAreaView>
+                        <Login />
+                    </SafeAreaView>
+                </Layout>
+            </GradientBackground>
+        );
+    }
+}
+
+function Login() {
+    return <LoginForm />;
 }
