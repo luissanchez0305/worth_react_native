@@ -12,7 +12,7 @@ export default function LoginForm() {
 
   const onSubmit = () =>{
     worthDB.post(epWorth.login, {
-      user: email,
+      username: email,
       password: password
     }).then((data)=>{
       console.log('Succes login ',data.data)
