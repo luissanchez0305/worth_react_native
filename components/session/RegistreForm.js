@@ -1,7 +1,7 @@
 import worthDB, { endpoints as epWorth } from "../../api/localDB";
 import { useNavigation } from "@react-navigation/native";
 import styled from "styled-components/native";
-import { View, Text } from "react-native";
+import { View, Text, ToastAndroid } from "react-native";
 import HeadDetail from "../HeadDetail";
 import { useState } from "react";
 
@@ -20,10 +20,20 @@ export default function RegistreForm() {
       lastname: fullLastName,
       password: password
     }).then((data)=>{
-      console.log('guardado exitoso ',data.data)
+      // console.log('guardado exitoso ',data.data)
+      ToastAndroid.showWithGravity(
+        "¡Usuario registrado exitosamente!",
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER
+      );
       navigation.navigate("Home")
     }).catch((error)=>{
       console.log('error',error)
+      ToastAndroid.showWithGravity(
+        "¡Error, Usuario no registrado!",
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER
+      );
     })
     };
 

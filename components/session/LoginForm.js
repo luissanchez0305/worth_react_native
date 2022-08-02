@@ -1,7 +1,8 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import worthDB, { endpoints as epWorth } from "../../api/localDB";
 import { useNavigation } from "@react-navigation/native";
+import { View, Text, ToastAndroid } from "react-native";
 import styled from "styled-components/native";
-import { View, Text } from "react-native";
 import HeadDetail from "../HeadDetail";
 import { useState } from "react";
 
@@ -11,15 +12,29 @@ export default function LoginForm() {
   const navigation = useNavigation();
 
   const onSubmit = () =>{
-    worthDB.post(epWorth.login, {
-      user: email,
-      password: password
-    }).then((data)=>{
-      console.log('Succes login ',data.data)
-      navigation.navigate("Home")
-    }).catch((error)=>{
-      console.log('Error login ', error)
-    })
+    try {
+      worthDB.post(epWorth.login, {
+        username: email,
+        password: password
+      }).then(async (data)=>{
+        await AsyncStorage.setItem('@token', data.data.access_token)
+        ToastAndroid.showWithGravity(
+          "¡Inicio de sesion exitoso!",
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER
+        );
+        navigation.navigate("Home")
+      }).catch((error)=>{
+        console.log('Error login ', error)
+        ToastAndroid.showWithGravity(
+          "Inicio de sesion fallido usuario o contraseña invalida",
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER
+        );
+      })
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (

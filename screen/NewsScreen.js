@@ -1,20 +1,22 @@
-import { ScrollView, View } from "react-native";
-import React, { useContext, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import HeadSection from "../components/HeadSection";
-import ListNews from "../components/list/ListNews";
-import ListMedia from "../components/list/ListMedia";
 import { Layout, HeadText, SubHeadText, CardContainer } from "../globalStyle";
-import VideoContext from "../context/VideoContext";
 import { GradientBackground } from "../components/GradientBackground";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useContext, useState, useEffect } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 import NewsFilterButton from "../components/NewsFilterButton";
 import LoginForm from "../components/session/LoginForm";
+import ListMedia from "../components/list/ListMedia";
+import HeadSection from "../components/HeadSection";
+import VideoContext from "../context/VideoContext";
+import ListNews from "../components/list/ListNews";
+import { ScrollView, View } from "react-native";
+import jwt_decode from "jwt-decode";
 
 export default function NewsScreen() {
-  const context = useContext(VideoContext)
   const [filter, setFilter] = useState("video");
-  const [user, setUser] = useState(false);
-  const videos = context.videos
+  const context = useContext(VideoContext);
+  const [user, setUser] = useState();
+  const videos = context.videos;
 
   const video = () => {
     setFilter("video");
@@ -23,6 +25,21 @@ export default function NewsScreen() {
   const news = () => {
     setFilter("news");
   };
+
+  const getToken = async () => {
+    try {
+        const value = await AsyncStorage.getItem('@token');
+        const decode = jwt_decode(value);
+        console.log(decode)
+        setUser(value)
+    } catch(error) {
+        console.log(error)
+    }
+  }
+
+  useEffect(()=>{
+      getToken()
+  }, [])
 
   return (
     <GradientBackground>
