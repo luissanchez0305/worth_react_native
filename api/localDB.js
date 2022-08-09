@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { Platform } from 'react-native';
 
 const worthDB = axios.create({
-    baseURL: 'http://10.0.2.2:3001'
+    baseURL: Platform.OS == "ios" ? 'http://localhost:3001' : 'http://10.0.2.2:3001'
 })
 export default worthDB;
 
@@ -11,5 +12,6 @@ export const endpoints = {
     getAllUsers: "/users",
     getAllCurrencies: "/currencies",
     createNewUser: "/users",
-    login: "/auth/login"
+    login: "/auth/login",
+    getAllSignals: "/signals",
 }

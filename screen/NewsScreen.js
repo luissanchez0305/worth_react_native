@@ -89,7 +89,7 @@ const headSection = {
     icon: require("../assets/headIcons/youtube.png"),
   },
   content: {
-    title: "Contenido",
+    title: "Cursos",
     icon: require("../assets/headIcons/content.png"),
   },
 };

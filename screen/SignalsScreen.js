@@ -9,10 +9,12 @@ import LoginForm from "../components/session/LoginForm";
 import ListEvents from "../components/list/ListEvents";
 import HeadSection from "../components/HeadSection";
 import { useEffect, useState } from "react";
-
+import worthDB, { endpoints as worthEndpoints } from "../api/localDB";
+import ListSignals from "../components/list/ListSignals";
 
 export default function SignalsScreen() {
     const [user, setUser] = useState();
+    const [signals, setSignals] = useState([]);
 
     const getToken = async () => {
         try {
@@ -21,18 +23,34 @@ export default function SignalsScreen() {
         } catch(error) {
             console.log(error)
         }
-      }
+    }
+
+    const getSignals = async () => {
+        const res = await worthDB.get(worthEndpoints.getAllSignals);
+        setSignals(res.data);
+    }
 
     useEffect(()=>{
-        getToken()
+        getToken();
+        getSignals();
     }, [])
 
-    if(user !== undefined){
+    if(user){
         return (
-            <GradientBackground>
+            <GradientBackground
+              colors={['#1f1f1f', '#ababab', 'white']}
+              start={{x: 0.4, y: 0.6}}
+              end={{x: 0.5, y: 0.9}}
+            >
                 <Layout>
                     <SafeAreaView>
                         <HeadText>Señales</HeadText>
+                        <View>
+                            {signals.length ? 
+                                <ListSignals signals={signals} />
+                                : <Text>Loading...</Text>
+                            }
+                        </View>
                     </SafeAreaView>
                 </Layout>
             </GradientBackground>

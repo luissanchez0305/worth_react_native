@@ -25,7 +25,7 @@ import { GradientBackground } from "../components/GradientBackground";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
-  const context = useContext(VideoContext)
+  const videoContext = useContext(VideoContext)
   const [loadingMarquee, setLoadingMarquee] = useState(true);
   const [loadingVideos, setLoadingVideos] = useState(true);
   const [pricesPromiseStatus, setPricesPromiseStatus] = useState('Getting symbols...');
@@ -87,8 +87,8 @@ export default function HomeScreen() {
     _videos.map((video) => {
       videos.push(cleanVideo(video))
     })
-    if(!context.videos.length){
-      context.videos = videos;
+    if(!videoContext.videos.length){
+      videoContext.videos = videos;
     }
     setLoadingVideos(false);
   }
