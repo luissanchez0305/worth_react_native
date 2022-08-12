@@ -29,8 +29,6 @@ export default function NewsScreen() {
   const getToken = async () => {
     try {
         const value = await AsyncStorage.getItem('@token');
-        const decode = jwt_decode(value);
-        console.log(decode)
         setUser(value)
     } catch(error) {
         console.log(error)
@@ -63,7 +61,7 @@ export default function NewsScreen() {
               </View>
             ) : (
               <View>
-                {user === false ? (  
+                {user === undefined ? (  
                     <Login />
                 ) : (   
                   <>
