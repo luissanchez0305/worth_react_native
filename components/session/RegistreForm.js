@@ -1,7 +1,8 @@
 import worthDB, { endpoints as epWorth } from "../../api/localDB";
+import { View, Text, ToastAndroid, Platform } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import styled from "styled-components/native";
-import { View, Text, ToastAndroid } from "react-native";
+import Toast from 'react-native-root-toast';
 import HeadDetail from "../HeadDetail";
 import { useState } from "react";
 
@@ -22,20 +23,34 @@ export default function RegistreForm() {
       password: password,
       phone,
     }).then((data)=>{
-      // console.log('guardado exitoso ',data.data)
-      ToastAndroid.showWithGravity(
-        "¡Usuario registrado exitosamente!",
-        ToastAndroid.SHORT,
-        ToastAndroid.CENTER
-      );
-      navigation.navigate("Home")
+      if(Platform.OS === 'ios'){
+        Toast.show('¡Usuario registrado exitosamente!', {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.CENTER,
+        });
+        navigation.navigate("Home");
+      } else {
+        ToastAndroid.showWithGravity(
+          "¡Usuario registrado exitosamente!",
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER
+        );
+        navigation.navigate("Home");
+      }
     }).catch((error)=>{
       console.log('error',error)
-      ToastAndroid.showWithGravity(
-        "¡Error, Usuario no registrado!",
-        ToastAndroid.SHORT,
-        ToastAndroid.CENTER
-      );
+      if(Platform.OS === 'ios'){
+        Toast.show('¡Error, Usuario no registrado!', {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.CENTER,
+        });
+      } else {
+        ToastAndroid.showWithGravity(
+          "¡Error, Usuario no registrado!",
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER
+        );
+      }
     })
     };
 

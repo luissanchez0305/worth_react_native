@@ -1,16 +1,17 @@
-import { Button, ScrollView, Text, View } from "react-native";
-import { SafeAreaView } from "react-native";
-import styled from "styled-components/native";
 import { Layout, HeadText, SubHeadText, CardContainer } from "../globalStyle";
-// import TradingChart from "../components/TradingChart/index";
-import { useEffect, useState } from "react";
 import { GradientBackground } from "../components/GradientBackground";
-import HeadSection from "../components/HeadSection";
-import ChartsFilterButton from "../components/ChartsFilterButton";
-import ListEvents from "../components/list/ListEvents";
 import finnhubDB, {endpoints as epFinnhub} from "../api/finnhubDB";
+import ChartsFilterButton from "../components/ChartsFilterButton";
 import { get } from "react-native/Libraries/Utilities/PixelRatio";
+// import TradingChart from "../components/TradingChart/index";
+import { Button, ScrollView, Text, View } from "react-native";
+import ListEvents from "../components/list/ListEvents";
+import HeadSection from "../components/HeadSection";
+import styled from "styled-components/native";
+import { SafeAreaView } from "react-native";
+import { useEffect, useState } from "react";
 import { getDateFormat } from "../utils";
+import ContainerView from '../components/ContainerView'
 
 export default function ChartsScreen() {
 
@@ -18,6 +19,7 @@ export default function ChartsScreen() {
   const [eventFilter, setEventFilter] = useState("today");
   const [eventsData, setEventsData] = useState([])
   const [eventsLoading, setEventsLoading] = useState(true);
+
   const tradingview = () => {
     setScreenFilter("tradingview");
   };
@@ -67,7 +69,7 @@ export default function ChartsScreen() {
   return (
     <GradientBackground>
       <Layout>
-          <SafeAreaView>
+          {/* <SafeAreaView> */}
             <HeadText>Mercado</HeadText>
             <CardContainer>
               <ChartsFilterButton
@@ -75,15 +77,11 @@ export default function ChartsScreen() {
                 filterEvents={events}
                 statusButton={screenFilter}
               />
+            </CardContainer>
               {screenFilter === "tradingview" ? (
-                <View>
-                  <HeadSection
-                    icon={headSection.tradingview.icon}
-                    title={headSection.tradingview.title}
-                  />
-                  <Text>TRADING VIEW</Text>
-                </View>
+                  <ContainerView/>
               ) : (
+              <CardContainer>
                 <View>
                   <View style={{flexDirection: 'row'}}>
                     <HeadSection  
@@ -102,9 +100,9 @@ export default function ChartsScreen() {
                       <ListEvents events={eventsData} />
                   }
                 </View>
+              </CardContainer>
               )}
-          </CardContainer>
-          </SafeAreaView>
+          {/* </SafeAreaView> */}
       </Layout>
     </GradientBackground>
   );

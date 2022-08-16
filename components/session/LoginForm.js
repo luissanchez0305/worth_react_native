@@ -1,8 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import worthDB, { endpoints as epWorth } from "../../api/localDB";
-import { useNavigation } from "@react-navigation/native";
-import { View, Text, ToastAndroid } from "react-native";
+import { useNavigation,  } from "@react-navigation/native";
+import { View, Text, ToastAndroid, Platform } from "react-native";
 import styled from "styled-components/native";
+import Toast from 'react-native-root-toast';
 import HeadDetail from "../HeadDetail";
 import { useState } from "react";
 
@@ -17,20 +18,38 @@ export default function LoginForm() {
         username: email,
         password: password
       }).then(async (data)=>{
-        await AsyncStorage.setItem('@token', data.data.access_token)
-        ToastAndroid.showWithGravity(
-          "¡Inicio de sesion exitoso!",
-          ToastAndroid.LONG,
-          ToastAndroid.CENTER
-        );
-        navigation.navigate("Home")
+        await AsyncStorage.setItem('@token', data.data.access_token);
+        if(Platform.OS === 'ios'){
+          Toast.show('¡Inicio de sesión exitoso!', {
+            duration: Toast.durations.LONG,
+            position: Toast.positions.CENTER,
+          });
+        } else {
+          ToastAndroid.showWithGravity(
+            "¡Inicio de sesión exitoso!",
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER
+          );
+          navigation.reset({routes: [
+            {
+              name: 'Profile',
+            },
+          ],})
+        }
       }).catch((error)=>{
         console.log('Error login ', error)
-        ToastAndroid.showWithGravity(
-          "Inicio de sesion fallido usuario o contraseña invalida",
-          ToastAndroid.LONG,
-          ToastAndroid.CENTER
-        );
+        if(Platform.OS === 'ios'){
+          Toast.show('Inicio de sesión fallido usuario o contraseña invalida', {
+            duration: Toast.durations.LONG,
+            position: Toast.positions.CENTER,
+          });
+        } else {
+          ToastAndroid.showWithGravity(
+            "Inicio de sesión fallido usuario o contraseña invalida",
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER
+          );
+        }
       })
     } catch (error) {
       console.log(error)
