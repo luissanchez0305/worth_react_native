@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
-import { View, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import HeadSection from "./HeadSection";
 import WebView from "react-native-webview";
+import { View, Text } from "react-native";
+import React, { useEffect } from "react";
+import HeadSection from "./HeadSection";
+import { TRADINGVIEW_URL } from '@env';
 
 function ContainerView() {
     useEffect(() => {});
@@ -37,8 +38,8 @@ function ContainerView() {
                     flex: 1
                 }}
             //   onLoadProgress={({ nativeEvent }) => console.log(nativeEvent)}
-                source={{uri: '192.168.1.111/charting_library'}}
-            //   onLoadEnd={(e) => console.log(e)}
+                source={{uri: TRADINGVIEW_URL}}
+            //   onLoadEnd={(e) => console.log(e)}r
                 injectedJavaScript={INJECTED_JAVASCRIPT}
                 javaScriptEnabled={true}
                 onMessage={({ nativeEvent }) => console.log(nativeEvent.data)}
