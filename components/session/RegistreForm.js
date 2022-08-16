@@ -11,6 +11,7 @@ export default function RegistreForm() {
   const [fullName, setFullName] = useState();
   const [password, setPassword] = useState();
   const [email, setEmail] = useState();
+  const [phone, setPhone] = useState();
   const navigation = useNavigation();
 
   const onsubmit = () =>{
@@ -18,7 +19,8 @@ export default function RegistreForm() {
       email: email,
       name: fullName,
       lastname: fullLastName,
-      password: password
+      password: password,
+      phone,
     }).then((data)=>{
       // console.log('guardado exitoso ',data.data)
       ToastAndroid.showWithGravity(
@@ -57,6 +59,10 @@ export default function RegistreForm() {
         <InputGroup>
           <Label>Correo</Label>
           <Input placeholder="useless placeholder" keyboardType="email-address" value={email} onChangeText={CreatedEmail => setEmail(CreatedEmail)}/>
+        </InputGroup>
+        <InputGroup>
+          <Label>Telefono</Label>
+          <Input placeholder="useless placeholder" value={phone} onChangeText={CreatedPhone => setPhone(CreatedPhone)}/>
         </InputGroup>
         <InputGroup>
           <Label>Contraseña</Label>

@@ -1,11 +1,13 @@
-import { Animated, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Animated, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View, Clipboard } from "react-native";
 import styled from "styled-components/native";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 
 const ExpandableView = ({ expanded = false, data = [] }) => {
   const [height] = useState(new Animated.Value(0));
-
+  const copyToClipboard = (val) => {
+    Clipboard.setString(val);
+  }
   useEffect(() => {
     Animated.timing(height, {
       toValue: !expanded ? 300 : 0,
@@ -25,7 +27,8 @@ const ExpandableView = ({ expanded = false, data = [] }) => {
           (
             <>
               <Channel>
-                <Text>Price</Text> {item.price}
+                <Text>Price</Text> 
+                    <Text onPress={() => copyToClipboard(item.price)}>{item.price}</Text>
               </Channel>
               <Channel>
                 <Text>Have been reached?</Text> {item.takeProfitReached ? (<Text>Yes</Text>) : (<Text>No</Text>)}
