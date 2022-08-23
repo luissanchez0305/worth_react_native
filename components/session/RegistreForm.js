@@ -1,10 +1,11 @@
 import worthDB, { endpoints as epWorth } from "../../api/localDB";
-import { View, Text, ToastAndroid, Platform } from "react-native";
+import { View, Text, ToastAndroid, Platform, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import PhoneInput from "react-native-phone-number-input";
 import styled from "styled-components/native";
 import Toast from 'react-native-root-toast';
 import HeadDetail from "../HeadDetail";
-import { useState } from "react";
+import React, { useState, useRef } from "react";
 
 
 export default function RegistreForm() {
@@ -13,13 +14,17 @@ export default function RegistreForm() {
   const [password, setPassword] = useState();
   const [email, setEmail] = useState();
   const navigation = useNavigation();
+  const phoneInput = useRef(null);
+  const [phone, setPhone] = useState("");
+
 
   const onsubmit = () =>{
     worthDB.post(epWorth.createNewUser, {
       email: email,
       name: fullName,
       lastname: fullLastName,
-      password: password
+      password: password,
+      phone: phone
     }).then((data)=>{
       if(Platform.OS === 'ios'){
         Toast.show('¡Usuario registrado exitosamente!', {
@@ -73,6 +78,42 @@ export default function RegistreForm() {
           <Label>Correo</Label>
           <Input placeholder="useless placeholder" keyboardType="email-address" value={email} onChangeText={CreatedEmail => setEmail(CreatedEmail)}/>
         </InputGroup>
+
+        <InputGroup>
+          <Label>Telefono</Label>
+          <PhoneInput
+              ref={phoneInput}
+              defaultValue={phone}
+              defaultCode="US"
+              layout="first"
+              onChangeFormattedText={(text) => {
+                setPhone(text);
+              }}
+              withDarkTheme
+              disableArrowIcon
+              keyboardType="phone-pad"
+              placeholder="useless placeholder"
+              textContainerStyle={{
+                backgroundColor: '#202226',
+                borderColor: '#4c4f63',
+                borderRadius: 8,
+              }}
+              textInputStyle={{
+                color:'#ffffff',
+              }}
+              codeTextStyle={{color:'#ffffff'}}
+              containerStyle={{
+                backgroundColor: '#202226',
+                minWidth: '43%',
+                width: '94%',
+                borderRadius: 8,
+                marginTop: 8,
+                marginBottom: 6,
+                marginHorizontal: '3%',
+              }}
+            />
+        </InputGroup>
+
         <InputGroup>
           <Label>Contraseña</Label>
           <Input placeholder="useless placeholder" value={password} secureTextEntry={true} onChangeText={CreatedPassword => setPassword(CreatedPassword)}/>

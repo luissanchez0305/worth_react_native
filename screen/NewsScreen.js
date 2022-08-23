@@ -36,7 +36,7 @@ export default function NewsScreen() {
   }
 
   useEffect(()=>{
-      getToken()
+      getToken();
   }, [])
 
   return (
@@ -61,8 +61,8 @@ export default function NewsScreen() {
               </View>
             ) : (
               <View>
-                {user === undefined ? (  
-                    <Login />
+                {user === null || user === undefined ? (  
+                    <LoginForm getToken={getToken}/>
                 ) : (   
                   <>
                   <HeadSection

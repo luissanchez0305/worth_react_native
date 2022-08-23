@@ -1,56 +1,67 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import worthDB, { endpoints as epWorth } from "../../api/localDB";
-import { useNavigation,  } from "@react-navigation/native";
+import { useNavigation, CommonActions } from "@react-navigation/native";
 import { View, Text, ToastAndroid, Platform } from "react-native";
 import styled from "styled-components/native";
 import Toast from 'react-native-root-toast';
 import HeadDetail from "../HeadDetail";
 import { useState } from "react";
+import validate from 'validate.js';
 
-export default function LoginForm() {
+export default function LoginForm(props) {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [emailError, setEmailError] = useState();
+  const [passwordError, setPasswordError] = useState();
   const navigation = useNavigation();
+  
 
   const onSubmit = () =>{
     try {
-      worthDB.post(epWorth.login, {
-        username: email,
-        password: password
-      }).then(async (data)=>{
-        await AsyncStorage.setItem('@token', data.data.access_token);
-        if(Platform.OS === 'ios'){
-          Toast.show('¡Inicio de sesión exitoso!', {
-            duration: Toast.durations.LONG,
-            position: Toast.positions.CENTER,
-          });
-        } else {
-          ToastAndroid.showWithGravity(
-            "¡Inicio de sesión exitoso!",
-            ToastAndroid.LONG,
-            ToastAndroid.CENTER
-          );
-          navigation.reset({routes: [
-            {
-              name: 'Profile',
-            },
-          ],})
-        }
-      }).catch((error)=>{
-        console.log('Error login ', error)
-        if(Platform.OS === 'ios'){
-          Toast.show('Inicio de sesión fallido usuario o contraseña invalida', {
-            duration: Toast.durations.LONG,
-            position: Toast.positions.CENTER,
-          });
-        } else {
-          ToastAndroid.showWithGravity(
-            "Inicio de sesión fallido usuario o contraseña invalida",
-            ToastAndroid.LONG,
-            ToastAndroid.CENTER
-          );
-        }
-      })
+      const emailError = validate('email', email);
+      const passwordError = validate('password', password);
+
+
+    setEmailError(emailError);
+    setPasswordError(passwordError);
+
+    console.log(emailError)
+    console.log(passwordError)
+
+      // worthDB.post(epWorth.login, {
+      //   username: email,
+      //   password: password
+      // }).then(async (data)=>{
+      //   await AsyncStorage.setItem('@token', data.data.access_token);
+      //   if(Platform.OS === 'ios'){
+      //     Toast.show('¡Inicio de sesión exitoso!', {
+      //       duration: Toast.durations.LONG,
+      //       position: Toast.positions.CENTER,
+      //     });
+      //     props.getToken()
+      //   } else {
+      //     ToastAndroid.showWithGravity(
+      //       "¡Inicio de sesión exitoso!",
+      //       ToastAndroid.LONG,
+      //       ToastAndroid.CENTER
+      //     );
+      //     props.getToken()
+      //   }
+      // }).catch((error)=>{
+      //   console.log('Error login ', error)
+      //   if(Platform.OS === 'ios'){
+      //     Toast.show('Inicio de sesión fallido usuario o contraseña invalida', {
+      //       duration: Toast.durations.LONG,
+      //       position: Toast.positions.CENTER,
+      //     });
+      //   } else {
+      //     ToastAndroid.showWithGravity(
+      //       "Inicio de sesión fallido usuario o contraseña invalida",
+      //       ToastAndroid.LONG,
+      //       ToastAndroid.CENTER
+      //     );
+      //   }
+      // })
     } catch (error) {
       console.log(error)
     }
