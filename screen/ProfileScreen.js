@@ -20,8 +20,7 @@ export default function ProfileScreen() {
   }
 
   useEffect(()=>{
-      // getToken();
-      AsyncStorage.clear();
+      getToken();
   },[])
 
   return (

@@ -18,50 +18,40 @@ export default function LoginForm(props) {
 
   const onSubmit = () =>{
     try {
-      const emailError = validate('email', email);
-      const passwordError = validate('password', password);
-
-
-    setEmailError(emailError);
-    setPasswordError(passwordError);
-
-    console.log(emailError)
-    console.log(passwordError)
-
-      // worthDB.post(epWorth.login, {
-      //   username: email,
-      //   password: password
-      // }).then(async (data)=>{
-      //   await AsyncStorage.setItem('@token', data.data.access_token);
-      //   if(Platform.OS === 'ios'){
-      //     Toast.show('¡Inicio de sesión exitoso!', {
-      //       duration: Toast.durations.LONG,
-      //       position: Toast.positions.CENTER,
-      //     });
-      //     props.getToken()
-      //   } else {
-      //     ToastAndroid.showWithGravity(
-      //       "¡Inicio de sesión exitoso!",
-      //       ToastAndroid.LONG,
-      //       ToastAndroid.CENTER
-      //     );
-      //     props.getToken()
-      //   }
-      // }).catch((error)=>{
-      //   console.log('Error login ', error)
-      //   if(Platform.OS === 'ios'){
-      //     Toast.show('Inicio de sesión fallido usuario o contraseña invalida', {
-      //       duration: Toast.durations.LONG,
-      //       position: Toast.positions.CENTER,
-      //     });
-      //   } else {
-      //     ToastAndroid.showWithGravity(
-      //       "Inicio de sesión fallido usuario o contraseña invalida",
-      //       ToastAndroid.LONG,
-      //       ToastAndroid.CENTER
-      //     );
-      //   }
-      // })
+      worthDB.post(epWorth.login, {
+        username: email,
+        password: password
+      }).then(async (data)=>{
+        await AsyncStorage.setItem('@token', data.data.access_token);
+        if(Platform.OS === 'ios'){
+          Toast.show('¡Inicio de sesión exitoso!', {
+            duration: Toast.durations.LONG,
+            position: Toast.positions.CENTER,
+          });
+          props.getToken()
+        } else {
+          ToastAndroid.showWithGravity(
+            "¡Inicio de sesión exitoso!",
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER
+          );
+          props.getToken()
+        }
+      }).catch((error)=>{
+        console.log('Error login ', error)
+        if(Platform.OS === 'ios'){
+          Toast.show('Inicio de sesión fallido usuario o contraseña invalida', {
+            duration: Toast.durations.LONG,
+            position: Toast.positions.CENTER,
+          });
+        } else {
+          ToastAndroid.showWithGravity(
+            "Inicio de sesión fallido usuario o contraseña invalida",
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER
+          );
+        }
+      })
     } catch (error) {
       console.log(error)
     }
