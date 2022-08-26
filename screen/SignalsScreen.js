@@ -60,7 +60,7 @@ export default function SignalsScreen() {
             <GradientBackground>
                 <Layout>
                     <SafeAreaView>
-                        <Login />
+                        <LoginForm getToken={getToken}/>
                     </SafeAreaView>
                 </Layout>
             </GradientBackground>

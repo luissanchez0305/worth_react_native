@@ -1,16 +1,20 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import worthDB, { endpoints as epWorth } from "../../api/localDB";
-import { useNavigation,  } from "@react-navigation/native";
+import { useNavigation, CommonActions } from "@react-navigation/native";
 import { View, Text, ToastAndroid, Platform } from "react-native";
 import styled from "styled-components/native";
 import Toast from 'react-native-root-toast';
 import HeadDetail from "../HeadDetail";
 import { useState } from "react";
+import validate from 'validate.js';
 
-export default function LoginForm() {
+export default function LoginForm(props) {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [emailError, setEmailError] = useState();
+  const [passwordError, setPasswordError] = useState();
   const navigation = useNavigation();
+  
 
   const onSubmit = () =>{
     try {
@@ -24,17 +28,14 @@ export default function LoginForm() {
             duration: Toast.durations.LONG,
             position: Toast.positions.CENTER,
           });
+          props.getToken()
         } else {
           ToastAndroid.showWithGravity(
             "¡Inicio de sesión exitoso!",
             ToastAndroid.LONG,
             ToastAndroid.CENTER
           );
-          navigation.reset({routes: [
-            {
-              name: 'Profile',
-            },
-          ],})
+          props.getToken()
         }
       }).catch((error)=>{
         console.log('Error login ', error)

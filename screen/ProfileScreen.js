@@ -20,8 +20,8 @@ export default function ProfileScreen() {
   }
 
   useEffect(()=>{
-      getToken()
-  }, [])
+      getToken();
+  },[])
 
   return (
     <GradientBackground>
@@ -29,7 +29,7 @@ export default function ProfileScreen() {
         <ScrollView>
           <SafeAreaView>
             <ButtonBack />
-            {user ? <Profile /> : <Login />}
+            {user ? <Profile /> : <LoginForm getToken={getToken}/>}
           </SafeAreaView>
         </ScrollView>
       </Layout>
@@ -42,5 +42,5 @@ function Profile() {
 }
 
 function Login() {
-  return <LoginForm />;
+  return <LoginForm getToken={getToken()}/>;
 }
