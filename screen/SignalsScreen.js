@@ -13,13 +13,13 @@ import worthDB, { endpoints as worthEndpoints } from "../api/localDB";
 import ListSignals from "../components/list/ListSignals";
 
 export default function SignalsScreen() {
-    const [user, setUser] = useState();
+    const [userToken, setUserToken] = useState();
     const [signals, setSignals] = useState([]);
 
     const getToken = async () => {
         try {
             const value = await AsyncStorage.getItem('@token');
-            setUser(value)
+            setUserToken(value)
         } catch(error) {
             console.log(error)
         }
@@ -35,7 +35,7 @@ export default function SignalsScreen() {
         getSignals();
     }, [])
 
-    if(user){
+    if(userToken){
         return (
             <GradientBackground
               colors={['#1f1f1f', '#ababab', 'white']}

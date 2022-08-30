@@ -5,33 +5,39 @@ import { View, Text, ToastAndroid, Platform } from "react-native";
 import styled from "styled-components/native";
 import Toast from 'react-native-root-toast';
 import HeadDetail from "../HeadDetail";
-import { useState } from "react";
-import validate from 'validate.js';
+import { useContext, useState } from "react";
+import UserContext from "../../context/UserContext";
 
 export default function LoginForm(props) {
-  const [email, setEmail] = useState();
+  const userContext = useContext(UserContext);
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState();
   const [emailError, setEmailError] = useState();
   const [passwordError, setPasswordError] = useState();
   const navigation = useNavigation();
+  const successLoginText = '¡Ha iniciado sesión exitosamente!';
+  const failLoginText = 'Usuario o contraseña invalida';
   
 
   const onSubmit = () =>{
     try {
       worthDB.post(epWorth.login, {
-        username: email,
+        username: email.toLowerCase(),
         password: password
       }).then(async (data)=>{
         await AsyncStorage.setItem('@token', data.data.access_token);
+        userContext.user = { token: data.data.access_token, email: email.toLowerCase() };
+        const user = await worthDB.get(epWorth.getUser, { email: email.toLowerCase() })
+        
         if(Platform.OS === 'ios'){
-          Toast.show('¡Inicio de sesión exitoso!', {
+          Toast.show(successLoginText, {
             duration: Toast.durations.LONG,
             position: Toast.positions.CENTER,
           });
           props.getToken()
         } else {
           ToastAndroid.showWithGravity(
-            "¡Inicio de sesión exitoso!",
+            successLoginText,
             ToastAndroid.LONG,
             ToastAndroid.CENTER
           );
@@ -40,13 +46,13 @@ export default function LoginForm(props) {
       }).catch((error)=>{
         console.log('Error login ', error)
         if(Platform.OS === 'ios'){
-          Toast.show('Inicio de sesión fallido usuario o contraseña invalida', {
+          Toast.show(failLoginText, {
             duration: Toast.durations.LONG,
             position: Toast.positions.CENTER,
           });
         } else {
           ToastAndroid.showWithGravity(
-            "Inicio de sesión fallido usuario o contraseña invalida",
+            failLoginText,
             ToastAndroid.LONG,
             ToastAndroid.CENTER
           );

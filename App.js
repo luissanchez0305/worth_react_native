@@ -7,6 +7,7 @@ import RegistreScreen from "./screen/RegistreScreen";
 import ProfileScreen from "./screen/ProfileScreen";
 import { StatusBar } from "react-native";
 import Tabs from "./navigation/Tabs";
+import { ValidationForm } from "./screen/ValidationForm";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +26,7 @@ export default function App() {
           <Stack.Screen name="Notification" component={NotificationScreen} />
           <Stack.Screen name="Profile" component={ProfileScreen} />
           <Stack.Screen name="Registre" component={RegistreScreen} />
+          <Stack.Screen name="ValidationForm" component={ValidationForm} />
         </Stack.Navigator>
       </NavigationContainer>
     </RootSiblingParent>

@@ -5,51 +5,60 @@ import PhoneInput from "react-native-phone-number-input";
 import styled from "styled-components/native";
 import Toast from 'react-native-root-toast';
 import HeadDetail from "../HeadDetail";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
+import UserContext from "../../context/UserContext";
 
 
 export default function RegistreForm() {
+  const userContext = useContext(UserContext);
   const [fullLastName, setFullLastName] = useState();
   const [fullName, setFullName] = useState();
   const [password, setPassword] = useState();
-  const [email, setEmail] = useState();
+  const [email, setEmail] = useState('');
   const [phone, setPhone] = useState();
   const navigation = useNavigation();
   const phoneInput = useRef(null);
+  const successRegisterText = '¡Usuario registrado exitosamente!';
+  const failRegisterText = '¡Error, Usuario no ha sido registrado!';
 
 
   const onsubmit = () =>{
     worthDB.post(epWorth.createNewUser, {
-      email: email,
+      email: email.toLowerCase(),
       name: fullName,
       lastname: fullLastName,
       password: password,
       phone,
     }).then((data)=>{
       if(Platform.OS === 'ios'){
-        Toast.show('¡Usuario registrado exitosamente!', {
+        Toast.show(successRegisterText, {
           duration: Toast.durations.LONG,
           position: Toast.positions.CENTER,
         });
-        navigation.navigate("Home");
+        userContext.user = { email: email.toLowerCase() }
+        navigation.navigate("ValidationForm", {
+          email: email.toLowerCase() 
+        });
       } else {
         ToastAndroid.showWithGravity(
-          "¡Usuario registrado exitosamente!",
+          successRegisterText,
           ToastAndroid.LONG,
           ToastAndroid.CENTER
         );
-        navigation.navigate("Home");
+        navigation.navigate("ValidationForm",{
+          email: email.toLowerCase() 
+        });
       }
     }).catch((error)=>{
       console.log('error',error)
       if(Platform.OS === 'ios'){
-        Toast.show('¡Error, Usuario no registrado!', {
+        Toast.show(failRegisterText, {
           duration: Toast.durations.LONG,
           position: Toast.positions.CENTER,
         });
       } else {
         ToastAndroid.showWithGravity(
-          "¡Error, Usuario no registrado!",
+          failRegisterText,
           ToastAndroid.LONG,
           ToastAndroid.CENTER
         );
@@ -84,7 +93,7 @@ export default function RegistreForm() {
           <PhoneInput
               ref={phoneInput}
               defaultValue={phone}
-              defaultCode="US"
+              defaultCode="PA"
               layout="first"
               onChangeFormattedText={(text) => {
                 setPhone(text);
@@ -112,11 +121,6 @@ export default function RegistreForm() {
                 marginHorizontal: '3%',
               }}
             />
-        </InputGroup>
-
-        <InputGroup>
-          <Label>Telefono</Label>
-          <Input placeholder="useless placeholder" value={phone} onChangeText={CreatedPhone => setPhone(CreatedPhone)}/>
         </InputGroup>
         <InputGroup>
           <Label>Contraseña</Label>

@@ -15,7 +15,7 @@ import jwt_decode from "jwt-decode";
 export default function NewsScreen() {
   const [filter, setFilter] = useState("video");
   const context = useContext(VideoContext);
-  const [user, setUser] = useState();
+  const [userToken, setUserToken] = useState();
   const videos = context.videos;
 
   const video = () => {
@@ -29,7 +29,7 @@ export default function NewsScreen() {
   const getToken = async () => {
     try {
         const value = await AsyncStorage.getItem('@token');
-        setUser(value)
+        setUserToken(value)
     } catch(error) {
         console.log(error)
     }
@@ -61,9 +61,9 @@ export default function NewsScreen() {
               </View>
             ) : (
               <View>
-                {user === null || user === undefined ? (  
+                {userToken === null || userToken === undefined ? (  
                     <LoginForm getToken={getToken}/>
-                ) : (   
+                ) : (
                   <>
                   <HeadSection
                     icon={headSection.content.icon}
