@@ -10,6 +10,7 @@ import HeadSection from "../components/HeadSection";
 import VideoContext from "../context/VideoContext";
 import ListNews from "../components/list/ListNews";
 import { ScrollView, View } from "react-native";
+import { getStorageItem } from "../utils";
 import jwt_decode from "jwt-decode";
 
 export default function NewsScreen() {
@@ -26,18 +27,14 @@ export default function NewsScreen() {
     setFilter("news");
   };
 
-  const getToken = async () => {
-    try {
-        const value = await AsyncStorage.getItem('@token');
-        setUserToken(value)
-    } catch(error) {
-        console.log(error)
-    }
-  }
+  const token = async () =>{
+    data = await getStorageItem('@token');
+    setUserToken(data);
+  } 
 
   useEffect(()=>{
-      getToken();
-  }, [])
+    token();
+  }, [userToken])
 
   return (
     <GradientBackground>
@@ -61,8 +58,8 @@ export default function NewsScreen() {
               </View>
             ) : (
               <View>
-                {userToken === null || userToken === undefined ? (  
-                    <LoginForm getToken={getToken}/>
+                {userToken === null ? (  
+                    <LoginForm getToken={token}/>
                 ) : (
                   <>
                   <HeadSection

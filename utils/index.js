@@ -1,3 +1,5 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export const getDateFormat = (date) => {      
     var dd = String(date.getUTCDate()).padStart(2, '0');
     var mm = String(date.getUTCMonth() + 1).padStart(2, '0'); //January is 0!
@@ -51,4 +53,9 @@ export const cleanVideo  = (data) => {
         tag: "#tag #tag",
         channel: "Canal Youtube",
     }
+}
+
+export const getStorageItem = async (data) => {
+    let value = await AsyncStorage.getItem(data);
+    return value
 }

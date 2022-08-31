@@ -3,30 +3,28 @@ import { GradientBackground } from "../components/GradientBackground";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LoginForm from "../components/session/LoginForm";
+import { Button, ScrollView, Text } from "react-native";
 import { Layout, CardContainer } from "../globalStyle";
 import ButtonBack from "../components/ButtonBack";
-import { Button, ScrollView, Text } from "react-native";
+import { getStorageItem } from "../utils";
+
 
 export default function ProfileScreen() {
   const [userToken, setUserToken] = useState();
 
-  const getToken = async () => {
-    try {
-        const value = await AsyncStorage.getItem('@token');
-        setUserToken(value)
-    } catch(error) {
-        console.log(error)
-    }
-  }
-
   const signout = async () => {
     await AsyncStorage.removeItem('@token');
-    setUser(null);
+    setUserToken(null);
   }
+  
+  const token = async () =>{
+    data = await getStorageItem('@token');
+    setUserToken(data);
+  } 
 
   useEffect(()=>{
-      getToken();
-  },[])
+    token();
+  },[userToken])
 
   return (
     <GradientBackground>
@@ -34,7 +32,7 @@ export default function ProfileScreen() {
         <ScrollView>
           <SafeAreaView>
             <ButtonBack />
-            {userToken ? <Profile signout={signout} /> : <LoginForm getToken={getToken}/>}
+            {userToken ? <Profile signout={signout} /> : <LoginForm getToken={token}/>}
           </SafeAreaView>
         </ScrollView>
       </Layout>
