@@ -11,19 +11,16 @@ import HeadSection from "../components/HeadSection";
 import { useEffect, useState } from "react";
 import worthDB, { endpoints as worthEndpoints } from "../api/localDB";
 import ListSignals from "../components/list/ListSignals";
+import { getStorageItem } from "../utils";
 
 export default function SignalsScreen() {
     const [userToken, setUserToken] = useState();
     const [signals, setSignals] = useState([]);
 
-    const getToken = async () => {
-        try {
-            const value = await AsyncStorage.getItem('@token');
-            setUserToken(value)
-        } catch(error) {
-            console.log(error)
-        }
-    }
+    const token = async () =>{
+        data = await getStorageItem('@token');
+        setUserToken(data);
+    } 
 
     const getSignals = async () => {
         const res = await worthDB.get(worthEndpoints.getAllSignals);
@@ -31,11 +28,11 @@ export default function SignalsScreen() {
     }
 
     useEffect(()=>{
-        getToken();
+        token();
         getSignals();
-    }, [])
+    }, [userToken])
 
-    if(userToken){
+    if(userToken !== null){
         return (
             <GradientBackground
               colors={['#1f1f1f', '#ababab', 'white']}
@@ -60,7 +57,7 @@ export default function SignalsScreen() {
             <GradientBackground>
                 <Layout>
                     <SafeAreaView>
-                        <LoginForm getToken={getToken}/>
+                        <LoginForm getToken={token}/>
                     </SafeAreaView>
                 </Layout>
             </GradientBackground>

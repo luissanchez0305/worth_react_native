@@ -8,36 +8,52 @@ import HeadDetail from "../HeadDetail";
 import React, { useState, useRef, useContext } from "react";
 import UserContext from "../../context/UserContext";
 
+import { useForm, Controller } from "react-hook-form";
 
 export default function RegistreForm() {
   const userContext = useContext(UserContext);
-  const [fullLastName, setFullLastName] = useState();
-  const [fullName, setFullName] = useState();
-  const [password, setPassword] = useState();
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState();
   const navigation = useNavigation();
   const phoneInput = useRef(null);
   const successRegisterText = '¡Usuario registrado exitosamente!';
   const failRegisterText = '¡Error, Usuario no ha sido registrado!';
 
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    defaultValues: {
+      fullName: '',
+      fullLastName: '',
+      email: '',
+      phone: '',
+      password: ''
+    }
+  });
 
-  const onsubmit = () =>{
+
+  const onSubmit = (data) =>{
+    if (data) {
+      data ={
+        fullName: data.fullName,
+        fullLastName: data.fullLastName,
+        email: data.email.toLowerCase(),
+        phone: data.phone,
+        password: data.password
+      }
+    }
+
     worthDB.post(epWorth.createNewUser, {
-      email: email.toLowerCase(),
-      name: fullName,
-      lastname: fullLastName,
-      password: password,
-      phone,
+      email: data.email,
+      name: data.fullName,
+      lastname: data.fullLastName,
+      password: data.password,
+      phone: data.phone,
     }).then((data)=>{
       if(Platform.OS === 'ios'){
         Toast.show(successRegisterText, {
           duration: Toast.durations.LONG,
           position: Toast.positions.CENTER,
         });
-        userContext.user = { email: email.toLowerCase() }
+        userContext.user = { email: data.email }
         navigation.navigate("ValidationForm", {
-          email: email.toLowerCase() 
+          email: data.email 
         });
       } else {
         ToastAndroid.showWithGravity(
@@ -46,7 +62,7 @@ export default function RegistreForm() {
           ToastAndroid.CENTER
         );
         navigation.navigate("ValidationForm",{
-          email: email.toLowerCase() 
+          email: data.email 
         });
       }
     }).catch((error)=>{
@@ -75,59 +91,112 @@ export default function RegistreForm() {
             "Crea una cuenta fácilmente para obtener beneficios de tener una cuenta con Worth"
           }
         />
-        <InputGroup>
-          <Label>Nombre Completo</Label>
-          <Input placeholder="useless placeholder" value={fullName} onChangeText={CreatedFullName => setFullName(CreatedFullName)}/>
-        </InputGroup>
-        <InputGroup>
-          <Label>Apellido Completo</Label>
-          <Input placeholder="useless placeholder" value={fullLastName} onChangeText={CreatedLastName => setFullLastName(CreatedLastName)}/>
-        </InputGroup>
-        <InputGroup>
-          <Label>Correo</Label>
-          <Input placeholder="useless placeholder" keyboardType="email-address" value={email} onChangeText={CreatedEmail => setEmail(CreatedEmail)}/>
-        </InputGroup>
 
+        <Controller
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, value } }) => (
+            <InputGroup>
+              <Label>Nombre Completo</Label>
+              <Input placeholder="useless placeholder" value={value} onChangeText={onChange}/>
+            </InputGroup>
+          )}
+          name="fullName"
+        />
+        {errors.fullName && <Text>Este campo es requerido.</Text>}
+
+        <Controller
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, value } }) => (
+            <InputGroup>
+              <Label>Apellido Completo</Label>
+              <Input placeholder="useless placeholder" value={value} onChangeText={onChange}/>
+            </InputGroup>
+          )}
+          name="fullLastName"
+        />
+        {errors.fullLastName && <Text>Este campo es requerido.</Text>}
+
+        <Controller
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, value } }) => (
+            <InputGroup>
+              <Label>Correo</Label>
+              <Input placeholder="useless placeholder" keyboardType="email-address" value={value} onChangeText={onChange}/>
+            </InputGroup>
+          )}
+          name="email"
+        />
+        {errors.email && <Text>Este campo es requerido.</Text>}
+
+        <Controller
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, value } }) => (
+            <InputGroup>
+              <Label>Teléfono</Label>
+              <PhoneInput
+                  ref={phoneInput}
+                  defaultValue={value}
+                  defaultCode="PA"
+                  layout="first"
+                  onChangeFormattedText={onChange}
+                  withDarkTheme
+                  disableArrowIcon
+                  keyboardType="phone-pad"
+                  placeholder="useless placeholder"
+                  textContainerStyle={{
+                    backgroundColor: '#202226',
+                    borderColor: '#4c4f63',
+                    borderRadius: 8,
+                  }}
+                  textInputStyle={{
+                    color:'#ffffff',
+                  }}
+                  codeTextStyle={{color:'#ffffff'}}
+                  containerStyle={{
+                    backgroundColor: '#202226',
+                    minWidth: '43%',
+                    width: '94%',
+                    borderRadius: 8,
+                    marginTop: 8,
+                    marginBottom: 6,
+                    marginHorizontal: '3%',
+                  }}
+                />
+            </InputGroup>
+          )}
+          name="phone"
+        />
+        {errors.phone && <Text>Este campo es requerido.</Text>}
+
+        <Controller
+          control={control}
+          rules={{
+            required: true,
+            min: 10
+          }}
+          render={({ field: { onChange, value } }) => (
+            <InputGroup>
+              <Label>Contraseña</Label>
+              <Input placeholder="useless placeholder" value={value} secureTextEntry={true} onChangeText={onChange}/>
+            </InputGroup>
+          )}
+          name="password"
+        />
+        {errors.password && <Text>Este campo es requerido.</Text>}
         <InputGroup>
-          <Label>Telefono</Label>
-          <PhoneInput
-              ref={phoneInput}
-              defaultValue={phone}
-              defaultCode="PA"
-              layout="first"
-              onChangeFormattedText={(text) => {
-                setPhone(text);
-              }}
-              withDarkTheme
-              disableArrowIcon
-              keyboardType="phone-pad"
-              placeholder="useless placeholder"
-              textContainerStyle={{
-                backgroundColor: '#202226',
-                borderColor: '#4c4f63',
-                borderRadius: 8,
-              }}
-              textInputStyle={{
-                color:'#ffffff',
-              }}
-              codeTextStyle={{color:'#ffffff'}}
-              containerStyle={{
-                backgroundColor: '#202226',
-                minWidth: '43%',
-                width: '94%',
-                borderRadius: 8,
-                marginTop: 8,
-                marginBottom: 6,
-                marginHorizontal: '3%',
-              }}
-            />
-        </InputGroup>
-        <InputGroup>
-          <Label>Contraseña</Label>
-          <Input placeholder="useless placeholder" value={password} secureTextEntry={true} onChangeText={CreatedPassword => setPassword(CreatedPassword)}/>
-        </InputGroup>
-        <InputGroup>
-          <ButtonLogin onPress={onsubmit}>
+          <ButtonLogin onPress={handleSubmit(onSubmit)}>
             <Text style={{ color: "black", textAlign: "center", fontSize: 16 }}>
               Crear cuenta
             </Text>

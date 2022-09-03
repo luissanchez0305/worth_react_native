@@ -1,63 +1,75 @@
+import { useNavigation, CommonActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import worthDB, { endpoints as epWorth } from "../../api/localDB";
-import { useNavigation, CommonActions } from "@react-navigation/native";
 import { View, Text, ToastAndroid, Platform } from "react-native";
+import UserContext from "../../context/UserContext";
+import React, { useContext, useEffect } from "react";
 import styled from "styled-components/native";
 import Toast from 'react-native-root-toast';
 import HeadDetail from "../HeadDetail";
-import { useContext, useState } from "react";
-import UserContext from "../../context/UserContext";
+
+import { useForm, Controller } from "react-hook-form";
 
 export default function LoginForm(props) {
   const userContext = useContext(UserContext);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState();
-  const [emailError, setEmailError] = useState();
-  const [passwordError, setPasswordError] = useState();
   const navigation = useNavigation();
   const successLoginText = '¡Ha iniciado sesión exitosamente!';
   const failLoginText = 'Usuario o contraseña invalida';
-  
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    defaultValues: {
+      password: '',
+      email: ''
+    }
+  });
 
-  const onSubmit = () =>{
+  useEffect(()=>{
+    props.getToken();
+}, [])
+
+  const onSubmit = (data) =>{
     try {
-      worthDB.post(epWorth.login, {
-        username: email.toLowerCase(),
-        password: password
-      }).then(async (data)=>{
-        await AsyncStorage.setItem('@token', data.data.access_token);
-        userContext.user = { token: data.data.access_token, email: email.toLowerCase() };
-        const user = await worthDB.get(epWorth.getUser, { email: email.toLowerCase() })
-        
-        if(Platform.OS === 'ios'){
-          Toast.show(successLoginText, {
-            duration: Toast.durations.LONG,
-            position: Toast.positions.CENTER,
-          });
-          props.getToken()
-        } else {
-          ToastAndroid.showWithGravity(
-            successLoginText,
-            ToastAndroid.LONG,
-            ToastAndroid.CENTER
-          );
-          props.getToken()
-        }
-      }).catch((error)=>{
-        console.log('Error login ', error)
-        if(Platform.OS === 'ios'){
-          Toast.show(failLoginText, {
-            duration: Toast.durations.LONG,
-            position: Toast.positions.CENTER,
-          });
-        } else {
-          ToastAndroid.showWithGravity(
-            failLoginText,
-            ToastAndroid.LONG,
-            ToastAndroid.CENTER
-          );
-        }
-      })
+      if (data) {
+        data = {
+          email: data.email.toLowerCase(),
+          password: data.password
+        } 
+        worthDB.post(epWorth.login, {
+          username: data.email,
+          password: data.password
+        }).then(async (data)=>{
+          await AsyncStorage.setItem('@token', data.data.access_token);
+          userContext.user = { token: data.data.access_token, email: data.email };
+          const user = await worthDB.get(epWorth.getUser, { email: data.email })
+          if(Platform.OS === 'ios'){
+            Toast.show(successLoginText, {
+              duration: Toast.durations.LONG,
+              position: Toast.positions.CENTER,
+            });
+            props.getToken()
+          } else {
+            ToastAndroid.showWithGravity(
+              successLoginText,
+              ToastAndroid.LONG,
+              ToastAndroid.CENTER
+            );
+            props.getToken()
+          }
+        }).catch((error)=>{
+          console.log('Error login ', error)
+          if(Platform.OS === 'ios'){
+            Toast.show(failLoginText, {
+              duration: Toast.durations.LONG,
+              position: Toast.positions.CENTER,
+            });
+          } else {
+            ToastAndroid.showWithGravity(
+              failLoginText,
+              ToastAndroid.LONG,
+              ToastAndroid.CENTER
+            );
+          }
+        })
+      } 
     } catch (error) {
       console.log(error)
     }
@@ -70,16 +82,37 @@ export default function LoginForm(props) {
           title={"Iniciar Sesión"}
           detail={"Disfruta los beneficios de tener una cuenta con Worth"}
         />
+        <Controller
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, value } }) => (
+            <InputGroup>
+              <Label>Correo</Label>
+              <Input placeholder="useless placeholder" value={value} keyboardType="email-address" onChangeText={onChange}/>
+            </InputGroup>
+          )}
+          name="email"
+        />
+        {errors.email && <Text>Este campo es requerido.</Text>}
+
+        <Controller
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, value } }) => (
+            <InputGroup>
+              <Label>Contraseña</Label>
+              <Input placeholder="useless placeholder" value={value} secureTextEntry={true} onChangeText={onChange}/>
+            </InputGroup>
+          )}
+          name="password"
+        />
+        {errors.password && <Text>Este campo es requerido.</Text>}
         <InputGroup>
-          <Label>Correo</Label>
-          <Input placeholder="useless placeholder" value={email} keyboardType="email-address" onChangeText={Email => setEmail(Email)}/>
-        </InputGroup>
-        <InputGroup>
-          <Label>Contraseña</Label>
-          <Input placeholder="useless placeholder" value={password} secureTextEntry={true} onChangeText={Password => setPassword(Password)}/>
-        </InputGroup>
-        <InputGroup>
-          <ButtonLogin onPress={onSubmit}>
+          <ButtonLogin onPress={handleSubmit(onSubmit)}>
             <Text style={{ color: "black", textAlign: "center", fontSize: 16 }}>
               Iniciar Sesión
             </Text>
