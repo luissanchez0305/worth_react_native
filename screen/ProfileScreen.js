@@ -43,5 +43,5 @@ export default function ProfileScreen() {
 }
 
 function Profile(props) {
-  return (<><Text style={{ color: "white" }}>Mi perfil</Text><Button title="Signout" onPress={() => props.signout()} /></>);
+  return (<><Text style={{ color: "white" }}>Mi perfil</Text><Button title="Signout" onPress={async () => await props.signout()} /></>);
 }
