@@ -5,83 +5,98 @@ import { View, Text, ToastAndroid, Platform } from "react-native";
 import UserContext from "../../context/UserContext";
 import React, { useContext, useEffect } from "react";
 import styled from "styled-components/native";
-import Toast from 'react-native-root-toast';
+import Toast from "react-native-root-toast";
 import HeadDetail from "../HeadDetail";
 
 import { useForm, Controller } from "react-hook-form";
+import { CardContainer } from "../../globalStyle";
 
 export default function LoginForm(props) {
   const userContext = useContext(UserContext);
   const navigation = useNavigation();
-  const successLoginText = '¡Ha iniciado sesión exitosamente!';
-  const failLoginText = 'Usuario o contraseña invalida';
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const successLoginText = "¡Ha iniciado sesión exitosamente!";
+  const failLoginText = "Usuario o contraseña invalida";
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
-      password: '',
-      email: ''
-    }
+      password: "",
+      email: "",
+    },
   });
 
-  useEffect(()=>{
+  useEffect(() => {
     props.getToken();
-}, [])
+  }, []);
 
-  const onSubmit = (data) =>{
+  const onSubmit = (data) => {
     try {
       if (data) {
         data = {
           email: data.email.toLowerCase(),
-          password: data.password
-        } 
-        worthDB.post(epWorth.login, {
-          username: data.email,
-          password: data.password
-        }).then(async (data)=>{
-          await AsyncStorage.setItem('@token', data.data.access_token);
-          userContext.user = { token: data.data.access_token, email: data.email };
-          const user = await worthDB.get(epWorth.getUser, { email: data.email })
-          if(Platform.OS === 'ios'){
-            Toast.show(successLoginText, {
-              duration: Toast.durations.LONG,
-              position: Toast.positions.CENTER,
+          password: data.password,
+        };
+        worthDB
+          .post(epWorth.login, {
+            username: data.email,
+            password: data.password,
+          })
+          .then(async (data) => {
+            await AsyncStorage.setItem("@token", data.data.access_token);
+            userContext.user = {
+              token: data.data.access_token,
+              email: data.email,
+            };
+            const user = await worthDB.get(epWorth.getUser, {
+              email: data.email,
             });
-            props.getToken()
-          } else {
-            ToastAndroid.showWithGravity(
-              successLoginText,
-              ToastAndroid.LONG,
-              ToastAndroid.CENTER
-            );
-            props.getToken()
-          }
-        }).catch((error)=>{
-          console.log('Error login ', error)
-          if(Platform.OS === 'ios'){
-            Toast.show(failLoginText, {
-              duration: Toast.durations.LONG,
-              position: Toast.positions.CENTER,
-            });
-          } else {
-            ToastAndroid.showWithGravity(
-              failLoginText,
-              ToastAndroid.LONG,
-              ToastAndroid.CENTER
-            );
-          }
-        })
-      } 
+            if (Platform.OS === "ios") {
+              Toast.show(successLoginText, {
+                duration: Toast.durations.LONG,
+                position: Toast.positions.CENTER,
+              });
+              props.getToken();
+            } else {
+              ToastAndroid.showWithGravity(
+                successLoginText,
+                ToastAndroid.LONG,
+                ToastAndroid.CENTER
+              );
+              props.getToken();
+            }
+          })
+          .catch((error) => {
+            console.log("Error login ", error);
+            if (Platform.OS === "ios") {
+              Toast.show(failLoginText, {
+                duration: Toast.durations.LONG,
+                position: Toast.positions.CENTER,
+              });
+            } else {
+              ToastAndroid.showWithGravity(
+                failLoginText,
+                ToastAndroid.LONG,
+                ToastAndroid.CENTER
+              );
+            }
+          });
+      }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   return (
-    <View>
+    <View style={{ flexDirection: "column" }}>
       <ContainerForm>
         <HeadDetail
           title={"Iniciar Sesión"}
           detail={"Disfruta los beneficios de tener una cuenta con Worth"}
         />
+      </ContainerForm>
+      <CardContainer style={{ height: "100%" }}>
         <Controller
           control={control}
           rules={{
@@ -90,7 +105,12 @@ export default function LoginForm(props) {
           render={({ field: { onChange, value } }) => (
             <InputGroup>
               <Label>Correo</Label>
-              <Input placeholder="useless placeholder" value={value} keyboardType="email-address" onChangeText={onChange}/>
+              <Input
+                placeholder="useless placeholder"
+                value={value}
+                keyboardType="email-address"
+                onChangeText={onChange}
+              />
             </InputGroup>
           )}
           name="email"
@@ -105,7 +125,12 @@ export default function LoginForm(props) {
           render={({ field: { onChange, value } }) => (
             <InputGroup>
               <Label>Contraseña</Label>
-              <Input placeholder="useless placeholder" value={value} secureTextEntry={true} onChangeText={onChange}/>
+              <Input
+                placeholder="useless placeholder"
+                value={value}
+                secureTextEntry={true}
+                onChangeText={onChange}
+              />
             </InputGroup>
           )}
           name="password"
@@ -123,7 +148,7 @@ export default function LoginForm(props) {
             </Text>
           </ButtonRegistre>
         </InputGroup>
-      </ContainerForm>
+      </CardContainer>
     </View>
   );
 }

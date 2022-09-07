@@ -5,23 +5,26 @@ import { Layout, CardContainer } from "../globalStyle";
 import ButtonBack from "../components/ButtonBack";
 import ListNotification from "../components/list/ListNotification";
 import HeadSection from "../components/HeadSection";
+import { GradientBackground } from "../components/GradientBackground";
 
 export default function NotificationScreen() {
   return (
-    <Layout>
-      <ScrollView>
-        <SafeAreaView>
-          <ButtonBack />
-          <CardContainer>
-            <HeadSection
-              icon={headSection.head.icon}
-              title={headSection.head.title}
-            />
-            <ListNotification datas={notifications} />
-          </CardContainer>
-        </SafeAreaView>
-      </ScrollView>
-    </Layout>
+    <GradientBackground>
+      <Layout>
+        <ScrollView>
+          <SafeAreaView>
+            <ButtonBack />
+            <CardContainer style={{ height: "100%" }}>
+              <HeadSection
+                icon={headSection.head.icon}
+                title={headSection.head.title}
+              />
+              <ListNotification datas={notifications} />
+            </CardContainer>
+          </SafeAreaView>
+        </ScrollView>
+      </Layout>
+    </GradientBackground>
   );
 }
 

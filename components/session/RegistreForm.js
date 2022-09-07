@@ -1,97 +1,103 @@
 import worthDB, { endpoints as epWorth } from "../../api/localDB";
-import { View, Text, ToastAndroid, Platform, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  ToastAndroid,
+  Platform,
+  TouchableOpacity,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import PhoneInput from "react-native-phone-number-input";
 import styled from "styled-components/native";
-import Toast from 'react-native-root-toast';
+import Toast from "react-native-root-toast";
 import HeadDetail from "../HeadDetail";
 import React, { useState, useRef, useContext } from "react";
 import UserContext from "../../context/UserContext";
 
 import { useForm, Controller } from "react-hook-form";
+import { CardContainer } from "../../globalStyle";
 
 export default function RegistreForm() {
   const userContext = useContext(UserContext);
   const navigation = useNavigation();
   const phoneInput = useRef(null);
-  const successRegisterText = '¡Usuario registrado exitosamente!';
-  const failRegisterText = '¡Error, Usuario no ha sido registrado!';
+  const successRegisterText = "¡Usuario registrado exitosamente!";
+  const failRegisterText = "¡Error, Usuario no ha sido registrado!";
 
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
-      fullName: '',
-      fullLastName: '',
-      email: '',
-      phone: '',
-      password: ''
-    }
+      fullName: "",
+      fullLastName: "",
+      email: "",
+      phone: "",
+      password: "",
+    },
   });
 
-
-  const onSubmit = (data) =>{
+  const onSubmit = (data) => {
     if (data) {
-      data ={
+      data = {
         fullName: data.fullName,
         fullLastName: data.fullLastName,
         email: data.email.toLowerCase(),
         phone: data.phone,
-        password: data.password
-      }
+        password: data.password,
+      };
     }
 
-    worthDB.post(epWorth.createNewUser, {
-      email: data.email,
-      name: data.fullName,
-      lastname: data.fullLastName,
-      password: data.password,
-      phone: data.phone,
-    }).then((data)=>{
-      if(Platform.OS === 'ios'){
-        Toast.show(successRegisterText, {
-          duration: Toast.durations.LONG,
-          position: Toast.positions.CENTER,
-        });
-        userContext.user = { email: data.email }
-        navigation.navigate("ValidationForm", {
-          email: data.email 
-        });
-      } else {
-        ToastAndroid.showWithGravity(
-          successRegisterText,
-          ToastAndroid.LONG,
-          ToastAndroid.CENTER
-        );
-        navigation.navigate("ValidationForm",{
-          email: data.email 
-        });
-      }
-    }).catch((error)=>{
-      console.log('error',error)
-      if(Platform.OS === 'ios'){
-        Toast.show(failRegisterText, {
-          duration: Toast.durations.LONG,
-          position: Toast.positions.CENTER,
-        });
-      } else {
-        ToastAndroid.showWithGravity(
-          failRegisterText,
-          ToastAndroid.LONG,
-          ToastAndroid.CENTER
-        );
-      }
-    })
-    };
+    worthDB
+      .post(epWorth.createNewUser, {
+        email: data.email,
+        name: data.fullName,
+        lastname: data.fullLastName,
+        password: data.password,
+        phone: data.phone,
+      })
+      .then((data) => {
+        if (Platform.OS === "ios") {
+          Toast.show(successRegisterText, {
+            duration: Toast.durations.LONG,
+            position: Toast.positions.CENTER,
+          });
+          userContext.user = { email: data.email };
+          navigation.navigate("ValidationForm", {
+            email: data.email,
+          });
+        } else {
+          ToastAndroid.showWithGravity(
+            successRegisterText,
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER
+          );
+          navigation.navigate("ValidationForm", {
+            email: data.email,
+          });
+        }
+      })
+      .catch((error) => {
+        console.log("error", error);
+        if (Platform.OS === "ios") {
+          Toast.show(failRegisterText, {
+            duration: Toast.durations.LONG,
+            position: Toast.positions.CENTER,
+          });
+        } else {
+          ToastAndroid.showWithGravity(
+            failRegisterText,
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER
+          );
+        }
+      });
+  };
 
   return (
     <View>
-      <ContainerForm>
-        <HeadDetail
-          title={"Registro"}
-          detail={
-            "Crea una cuenta fácilmente para obtener beneficios de tener una cuenta con Worth"
-          }
-        />
-
+      <CardContainer style={{ height: "100%" }}>
         <Controller
           control={control}
           rules={{
@@ -100,7 +106,11 @@ export default function RegistreForm() {
           render={({ field: { onChange, value } }) => (
             <InputGroup>
               <Label>Nombre Completo</Label>
-              <Input placeholder="useless placeholder" value={value} onChangeText={onChange}/>
+              <Input
+                placeholder="useless placeholder"
+                value={value}
+                onChangeText={onChange}
+              />
             </InputGroup>
           )}
           name="fullName"
@@ -115,7 +125,11 @@ export default function RegistreForm() {
           render={({ field: { onChange, value } }) => (
             <InputGroup>
               <Label>Apellido Completo</Label>
-              <Input placeholder="useless placeholder" value={value} onChangeText={onChange}/>
+              <Input
+                placeholder="useless placeholder"
+                value={value}
+                onChangeText={onChange}
+              />
             </InputGroup>
           )}
           name="fullLastName"
@@ -130,7 +144,12 @@ export default function RegistreForm() {
           render={({ field: { onChange, value } }) => (
             <InputGroup>
               <Label>Correo</Label>
-              <Input placeholder="useless placeholder" keyboardType="email-address" value={value} onChangeText={onChange}/>
+              <Input
+                placeholder="useless placeholder"
+                keyboardType="email-address"
+                value={value}
+                onChangeText={onChange}
+              />
             </InputGroup>
           )}
           name="email"
@@ -146,34 +165,35 @@ export default function RegistreForm() {
             <InputGroup>
               <Label>Teléfono</Label>
               <PhoneInput
-                  ref={phoneInput}
-                  defaultValue={value}
-                  defaultCode="PA"
-                  layout="first"
-                  onChangeFormattedText={onChange}
-                  withDarkTheme
-                  disableArrowIcon
-                  keyboardType="phone-pad"
-                  placeholder="useless placeholder"
-                  textContainerStyle={{
-                    backgroundColor: '#202226',
-                    borderColor: '#4c4f63',
-                    borderRadius: 8,
-                  }}
-                  textInputStyle={{
-                    color:'#ffffff',
-                  }}
-                  codeTextStyle={{color:'#ffffff'}}
-                  containerStyle={{
-                    backgroundColor: '#202226',
-                    minWidth: '43%',
-                    width: '94%',
-                    borderRadius: 8,
-                    marginTop: 8,
-                    marginBottom: 6,
-                    marginHorizontal: '3%',
-                  }}
-                />
+                ref={phoneInput}
+                defaultValue={value}
+                defaultCode="PA"
+                layout="first"
+                onChangeFormattedText={onChange}
+                withDarkTheme
+                disableArrowIcon
+                keyboardType="phone-pad"
+                placeholder="useless placeholder"
+                textContainerStyle={{
+                  backgroundColor: "#202226",
+                  borderRadius: 8,
+                }}
+                textInputStyle={{
+                  color: "#ffffff",
+                }}
+                codeTextStyle={{ color: "#ffffff" }}
+                containerStyle={{
+                  backgroundColor: "#202226",
+                  borderColor: "#4c4f63",
+                  borderWidth: 1,
+                  minWidth: "43%",
+                  width: "94%",
+                  borderRadius: 8,
+                  marginTop: 8,
+                  marginBottom: 6,
+                  marginHorizontal: "3%",
+                }}
+              />
             </InputGroup>
           )}
           name="phone"
@@ -184,12 +204,17 @@ export default function RegistreForm() {
           control={control}
           rules={{
             required: true,
-            min: 10
+            min: 10,
           }}
           render={({ field: { onChange, value } }) => (
             <InputGroup>
               <Label>Contraseña</Label>
-              <Input placeholder="useless placeholder" value={value} secureTextEntry={true} onChangeText={onChange}/>
+              <Input
+                placeholder="useless placeholder"
+                value={value}
+                secureTextEntry={true}
+                onChangeText={onChange}
+              />
             </InputGroup>
           )}
           name="password"
@@ -202,7 +227,7 @@ export default function RegistreForm() {
             </Text>
           </ButtonLogin>
         </InputGroup>
-      </ContainerForm>
+      </CardContainer>
     </View>
   );
 }

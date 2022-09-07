@@ -10,12 +10,12 @@ export default function HeadDetail({ detail, title }) {
 }
 
 export const Container = styled.View`
-  margin-bottom: 20px;
+  margin-bottom: 8px;
 `;
 
 export const Title = styled.Text`
   font-size: 22px;
-  padding-bottom: 16px;
+  padding-bottom: 8px;
   font-weight: 800;
   color: #ffffff;
 `;

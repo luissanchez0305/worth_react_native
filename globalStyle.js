@@ -30,7 +30,7 @@ export const NavIcon = styled.Image`
 `;
 
 export const SubHeadText = styled.Text`
-  color: #8b8c97;
+  color: #e2e2e2;
   font-size: 16px;
   font-weight: 500;
   padding-horizontal: 16px;
@@ -38,9 +38,18 @@ export const SubHeadText = styled.Text`
 `;
 
 export const CardContainer = styled.View`
-  background-color: #202226;
+  background-color: #131518;
+  border-top-width: 1px;
+  border-top-color: #384153;
+  border-bottom-width: 1px;
+  border-bottom-color: #384153;
   padding-top: 10px;
   padding-horizontal: 16px;
   padding-bottom: 16px;
   margin-vertical: 10px;
+`;
+
+export const ContainerForm = styled.View`
+  margin-horizontal: 16px;
+  margin-vertical: 16px;
 `;

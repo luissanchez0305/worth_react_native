@@ -14,7 +14,7 @@ export default function ButtonBack() {
 
 const ContainerButton = styled.TouchableOpacity`
   flex-direction: row;
-  margin-vertical: 16px;
+  margin-vertical: 8px;
 `;
 
 const Icon = styled.Image`
