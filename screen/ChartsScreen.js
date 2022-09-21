@@ -70,7 +70,7 @@ export default function ChartsScreen() {
     <GradientBackground>
       <Layout>
         {/* <SafeAreaView> */}
-        <View style={{ marginTop: 32 }} />
+        <View />
         <HeadText>Mercado</HeadText>
         <SubHeadText>Lo mas reciente</SubHeadText>
         <CardContainer>
