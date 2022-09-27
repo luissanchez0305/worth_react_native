@@ -1,6 +1,6 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import WebView from "react-native-webview";
-import { View, Text } from "react-native";
+import { View, Text, Platform } from "react-native";
 import React, { useEffect } from "react";
 import HeadSection from "./HeadSection";
 import { TRADINGVIEW_URL } from '@env';
@@ -24,6 +24,10 @@ function ContainerView() {
           // (https://github.com/react-native-webview/react-native-webview/blob/master/docs/Guide.md)
   `;
 
+  const state = {
+    url: 'http://165.227.117.108:8181'
+  }
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View>
@@ -32,18 +36,30 @@ function ContainerView() {
                     title={headSection.tradingview.title}
                 />
             </View>
+
+            {Platform.OS === "ios" ? (
             <WebView
-                style={{
-                    backgroundColor: "white",
-                    flex: 1
-                }}
-            //   onLoadProgress={({ nativeEvent }) => console.log(nativeEvent)}
-                source={{uri: TRADINGVIEW_URL}}
-            //   onLoadEnd={(e) => console.log(e)}r
+                style={{flex: 1}}
+                source={{uri: state.url}}
+                allowFileAccessFromFileURLs={true}
+                originWhitelist={["*"]}
                 injectedJavaScript={INJECTED_JAVASCRIPT}
-                javaScriptEnabled={true}
                 onMessage={({ nativeEvent }) => console.log(nativeEvent.data)}
             />
+            ) : ( 
+                <WebView
+                    style={{
+                        backgroundColor: "white",
+                        flex: 1
+                    }}
+                    //   onLoadProgress={({ nativeEvent }) => console.log(nativeEvent)}
+                    source={{uri: TRADINGVIEW_URL}}
+                    //   onLoadEnd={(e) => console.log(e)}r
+                    injectedJavaScript={INJECTED_JAVASCRIPT}
+                    javaScriptEnabled={true}
+                    onMessage={({ nativeEvent }) => console.log(nativeEvent.data)}
+                />
+            )}
         </SafeAreaView>
     );
 }
