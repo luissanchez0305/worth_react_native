@@ -17,7 +17,7 @@ import HeadDetail from "../components/HeadDetail";
 import RegistreForm from "../components/session/RegistreForm";
 
 export default function ProfileScreen() {
-  const [userToken, setUserToken] = useState("985265656566");
+  const [userToken, setUserToken] = useState();
 
   const signout = async () => {
     await AsyncStorage.removeItem("@token");
