@@ -52,7 +52,7 @@ const ExpandableView = ({ expanded = false, data = [] }) => {
 export default function ListSignals({ signals }) {
   const navigation = useNavigation();
   const [isExpanded, setIsExpanded] = useState(false);
-  const [expandedSignals, setExpandedSignals] = useState([]);
+  const [expandedSignals, setExpandedSignals] = useState([8]);
 
   const toggleExpanded = (index) => {
     const array = [...expandedSignals];
