@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { Platform } from 'react-native';
+import { IOS_API_URL, ANDROID_API_URL } from '@env';
 
 const worthDB = axios.create({
-    baseURL: Platform.OS == "ios" ? 'http://localhost:3001' : 'http://192.168.1.111:3001'
+    baseURL: Platform.OS == "android" ? ANDROID_API_URL : IOS_API_URL
 })
 export default worthDB;
 

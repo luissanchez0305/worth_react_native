@@ -1,6 +1,6 @@
 
 import React, { useContext, useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { ScrollView, StyleSheet, Text, View, TouchableOpacity, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeadSection from "../components/HeadSection";
 import ListMedia from "../components/list/ListMedia";
@@ -32,7 +32,8 @@ export default function HomeScreen() {
   const [videosPromiseStatus, setVideosPromiseStatus] = useState('Getting symbols...');
   const [data, setData] = useState([]);
   const [videos, setVideos] = useState([]);
-
+  
+  const courses = [];
   const promises = [];
   const getPrices = async () => {
     
@@ -42,7 +43,6 @@ export default function HomeScreen() {
 
     today = getDateFormat(today);
     yesterday = getDateFormat(yesterday);
-
     worthDB
       .get(epWorth.getAllActiveSymbols)
       .then(async (res) => {
@@ -85,10 +85,22 @@ export default function HomeScreen() {
     
     let _videos = res.data['items'];
     _videos.map((video) => {
-      videos.push(cleanVideo(video))
+      const cleanedVideo = cleanVideo(video);
+      
+      if(cleanedVideo.title.indexOf('Curso de Trading GRATIS') > -1) {
+        courses.push(cleanedVideo);
+      }
+      else {
+        videos.push(cleanedVideo)
+      }
     })
+
     if(!videoContext.videos.length){
       videoContext.videos = videos;
+    }
+
+    if(!videoContext.courses.length){
+      videoContext.courses = courses;
     }
     setLoadingVideos(false);
   }

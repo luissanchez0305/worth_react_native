@@ -16,8 +16,8 @@ import jwt_decode from "jwt-decode";
 export default function NewsScreen() {
   const [filter, setFilter] = useState("video");
   const context = useContext(VideoContext);
-  const [userToken, setUserToken] = useState();
   const videos = context.videos;
+  const courses = context.courses;
 
   const video = () => {
     setFilter("video");
@@ -26,15 +26,6 @@ export default function NewsScreen() {
   const news = () => {
     setFilter("news");
   };
-
-  const token = async () =>{
-    data = await getStorageItem('@token');
-    setUserToken(data);
-  } 
-
-  useEffect(()=>{
-    token();
-  }, [userToken])
 
   return (
     <GradientBackground>
@@ -58,17 +49,11 @@ export default function NewsScreen() {
               </View>
             ) : (
               <View>
-                {userToken === null ? (  
-                    <LoginForm getToken={token}/>
-                ) : (
-                  <>
                   <HeadSection
                     icon={headSection.content.icon}
                     title={headSection.content.title} 
                   />
-                  <ListNews datas={blogs} />
-                  </>
-                )}
+                  <ListMedia videos={coursesr} />
               </View>
             )}
           </CardContainer>
