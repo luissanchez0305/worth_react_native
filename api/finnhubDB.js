@@ -3,13 +3,10 @@ import {FINNHUB_KEY} from '@env'
 
 const finnhubDB = axios.create({
   baseURL: 'https://finnhub.io/api/v1',
-  params: {
-    token: FINNHUB_KEY,
-  },
 });
 
 export default finnhubDB;
 
 export const endpoints = {
-  events: "/calendar/economic", //&from=date&to=date
+  events: (token, from, to) => { return `/calendar/economic?from=${from}&to=${to}&token=${token}` }, //&from=date&to=date
 }

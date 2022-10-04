@@ -31,8 +31,6 @@ export default function NewsScreen() {
     <GradientBackground>
       <Layout>
         <SafeAreaView>
-          <HeadText>Contenido</HeadText>
-          <SubHeadText>Lo mas reciente</SubHeadText>
           <CardContainer>
             <NewsFilterButton
               filterVideo={video}
@@ -53,7 +51,7 @@ export default function NewsScreen() {
                     icon={headSection.content.icon}
                     title={headSection.content.title} 
                   />
-                  <ListMedia videos={coursesr} />
+                  <ListMedia videos={courses} />
               </View>
             )}
           </CardContainer>

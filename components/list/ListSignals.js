@@ -6,16 +6,16 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Clipboard,
 } from "react-native";
+import * as Clipboard from 'expo-clipboard';
 import styled from "styled-components/native";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 
 const ExpandableView = ({ expanded = false, data = [] }) => {
   const [height] = useState(new Animated.Value(0));
-  const copyToClipboard = (val) => {
-    Clipboard.setString(val);
+  const copyToClipboard = async (val) => {
+    await Clipboard.setStringAsync(val);
   };
   useEffect(() => {
     Animated.timing(height, {

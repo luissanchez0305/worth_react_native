@@ -2,7 +2,6 @@ import styled from "styled-components/native";
 
 export const Layout = styled.View`
   flex: 1;
-  padding-top: 16px;
 `;
 
 export const HeadText = styled.Text`

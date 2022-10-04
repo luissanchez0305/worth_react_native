@@ -12,6 +12,7 @@ import { SafeAreaView } from "react-native";
 import { useEffect, useState } from "react";
 import { getDateFormat } from "../utils";
 import ContainerView from "../components/ContainerView";
+import {FINNHUB_KEY} from '@env'
 
 export default function ChartsScreen() {
   const [screenFilter, setScreenFilter] = useState("tradingview");
@@ -48,14 +49,9 @@ export default function ChartsScreen() {
 
   const getEvents = async (date) => {
     const finnhubRes = await finnhubDB
-      .get(epFinnhub.events, {
-        params: {
-          from: date,
-          to: date,
-        },
-      })
+      .get(epFinnhub.events(FINNHUB_KEY, date, date))
       .catch((ex) => {
-        console.log(`Error al eventos: ${ex}`);
+        console.log(`Error al traer eventos: ${ex}`);
       });
     setEventsData(finnhubRes.data["economicCalendar"]);
     setEventsLoading(false);
@@ -70,9 +66,6 @@ export default function ChartsScreen() {
     <GradientBackground>
       <Layout>
         {/* <SafeAreaView> */}
-        <View />
-        <HeadText>Mercado</HeadText>
-        <SubHeadText>Lo mas reciente</SubHeadText>
         <CardContainer>
           <ChartsFilterButton
             filterTradingView={tradingview}

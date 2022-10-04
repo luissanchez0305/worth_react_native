@@ -10,8 +10,6 @@ export default function CalculatorScreen() {
       <Layout>
         <ScrollView>
           <SafeAreaView>
-            <HeadText>Calculadora</HeadText>
-            <SubHeadText>Cotizar</SubHeadText>
             <CalculatorForm />
           </SafeAreaView>
         </ScrollView>
