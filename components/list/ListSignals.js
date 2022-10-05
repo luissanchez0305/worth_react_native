@@ -22,7 +22,7 @@ const ExpandableView = ({ expanded = false, data = [] }) => {
       toValue: !expanded ? 300 : 0,
       duration: 150,
       useNativeDriver: false,
-    }).start();
+    }).start();19508
   }, [expanded, height]);
 
   // console.log('rerendered');

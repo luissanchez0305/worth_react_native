@@ -37,7 +37,7 @@ export default function SignalsScreen() {
       <GradientBackground
         colors={["#111D2E", "#1D242F", "#102F49"]}
         start={{ x: 0.4, y: 0.6 }}
-        end={{ x: 0.5, y: 0.9 }}
+        end={{ x: 0.5, y: 0.9 }}  
       >
         <Layout>
           <SafeAreaView>
