@@ -3,7 +3,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "react-native";
 
 import HomeScreen from "../screen/HomeScreen";
-import ChartScreen from "../screen/ChartsScreen";
+import ChartsScreen from "../screen/ChartsScreen";
 import NewsScreen from "../screen/NewsScreen";
 import CalculatorScreen from "../screen/CalculatorScreen";
 import SignalsScreen from "../screen/SignalsScreen";
@@ -59,7 +59,7 @@ export default function Tabs() {
               />
             ),
           }}
-          component={ChartScreen}
+          component={ChartsScreen}
         />
         <Tab.Screen
           name="Señales"

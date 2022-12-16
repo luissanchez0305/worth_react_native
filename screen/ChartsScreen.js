@@ -1,6 +1,5 @@
 import { Layout, HeadText, SubHeadText, CardContainer } from "../globalStyle";
 import { GradientBackground } from "../components/GradientBackground";
-import finnhubDB, { endpoints as epFinnhub } from "../api/finnhubDB";
 import ChartsFilterButton from "../components/ChartsFilterButton";
 import { get } from "react-native/Libraries/Utilities/PixelRatio";
 // import TradingChart from "../components/TradingChart/index";
@@ -9,16 +8,18 @@ import ListEvents from "../components/list/ListEvents";
 import HeadSection from "../components/HeadSection";
 import styled from "styled-components/native";
 import { SafeAreaView } from "react-native";
-import { useEffect, useState } from "react";
-import { getDateFormat } from "../utils";
+import { useContext, useEffect, useState } from "react";
+import { getDateFormat, getTodayDateString } from "../utils";
 import ContainerView from "../components/ContainerView";
-import {FINNHUB_KEY} from '@env'
+import EventsContext from "../context/EventContext";
+
 
 export default function ChartsScreen() {
+  const context = useContext(EventsContext);
   const [screenFilter, setScreenFilter] = useState("tradingview");
   const [eventFilter, setEventFilter] = useState("today");
-  const [eventsData, setEventsData] = useState([]);
   const [eventsLoading, setEventsLoading] = useState(true);
+  const [eventsData, setEventsData] = useState([]);
 
   const tradingview = () => {
     setScreenFilter("tradingview");
@@ -28,7 +29,7 @@ export default function ChartsScreen() {
     setScreenFilter("events");
   };
 
-  const setEventFilterButton = (value) => {
+  const setEventFilterButton = async (value) => {
     if (value !== eventFilter) {
       setEventsLoading(true);
       const date = new Date();
@@ -42,25 +43,21 @@ export default function ChartsScreen() {
           break;
       }
       _date = getDateFormat(date);
-      getEvents(_date);
+      const events = await context.getEvents(_date);
       setEventFilter(value);
+      setEventsData(events)
+      setEventsLoading(false)
     }
   };
-
-  const getEvents = async (date) => {
-    const finnhubRes = await finnhubDB
-      .get(epFinnhub.events(FINNHUB_KEY, date, date))
-      .catch((ex) => {
-        console.log(`Error al traer eventos: ${ex}`);
-      });
-    setEventsData(finnhubRes.data["economicCalendar"]);
-    setEventsLoading(false);
-  };
+  const getInitEvents = async () => {
+    const today = getTodayDateString()
+    const events = await context.getEvents(today)
+    setEventsLoading(false)
+    setEventsData(events)
+  }
 
   useEffect(() => {
-    const today = new Date();
-    const _today = getDateFormat(today);
-    getEvents(_today);
+    getInitEvents()
   }, []);
   return (
     <GradientBackground>
@@ -111,9 +108,9 @@ export default function ChartsScreen() {
                 </View>
               </View>
               {eventsLoading ? (
-                <Text>Loading...</Text>
+                <Text style={{color: "#8b8c97"}}>Loading...</Text>
               ) : (
-                <ListEvents events={eventsData} />
+                eventsData.length > 0 ? (<ListEvents events={eventsData} /> ): (<Text style={{color: "#8b8c97"}}>No hay eventos para este dia</Text>)
               )}
             </View>
           </CardContainer>

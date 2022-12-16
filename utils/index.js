@@ -1,5 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+export const getTodayDateString = () => {
+    const today = new Date();
+    const _today = getDateFormat(today);
+    return _today;
+}
+
 export const getDateFormat = (date) => {      
     var dd = String(date.getUTCDate()).padStart(2, '0');
     var mm = String(date.getUTCMonth() + 1).padStart(2, '0'); //January is 0!

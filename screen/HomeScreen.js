@@ -1,10 +1,9 @@
 
 import React, { useContext, useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, View, TouchableOpacity, Platform } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeadSection from "../components/HeadSection";
-import ListMedia from "../components/list/ListMedia";
-import ListNews from "../components/list/ListNews";
+import finnhubDB, { endpoints as epFinnhub } from "../api/finnhubDB";
 import { useNavigation } from "@react-navigation/native";
 import {
   Layout,
@@ -19,21 +18,27 @@ import Marquee from "../components/MarqueeHSNZ/Marquee";
 import polygonDB, { endpoints as epPolygon } from "../api/polygonDB";
 import worthDB, { endpoints as epWorth } from "../api/localDB";
 import youtubeDB, {endpoints as epYoutube} from "../api/youtubeDB";
-import { cleanPrice, cleanVideo, getDateFormat } from "../utils";
+import { cleanPrice, cleanVideo, getDateFormat, getTodayDateString } from "../utils";
 import VideoContext from "../context/VideoContext";
+import EventContext from "../context/EventContext";
 import { GradientBackground } from "../components/GradientBackground";
+import { getDevicePushTokenAsync } from "expo-notifications";
+import ListEvents from "../components/list/ListEvents";
+import {FINNHUB_KEY} from '@env'
 
 export default function HomeScreen() {
   const navigation = useNavigation();
   const videoContext = useContext(VideoContext)
+  const eventContext = useContext(EventContext)
   const [loadingMarquee, setLoadingMarquee] = useState(true);
-  const [loadingVideos, setLoadingVideos] = useState(true);
-  const [pricesPromiseStatus, setPricesPromiseStatus] = useState('Getting symbols...');
-  const [videosPromiseStatus, setVideosPromiseStatus] = useState('Getting symbols...');
+  const [loadingEvents, setLoadingEvents] = useState(true);
+  const [pricesPromiseStatus, setPricesPromiseStatus] = useState('Obteniendo simbolos...');
+  const [eventsPromiseStatus, setEventsPromiseStatus] = useState('Obteniendo eventos...');
   const [data, setData] = useState([]);
-  const [videos, setVideos] = useState([]);
+  const [eventsData, setEventsData] = useState([]);
   
   const courses = [];
+  const videos = []
   const promises = [];
   const getPrices = async () => {
     
@@ -79,7 +84,7 @@ export default function HomeScreen() {
     const res = await youtubeDB
       .get(epYoutube.search)
       .catch((ex) => {
-        setVideosPromiseStatus(`Error al cargar videos: ${ex}`)
+        console.log(`Error al cargar videos: ${ex}`)
         return;
       })
     
@@ -102,12 +107,30 @@ export default function HomeScreen() {
     if(!videoContext.courses.length){
       videoContext.courses = courses;
     }
-    setLoadingVideos(false);
+  }
+
+  const getEvents = async (date) => {
+    const finnhubRes = await finnhubDB
+      .get(epFinnhub.events(FINNHUB_KEY, date, date))
+      .catch((ex) => {
+        setEventsPromiseStatus(`Error al traer eventos: ${ex}`)
+      });
+    return finnhubRes.data["economicCalendar"];
+  }
+
+  const init = async () => {
+    getPrices();
+    getVideos();
+
+    const today = getTodayDateString()
+    const events = await getEvents(today);
+    setEventsData(events);
+    eventContext.getEvents = getEvents
+    setLoadingEvents(false);
   }
   
   useEffect(() => {
-    getPrices();
-    getVideos();
+    init();
   }, [])
   return (
     <GradientBackground>
@@ -158,10 +181,10 @@ export default function HomeScreen() {
           </CardContainer>
           <CardContainer>
             <HeadSection
-              icon={headSection.video.icon}
-              title={headSection.video.title}
+              icon={headSection.content.icon}
+              title={headSection.content.title}
             />
-              {!loadingVideos ? (<ListMedia videos={videos} />) : (<Text style={{color: "#8b8c97"}}>{videosPromiseStatus}</Text>)}
+              {!loadingEvents ? (<ListEvents events={eventsData} getEvents={getEvents} />) : (<Text style={{color: "#8b8c97"}}>{eventsPromiseStatus}</Text>)}
           </CardContainer>
         </SafeAreaView>
       </Layout>
@@ -179,7 +202,7 @@ const headSection = {
     icon: require("../assets/headIcons/youtube.png"),
   },
   content: {
-    title: "Contenido",
+    title: "Eventos",
     icon: require("../assets/headIcons/content.png"),
   },
 };
