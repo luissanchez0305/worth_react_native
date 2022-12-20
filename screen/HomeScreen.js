@@ -3,8 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeadSection from "../components/HeadSection";
-import finnhubDB, { endpoints as epFinnhub } from "../api/finnhubDB";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import {
   Layout,
   HeadText,
@@ -18,18 +17,15 @@ import Marquee from "../components/MarqueeHSNZ/Marquee";
 import polygonDB, { endpoints as epPolygon } from "../api/polygonDB";
 import worthDB, { endpoints as epWorth } from "../api/localDB";
 import youtubeDB, {endpoints as epYoutube} from "../api/youtubeDB";
-import { cleanPrice, cleanVideo, getDateFormat, getTodayDateString } from "../utils";
+import { cleanPrice, cleanVideo, getDateFormat, getEvents, getTodayDateString } from "../utils";
 import VideoContext from "../context/VideoContext";
-import EventContext from "../context/EventContext";
 import { GradientBackground } from "../components/GradientBackground";
 import { getDevicePushTokenAsync } from "expo-notifications";
 import ListEvents from "../components/list/ListEvents";
-import {FINNHUB_KEY} from '@env'
 
 export default function HomeScreen() {
   const navigation = useNavigation();
   const videoContext = useContext(VideoContext)
-  const eventContext = useContext(EventContext)
   const [loadingMarquee, setLoadingMarquee] = useState(true);
   const [loadingEvents, setLoadingEvents] = useState(true);
   const [pricesPromiseStatus, setPricesPromiseStatus] = useState('Obteniendo simbolos...');
@@ -109,24 +105,18 @@ export default function HomeScreen() {
     }
   }
 
-  const getEvents = async (date) => {
-    const finnhubRes = await finnhubDB
-      .get(epFinnhub.events(FINNHUB_KEY, date, date))
-      .catch((ex) => {
-        setEventsPromiseStatus(`Error al traer eventos: ${ex}`)
-      });
-    return finnhubRes.data["economicCalendar"];
-  }
-
   const init = async () => {
     getPrices();
     getVideos();
 
     const today = getTodayDateString()
     const events = await getEvents(today);
-    setEventsData(events);
-    eventContext.getEvents = getEvents
-    setLoadingEvents(false);
+    if(events.length > 0){
+      setEventsData(events);
+      setLoadingEvents(false);
+    } else {
+      setEventsPromiseStatus('No hay eventos para hoy')
+    }
   }
   
   useEffect(() => {

@@ -8,14 +8,12 @@ import ListEvents from "../components/list/ListEvents";
 import HeadSection from "../components/HeadSection";
 import styled from "styled-components/native";
 import { SafeAreaView } from "react-native";
-import { useContext, useEffect, useState } from "react";
-import { getDateFormat, getTodayDateString } from "../utils";
+import { useEffect, useState } from "react";
+import { getDateFormat, getEvents, getTodayDateString } from "../utils";
 import ContainerView from "../components/ContainerView";
-import EventsContext from "../context/EventContext";
 
 
 export default function ChartsScreen() {
-  const context = useContext(EventsContext);
   const [screenFilter, setScreenFilter] = useState("tradingview");
   const [eventFilter, setEventFilter] = useState("today");
   const [eventsLoading, setEventsLoading] = useState(true);
@@ -43,7 +41,7 @@ export default function ChartsScreen() {
           break;
       }
       _date = getDateFormat(date);
-      const events = await context.getEvents(_date);
+      const events = await getEvents(_date);
       setEventFilter(value);
       setEventsData(events)
       setEventsLoading(false)
@@ -51,7 +49,7 @@ export default function ChartsScreen() {
   };
   const getInitEvents = async () => {
     const today = getTodayDateString()
-    const events = await context.getEvents(today)
+    const events = await getEvents(today)
     setEventsLoading(false)
     setEventsData(events)
   }

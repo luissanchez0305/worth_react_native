@@ -43,7 +43,7 @@ export default function SignalsScreen() {
           <SafeAreaView>
             <CardContainer style={{ height: "100%" }}>
               {signals.length ? (
-                <ListSignals signals={signals} />
+                <ListSignals signals={signals}/>
               ) : (
                 <Text>Loading...</Text>
               )}

@@ -11,27 +11,26 @@ import * as Clipboard from 'expo-clipboard';
 import styled from "styled-components/native";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
+import worthDB, { endpoints as worthEndpoints } from "../../api/localDB";
+import { 
+  getRandomNumber, 
+  /* useComponentDidMount,
+  useComponentDidUpdate,
+  useComponentWillUnmount  */
+} from "../../utils";
 
-const ExpandableView = ({ expanded = false, data = [] }) => {
-  const [height] = useState(new Animated.Value(0));
+const PanelView = ({ data = [] }) => {
+
   const copyToClipboard = async (val) => {
     await Clipboard.setStringAsync(val);
   };
-  useEffect(() => {
-    Animated.timing(height, {
-      toValue: !expanded ? 300 : 0,
-      duration: 150,
-      useNativeDriver: false,
-    }).start();19508
-  }, [expanded, height]);
 
   // console.log('rerendered');
 
   return (
-    <Animated.View style={{ height, backgroundColor: "white" }}>
-      <View>
+    <Animated.View style={{ height: 150, backgroundColor: "white" }}>
         {data.map((item, index) => (
-          <>
+          <View key={index}>
             <Channel>
               <Text>Price</Text>
               <Text onPress={() => copyToClipboard(item.price)}>
@@ -42,28 +41,18 @@ const ExpandableView = ({ expanded = false, data = [] }) => {
               <Text>Have been reached?</Text>{" "}
               {item.takeProfitReached ? <Text>Yes</Text> : <Text>No</Text>}
             </Channel>
-          </>
+          </View>
         ))}
-      </View>
     </Animated.View>
   );
 };
 
 export default function ListSignals({ signals }) {
   const navigation = useNavigation();
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [expandedSignals, setExpandedSignals] = useState([8]);
-
-  const toggleExpanded = (index) => {
-    const array = [...expandedSignals];
-    array.map((value, placeindex) =>
-      placeindex === index
-        ? (array[placeindex]["isExpanded"] = !array[placeindex]["isExpanded"])
-        : (array[placeindex]["isExpanded"] = false)
-    );
-
-    setExpandedSignals(array);
-  };
+  const [expandedSignals, setExpandedSignals] = useState([]);
+  const [count, setCount] = useState(0)
+  let signalInterval;
+  let _signals = [];
 
   const isCloseToBottom = ({
     layoutMeasurement,
@@ -79,19 +68,57 @@ export default function ListSignals({ signals }) {
 
   const showLoadMoreButton = () => {};
 
-  const setExpandables = () => {
-    const _signals = signals.map((item) => {
-      return {
-        isExpanded: false,
-        ...item,
-      };
-    });
+  const getSymbolPrice = async (exchangeSymbol, signalId) => {
+    const res = await worthDB.get(worthEndpoints.getSymbolPrice(exchangeSymbol))
+    return res.data
+  };
+
+  const setSignals = async () => {
+    for(const signal of signals){
+      _signals.push({
+        price: await getSymbolPrice(signal.exchangeSymbol),
+        ...signal,
+      });
+    }
     setExpandedSignals(_signals);
   };
 
-  useState(() => {
-    setExpandables();
+  const updateSignals = () => {
+    signalInterval = !signalInterval && setInterval(() => {
+      for(const index in _signals){
+          const signal = _signals[index];
+
+          worthDB.get(worthEndpoints.getSymbolPrice(signal.exchangeSymbol))
+          .then((res) => {
+            const array = [..._signals];
+            const item = {...array[index]}
+            item.price = res.data
+            array[index] = item
+            _signals = array
+            setExpandedSignals(array);
+          })
+          .catch((ex) => console.log(ex));
+      }
+    }, 3000);
+  }
+
+  /* useComponentDidMount(() => {
+    console.log("Component list signals did mount!");
   });
+
+  useComponentDidUpdate(() => {
+    console.log("myProp list signals did update!");
+  }, []);
+
+  useComponentWillUnmount(() => {
+    console.log("Component will unmount!");
+  }); */
+
+  useEffect(() => {
+    setSignals();
+    updateSignals();
+    return () => { clearInterval(signalInterval) }
+  }, [])
 
   return (
     <ScrollView
@@ -105,10 +132,14 @@ export default function ListSignals({ signals }) {
       {expandedSignals.map((data, index) => {
         const uri = data.image;
         return (
-          <Container key={index}>
-            <ContainerText>
+          <Container key={getRandomNumber(501, 600)}>
+            <ContainerText key={getRandomNumber(601, 700)}>
               <Title>{data.symbol}</Title>
               <Tag>{data.type}</Tag>
+              <Channel>
+                <Text>Price</Text>
+                <Datas>{data.price}</Datas>
+              </Channel>
               <Channel>
                 <Text>Risk</Text>
                 <Datas>{data.risk}</Datas>
@@ -121,16 +152,9 @@ export default function ListSignals({ signals }) {
                 <Text>Stop Lost</Text>
                 <Datas>{data.stopLost}</Datas>
               </Channel>
-              <TouchableOpacity
-                onPress={() => {
-                  setIsExpanded(toggleExpanded(index));
-                }}
-                style={styles.toggle}
-              >
                 <Text style={styles.toggleText}>Take profits</Text>
-              </TouchableOpacity>
-              <ExpandableView
-                expanded={!data.isExpanded}
+              <PanelView
+                key={getRandomNumber(0, 100)}
                 data={data.takeProfits}
               />
             </ContainerText>

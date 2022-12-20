@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { Image } from "react-native";
+import { Image, TouchableOpacity } from "react-native";
 
 import HomeScreen from "../screen/HomeScreen";
 import ChartsScreen from "../screen/ChartsScreen";
@@ -94,7 +94,6 @@ export default function Tabs() {
                 }}
               />
             ),
-            
           }}
           component={NewsScreen}
         />

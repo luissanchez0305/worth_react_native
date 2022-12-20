@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import styled from "styled-components/native";
 import CountryFlag from "react-native-country-flag";
-import { formatCurrencyDecimals, getDataFormatComplete } from "../../utils";
+import { formatCurrencyDecimals, getDateFormatComplete } from "../../utils";
 
 export default function ListEvents({ events }) {
   const capitalizeFirstLetter = (
@@ -53,7 +53,7 @@ export default function ListEvents({ events }) {
             </ContainerInfo>
             <ContainerInfo>
               <TagSmall>
-                {getDataFormatComplete(data.time.replace(" ", "T"))}
+                {getDateFormatComplete(data.time.replace(" ", "T"))}
               </TagSmall>
             </ContainerInfo>
           </ContainerText>

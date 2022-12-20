@@ -1,4 +1,16 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import finnhubDB, { endpoints as epFinnhub } from "../api/finnhubDB";
+import {FINNHUB_KEY} from '@env'
+import { useEffect, useRef } from "react";
+
+export const getEvents = async (date) => {
+    const finnhubRes = await finnhubDB
+      .get(epFinnhub.events(FINNHUB_KEY, date, date))
+      .catch((ex) => {
+        throw `Error al traer eventos: ${ex}`
+      });
+    return finnhubRes.data["economicCalendar"];
+  }
 
 export const getTodayDateString = () => {
     const today = new Date();
@@ -14,7 +26,11 @@ export const getDateFormat = (date) => {
     return `${yyyy}-${mm}-${dd}`;
 }
 
-export const getDataFormatComplete = (date) => {
+export const getRandomNumber = (from, to) => {
+    return (Math.floor(Math.random() * (to - from + 1)) + from).toString()
+}
+
+export const getDateFormatComplete = (date) => {
     const _dateObj = new Date(date);
     const _date = getDateFormat(_dateObj);
     var hh = String(_dateObj.getHours());
@@ -65,3 +81,25 @@ export const getStorageItem = async (data) => {
     let value = await AsyncStorage.getItem(data);
     return value
 }
+
+export const useComponentDidMount = handler => {
+    return useEffect(() => handler(), []);
+};
+  
+export const useComponentDidUpdate = (handler, deps) => {
+    const isInitialMount = useRef(true);
+
+    useEffect(() => {
+        if (isInitialMount.current) {
+        isInitialMount.current = false;
+
+        return;
+        }
+
+        return handler();
+    }, deps);
+};
+
+export const useComponentWillUnmount = handler => {
+    return useEffect(() => handler, []);
+};
