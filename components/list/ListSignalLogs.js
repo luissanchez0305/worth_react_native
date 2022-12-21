@@ -30,7 +30,7 @@ function ListSignalLogs({ logs }) {
               return (
                 <Container key={index}>
                     <ContainerText>
-                        <Title>{data.created_at}</Title>
+                        <Title>{getDateFormatComplete(data.created_at)}</Title>
                         <ContainerInfo>
                             <Tag>{data.description}</Tag>
                         </ContainerInfo>

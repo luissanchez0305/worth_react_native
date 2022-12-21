@@ -106,18 +106,6 @@ export default function ListSignals({ signals }) {
     }, 3000);
   }
 
-  /* useComponentDidMount(() => {
-    console.log("Component list signals did mount!");
-  });
-
-  useComponentDidUpdate(() => {
-    console.log("myProp list signals did update!");
-  }, []);
-
-  useComponentWillUnmount(() => {
-    console.log("Component will unmount!");
-  }); */
-
   useEffect(() => {
     setSignals();
     updateSignals();
@@ -140,9 +128,9 @@ export default function ListSignals({ signals }) {
             <ContainerText key={getRandomNumber(601, 700)}>
               <Title>{data.symbol}</Title>
               <Tag>{data.type}</Tag>
-              <EventFilter
+              <SignalButton
                 title='Logs'
-                onPress={() => { navigation.navigate('SignalLogs', { signalId: data.id }) }}
+                onPress={() => { navigation.navigate('SignalLogs', { signalId: data.id, symbol: data.symbol, type: data.type }) }}
               />
               <Channel>
                 <Text>Price</Text>
@@ -200,7 +188,7 @@ export const Datas = styled.Text`
   padding-right: 4px;
 `;
 
-const EventFilter = styled.Button`
+const SignalButton = styled.Button`
   align-items: center;
   padding: 8px;
   border-radius: 8px;

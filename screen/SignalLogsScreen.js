@@ -9,8 +9,8 @@ import { GradientBackground } from "../components/GradientBackground";
 import worthDB, { endpoints as worthEndpoints } from "../api/localDB";
 import ListSignalLogs from "../components/list/ListSignalLogs";
 
-export default function SignalLogsScreen({ route, navigation }) {
-    const { signalId } = route.params;
+export default function SignalLogsScreen({ route }) {
+    const { signalId, symbol, type } = route.params;
     const [logs, setLogs] = useState([])
     const [logsLoading, setLogsLoading] = useState(true)
 
@@ -32,7 +32,7 @@ export default function SignalLogsScreen({ route, navigation }) {
                     <CardContainer>
                         <View>
                             <ButtonBack />
-                            <HeadText>Details Screen</HeadText>
+                            <HeadText>Señal: {symbol} - {type}</HeadText>
                             {logsLoading ? 
                                 <TextStatus>Cargando...</TextStatus> : 
                                     logs.length ? <ListSignalLogs logs={logs} /> : 
