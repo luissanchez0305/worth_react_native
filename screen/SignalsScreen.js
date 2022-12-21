@@ -1,13 +1,7 @@
-import { Layout, HeadText, SubHeadText, CardContainer } from "../globalStyle";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Layout, CardContainer } from "../globalStyle";
 import { GradientBackground } from "../components/GradientBackground";
-import { ScrollView, Text, View, SafeAreaView } from "react-native";
-import finnhubDB, { endpoints as epFinnhub } from "../api/finnhubDB";
-import ChartsFilterButton from "../components/ChartsFilterButton";
-// import TradingChart from "../components/TradingChart/index";
+import { Text, SafeAreaView } from "react-native";
 import LoginForm from "../components/session/LoginForm";
-import ListEvents from "../components/list/ListEvents";
-import HeadSection from "../components/HeadSection";
 import { useEffect, useState } from "react";
 import worthDB, { endpoints as worthEndpoints } from "../api/localDB";
 import ListSignals from "../components/list/ListSignals";
@@ -45,7 +39,7 @@ export default function SignalsScreen() {
               {signals.length ? (
                 <ListSignals signals={signals}/>
               ) : (
-                <Text>Loading...</Text>
+                <Text>Cargando...</Text>
               )}
             </CardContainer>
           </SafeAreaView>

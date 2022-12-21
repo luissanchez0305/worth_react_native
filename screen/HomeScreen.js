@@ -47,7 +47,7 @@ export default function HomeScreen() {
     worthDB
       .get(epWorth.getAllActiveSymbols)
       .then(async (res) => {
-        setPricesPromiseStatus('Loading values...');
+        setPricesPromiseStatus('Cargando valores...');
         const _data = res.data;
         _data.forEach(element => {
           const url = element.type === 'crypto' ? 

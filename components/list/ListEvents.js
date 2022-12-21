@@ -2,6 +2,7 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import styled from "styled-components/native";
 import CountryFlag from "react-native-country-flag";
 import { formatCurrencyDecimals, getDateFormatComplete } from "../../utils";
+import { Container, ContainerText, Title } from "../../globalStyle";
 
 export default function ListEvents({ events }) {
   const capitalizeFirstLetter = (
@@ -63,23 +64,6 @@ export default function ListEvents({ events }) {
   );
 }
 
-export const Container = styled.TouchableOpacity`
-  flex-direction: row;
-  margin-bottom: 6px;
-  border-radius: 8px;
-  padding-top: 10px;
-  padding-bottom: 14px;
-  padding-right: 10px;
-  padding-left: 10px;
-  border-bottom-width: 1px;
-  border-bottom-color: #45464f;
-  background-color: #353c47;
-`;
-
-export const ContainerText = styled.View`
-  flex: 1;
-`;
-
 export const ContainerInfo = styled.View`
   flex-direction: row;
 `;
@@ -91,11 +75,6 @@ export const Image = styled.Image`
   border-radius: 4px;
 `;
 
-export const Title = styled.Text`
-  font-size: 15px;
-  font-weight: 700;
-  color: #ffffff;
-`;
 export const Tag = styled.Text`
   color: #ffffff;
   font-weight: 800;

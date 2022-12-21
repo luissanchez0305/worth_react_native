@@ -18,5 +18,6 @@ export const endpoints = {
     getAllSignals: "/signals",
     sendEmailCode: "/messages/email-code-validate", //&email=
     sendSMSCode: "/messages/sms-code-validate", //&email=
-    getSymbolPrice: (symbol) => { return `/websocket/price/${symbol}` }
+    getSymbolPrice: (symbol) => { return `/websocket/price/${symbol}` },
+    getSignalLogs: (signalId) => { return `/signal_logs/signal/${signalId}` }
 }

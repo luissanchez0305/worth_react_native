@@ -1,6 +1,7 @@
-import { Image, ScrollView, View } from "react-native";
+import { Image, ScrollView, StyleSheet, View } from "react-native";
 import styled from "styled-components/native";
 import { useNavigation } from "@react-navigation/native";
+import { SimpleContainer, ContainerText, Title, Channel } from "../../globalStyle";
 
 export default function ListMedia({ videos }) {
   const navigation = useNavigation();
@@ -27,7 +28,7 @@ export default function ListMedia({ videos }) {
       {videos.map((data, index) => {
         const uri = data.image;
         return (
-        <Container
+        <SimpleContainer
           onPress={() => {
             navigation.navigate("DetailVideo", {
               videoId: data.videoId,
@@ -39,27 +40,20 @@ export default function ListMedia({ videos }) {
           <VideoImage source={{uri}} />
           <ContainerText>
             <Title>{data.title}</Title>
-            <Tag>{data.tag}</Tag>
+            {/* <Tag style={styles.yellow}>{data.tag}</Tag> */}
             <Channel>{data.channel}</Channel>
           </ContainerText>
-        </Container>
+        </SimpleContainer>
       )})}
     </ScrollView>
   );
 }
 
-export const Container = styled.TouchableOpacity`
-  flex-direction: row;
-  margin-bottom: 6px;
-  padding-top: 10px;
-  padding-bottom: 14px;
-  border-bottom-width: 1px;
-  border-bottom-color: #45464f;
-`;
-
-export const ContainerText = styled.View`
-  flex: 1;
-`;
+const styles = StyleSheet.create({
+  yellow: {
+    color: "#cda434",
+  },
+})
 
 export const VideoImage = styled.Image`
   width: 85px;
@@ -68,21 +62,8 @@ export const VideoImage = styled.Image`
   border-radius: 4px;
 `;
 
-export const Title = styled.Text`
-  font-size: 15px;
-  font-weight: 700;
-  color: #ffffff;
-`;
-export const Channel = styled.Text`
-  padding-top: 4px;
-  font-size: 13px;
-  font-weight: 400;
-  color: #aaabb5;
-`;
-
 export const Tag = styled.Text`
   padding-top: 4px;
   font-size: 13px;
   font-weight: 400;
-  color: #cda434;
 `;

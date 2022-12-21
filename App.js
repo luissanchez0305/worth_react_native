@@ -5,6 +5,7 @@ import DetailVideoScreen from "./screen/DetailVideoScreen";
 import NotificationScreen from "./screen/Notification";
 import RegistreScreen from "./screen/RegistreScreen";
 import ProfileScreen from "./screen/ProfileScreen";
+import SignalLogsScreen from "./screen/SignalLogsScreen";
 import { StatusBar } from "react-native";
 import Tabs from "./navigation/Tabs";
 import { ValidationForm } from "./screen/ValidationForm";
@@ -25,8 +26,9 @@ export default function App() {
           <Stack.Screen name="DetailVideo" component={DetailVideoScreen} />
           <Stack.Screen name="Notification" component={NotificationScreen} />
           <Stack.Screen name="Profile" component={ProfileScreen} />
-          <Stack.Screen name="Registre" component={RegistreScreen} />
+          <Stack.Screen name="Register" component={RegistreScreen} />
           <Stack.Screen name="ValidationForm" component={ValidationForm} />
+          <Stack.Screen name="SignalLogs" component={SignalLogsScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </RootSiblingParent>

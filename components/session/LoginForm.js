@@ -142,7 +142,7 @@ export default function LoginForm(props) {
               Iniciar Sesión
             </Text>
           </ButtonLogin>
-          <ButtonRegistre onPress={() => navigation.navigate("Registre")}>
+          <ButtonRegistre onPress={() => navigation.navigate("Register")}>
             <Text style={{ color: "white", textAlign: "center", fontSize: 16 }}>
               Crear una cuenta
             </Text>

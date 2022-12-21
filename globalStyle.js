@@ -52,3 +52,70 @@ export const ContainerForm = styled.View`
   margin-horizontal: 16px;
   margin-vertical: 16px;
 `;
+
+export const Container = styled.TouchableOpacity`
+flex-direction: row;
+margin-bottom: 6px;
+border-radius: 8px;
+padding-top: 10px;
+padding-bottom: 14px;
+padding-right: 10px;
+padding-left: 10px;
+border-bottom-width: 1px;
+border-bottom-color: #45464f;
+background-color: #353c47;
+`;
+
+export const SimpleContainer = styled.TouchableOpacity`
+  flex-direction: row;
+  margin-bottom: 6px;
+  padding-top: 10px;
+  padding-bottom: 14px;
+  border-bottom-width: 1px;
+  border-bottom-color: #45464f;
+`;
+
+export const TextStatus = styled.Text`
+color: #8b8c97
+`;
+
+
+export const ContainerText = styled.View`
+flex: 1;
+`;
+
+export const ContainerInfo = styled.View`
+flex-direction: row;
+`;
+
+export const Image = styled.Image`
+width: 65px;
+height: 55px;
+margin-right: 8px;
+border-radius: 4px;
+`;
+
+export const Title = styled.Text`
+font-size: 15px;
+font-weight: 700;
+color: #ffffff;
+`;
+export const Tag = styled.Text`
+color: #ffffff;
+font-weight: 800;
+padding-right: 4px;
+`;
+
+export const Topic = styled.Text`
+  font-size: 13px;
+  font-weight: 600;
+  color: #cda434;
+  padding-right: 4px;
+`;
+
+export const Channel = styled.Text`
+  padding-top: 4px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #aaabb5;
+`;

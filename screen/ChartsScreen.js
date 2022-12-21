@@ -1,13 +1,9 @@
-import { Layout, HeadText, SubHeadText, CardContainer } from "../globalStyle";
+import { Layout, CardContainer } from "../globalStyle";
 import { GradientBackground } from "../components/GradientBackground";
 import ChartsFilterButton from "../components/ChartsFilterButton";
-import { get } from "react-native/Libraries/Utilities/PixelRatio";
-// import TradingChart from "../components/TradingChart/index";
-import { Button, ScrollView, Text, View } from "react-native";
+import { Button, Text, View } from "react-native";
 import ListEvents from "../components/list/ListEvents";
 import HeadSection from "../components/HeadSection";
-import styled from "styled-components/native";
-import { SafeAreaView } from "react-native";
 import { useEffect, useState } from "react";
 import { getDateFormat, getEvents, getTodayDateString } from "../utils";
 import ContainerView from "../components/ContainerView";
@@ -106,7 +102,7 @@ export default function ChartsScreen() {
                 </View>
               </View>
               {eventsLoading ? (
-                <Text style={{color: "#8b8c97"}}>Loading...</Text>
+                <Text style={{color: "#8b8c97"}}>Cargando...</Text>
               ) : (
                 eventsData.length > 0 ? (<ListEvents events={eventsData} /> ): (<Text style={{color: "#8b8c97"}}>No hay eventos para este dia</Text>)
               )}
@@ -129,8 +125,3 @@ const headSection = {
     icon: require("../assets/headIcons/content.png"), //TODO: put a calendar icon
   },
 };
-const EventFilter = styled.Button`
-  align-items: center;
-  padding: 8px;
-  border-radius: 8px;
-`;

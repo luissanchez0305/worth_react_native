@@ -1,5 +1,6 @@
 import { View } from "react-native";
 import styled from "styled-components/native";
+import { Title } from "../../globalStyle";
 
 export default function ListNews({ datas }) {
   return (
@@ -38,11 +39,6 @@ export const Image = styled.Image`
   border-radius: 4px;
 `;
 
-export const Title = styled.Text`
-  font-size: 15px;
-  font-weight: 700;
-  color: #ffffff;
-`;
 export const Tag = styled.Text`
   padding-top: 4px;
   font-size: 13px;

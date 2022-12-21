@@ -1,5 +1,6 @@
 import {
   Animated,
+  Button,
   Image,
   ScrollView,
   StyleSheet,
@@ -18,6 +19,7 @@ import {
   useComponentDidUpdate,
   useComponentWillUnmount  */
 } from "../../utils";
+import { Container, ContainerText, Title, Channel } from "../../globalStyle";
 
 const PanelView = ({ data = [] }) => {
 
@@ -49,8 +51,7 @@ const PanelView = ({ data = [] }) => {
 
 export default function ListSignals({ signals }) {
   const navigation = useNavigation();
-  const [expandedSignals, setExpandedSignals] = useState([]);
-  const [count, setCount] = useState(0)
+  const [signalList, setSignalList] = useState([]);
   let signalInterval;
   let _signals = [];
 
@@ -80,7 +81,7 @@ export default function ListSignals({ signals }) {
         ...signal,
       });
     }
-    setExpandedSignals(_signals);
+    setSignalList(_signals);
   };
 
   const updateSignals = () => {
@@ -95,7 +96,10 @@ export default function ListSignals({ signals }) {
             item.price = res.data
             array[index] = item
             _signals = array
-            setExpandedSignals(array);
+            if(_signals.length !== array.length){
+              console.log('different lengths')
+            }
+            setSignalList(array);
           })
           .catch((ex) => console.log(ex));
       }
@@ -129,13 +133,17 @@ export default function ListSignals({ signals }) {
       }}
       scrollEventThrottle={400}
     >
-      {expandedSignals.map((data, index) => {
+      {signalList.map((data, index) => {
         const uri = data.image;
         return (
-          <Container key={getRandomNumber(501, 600)}>
+          <Container key={index}>
             <ContainerText key={getRandomNumber(601, 700)}>
               <Title>{data.symbol}</Title>
               <Tag>{data.type}</Tag>
+              <EventFilter
+                title='Logs'
+                onPress={() => { navigation.navigate('SignalLogs', { signalId: data.id }) }}
+              />
               <Channel>
                 <Text>Price</Text>
                 <Datas>{data.price}</Datas>
@@ -152,7 +160,7 @@ export default function ListSignals({ signals }) {
                 <Text>Stop Lost</Text>
                 <Datas>{data.stopLost}</Datas>
               </Channel>
-                <Text style={styles.toggleText}>Take profits</Text>
+              <Text style={styles.toggleText}>Take profits</Text>
               <PanelView
                 key={getRandomNumber(0, 100)}
                 data={data.takeProfits}
@@ -179,35 +187,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export const Container = styled.TouchableOpacity`
-  flex-direction: row;
-  margin-bottom: 6px;
-  border-radius: 8px;
-  padding-top: 10px;
-  padding-bottom: 14px;
-  padding-right: 10px;
-  padding-left: 10px;
-  border-bottom-width: 1px;
-  border-bottom-color: #45464f;
-  background-color: #353c47;
-`;
-
-export const ContainerText = styled.View`
-  flex: 1;
-`;
-
-export const Title = styled.Text`
-  font-size: 15px;
-  font-weight: 700;
-  color: #ffffff;
-`;
-export const Channel = styled.Text`
-  padding-top: 4px;
-  font-size: 13px;
-  font-weight: 400;
-  color: #aaabb5;
-`;
-
 export const Tag = styled.Text`
   padding-top: 4px;
   font-size: 13px;
@@ -219,4 +198,10 @@ export const Datas = styled.Text`
   color: #ffffff;
   font-weight: 800;
   padding-right: 4px;
+`;
+
+const EventFilter = styled.Button`
+  align-items: center;
+  padding: 8px;
+  border-radius: 8px;
 `;
