@@ -11,7 +11,7 @@ export const endpoints = {
     getAllSymbols: "/symbols",
     getAllActiveSymbols: "/symbols/active",
     getAllUsers: "/users",
-    getUser: "/users", //&email=
+    getUser: (email) => { return `/users/email/${email}` }, //&email=
     getAllCurrencies: "/currencies",
     createNewUser: "/users",
     login: "/auth/login",

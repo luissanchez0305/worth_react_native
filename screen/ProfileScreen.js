@@ -15,17 +15,20 @@ import ButtonBack from "../components/ButtonBack";
 import { getStorageItem } from "../utils";
 import HeadDetail from "../components/HeadDetail";
 import RegistreForm from "../components/session/RegistreForm";
+import UserContext from "../context/UserContext";
 
 export default function ProfileScreen() {
+  const userContext = useContext(UserContext);
   const [userToken, setUserToken] = useState();
 
   const signout = async () => {
     await AsyncStorage.removeItem("@token");
+    userContext.user = null;
     setUserToken(null);
   };
 
   const token = async () => {
-    data = await getStorageItem("@token");
+    const data = await getStorageItem("@token");
     setUserToken(data);
   };
 
@@ -57,8 +60,8 @@ function Profile(props) {
       <ContainerForm>
         <HeadDetail title={"Mi Perfil"} detail={"Actualiza tus datos aqui"} />
       </ContainerForm>
+      <Button title="Logout" onPress={async () => await props.signout()} />
       <RegistreForm />
-      <Button title="Signout" onPress={async () => await props.signout()} />
     </>
   );
 }

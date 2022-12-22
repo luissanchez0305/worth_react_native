@@ -82,6 +82,10 @@ export const getStorageItem = async (data) => {
     return value
 }
 
+export const removeUserTokenStorage = async () => {
+    await AsyncStorage.removeItem('@token');
+}
+
 export const useComponentDidMount = handler => {
     return useEffect(() => handler(), []);
 };

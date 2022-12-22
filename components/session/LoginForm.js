@@ -23,7 +23,7 @@ export default function LoginForm(props) {
   } = useForm({
     defaultValues: {
       password: "",
-      email: "",
+      email: "luis.sanchez@esferasoluciones.com",
     },
   });
 
@@ -43,15 +43,16 @@ export default function LoginForm(props) {
             username: data.email,
             password: data.password,
           })
-          .then(async (data) => {
-            await AsyncStorage.setItem("@token", data.data.access_token);
+          .then(async (res) => {
+            await AsyncStorage.setItem("@token", res.data.access_token);
+
+            const user = await worthDB.get(epWorth.getUser(data.email));
+            
             userContext.user = {
-              token: data.data.access_token,
+              token: res.data.access_token,
               email: data.email,
+              isPremium: user.data.isPremium
             };
-            const user = await worthDB.get(epWorth.getUser, {
-              email: data.email,
-            });
             if (Platform.OS === "ios") {
               Toast.show(successLoginText, {
                 duration: Toast.durations.LONG,

@@ -9,6 +9,7 @@ import SignalLogsScreen from "./screen/SignalLogsScreen";
 import { StatusBar } from "react-native";
 import Tabs from "./navigation/Tabs";
 import { ValidationForm } from "./screen/ValidationForm";
+import SignalsScreen from "./screen/SignalsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +30,7 @@ export default function App() {
           <Stack.Screen name="Register" component={RegistreScreen} />
           <Stack.Screen name="ValidationForm" component={ValidationForm} />
           <Stack.Screen name="SignalLogs" component={SignalLogsScreen} />
+          <Stack.Screen name="Signals" component={SignalsScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </RootSiblingParent>
