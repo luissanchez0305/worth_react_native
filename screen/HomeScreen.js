@@ -22,10 +22,13 @@ import VideoContext from "../context/VideoContext";
 import { GradientBackground } from "../components/GradientBackground";
 import { getDevicePushTokenAsync } from "expo-notifications";
 import ListEvents from "../components/list/ListEvents";
+import UserContext from "../context/UserContext";
+import { getStorageItem } from "../utils";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
   const videoContext = useContext(VideoContext)
+  const userContext = useContext(UserContext)
   const [loadingMarquee, setLoadingMarquee] = useState(true);
   const [loadingEvents, setLoadingEvents] = useState(true);
   const [pricesPromiseStatus, setPricesPromiseStatus] = useState('Obteniendo simbolos...');
@@ -105,7 +108,16 @@ export default function HomeScreen() {
     }
   }
 
+  const getStorageData = async () => {
+    const dataString = await getStorageItem("@worthapp");
+    if(dataString){
+      const data = JSON.parse(dataString)
+      userContext.user = data
+    }
+  }
+
   const init = async () => {
+    getStorageData();
     getPrices();
     getVideos();
 

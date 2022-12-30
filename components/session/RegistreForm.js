@@ -11,49 +11,74 @@ import PhoneInput from "react-native-phone-number-input";
 import styled from "styled-components/native";
 import Toast from "react-native-root-toast";
 import HeadDetail from "../HeadDetail";
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext, useEffect, useMemo } from "react";
 import UserContext from "../../context/UserContext";
 
 import { useForm, Controller } from "react-hook-form";
 import { CardContainer } from "../../globalStyle";
 
-export default function RegistreForm() {
+export default function RegistreForm({user,setValidate}) {
   const userContext = useContext(UserContext);
   const navigation = useNavigation();
-  const phoneInput = useRef(null);
   const successRegisterText = "¡Usuario registrado exitosamente!";
   const failRegisterText = "¡Error, Usuario no ha sido registrado!";
+  const userData = useRef();
 
+  const initialState = {
+    name: "",
+    lastname: "",
+    email: "",
+    phone: "",
+    password: "",
+    isPremium: false
+  }
   const {
+    reset,
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      fullName: "",
-      fullLastName: "",
-      email: "",
-      phone: "",
-      password: "",
-    },
+    defaultValues: initialState,
   });
 
   const onSubmit = (data) => {
-    if (data) {
-      data = {
-        fullName: data.fullName,
-        fullLastName: data.fullLastName,
-        email: data.email.toLowerCase(),
-        phone: data.phone,
-        password: data.password,
-      };
-    }
+    if(user) {
+      worthDB.put(epWorth.updateUser(userData.current.email), {
+        ...data,
+        phone: userData.current.phone,
+        isPremium: userData.current.isPremium,
+      })
+      .then(() => {
+        userContext.user = { ...userContext.user }
+        userContext.user.email= data.email;
 
+        if (Platform.OS === "ios") {
+          Toast.show(successRegisterText, {
+            duration: Toast.durations.LONG,
+            position: Toast.positions.CENTER,
+          });
+        } else {
+          ToastAndroid.showWithGravity(
+            successRegisterText,
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER
+          );
+        }
+
+        if(data.email !== userData.current.email){
+          userContext.user.isEmailValidated = false
+          setValidate(false)
+          navigation.navigate("ValidationForm", {
+            email: data.email,
+          });
+        }
+      })
+    } else {
     worthDB
       .post(epWorth.createNewUser, {
         email: data.email,
-        name: data.fullName,
-        lastname: data.fullLastName,
+        name: data.name,
+        lastname: data.lastname,
         password: data.password,
         phone: data.phone,
       })
@@ -63,7 +88,7 @@ export default function RegistreForm() {
             duration: Toast.durations.LONG,
             position: Toast.positions.CENTER,
           });
-          userContext.user = { email: data.email };
+          userContext.user = { email: data.email, isEmailValidated: false, isSMSValidated: false };
           navigation.navigate("ValidationForm", {
             email: data.email,
           });
@@ -73,6 +98,7 @@ export default function RegistreForm() {
             ToastAndroid.LONG,
             ToastAndroid.CENTER
           );
+          userContext.user = { email: data.email, isEmailValidated: false, isSMSValidated: false };
           navigation.navigate("ValidationForm", {
             email: data.email,
           });
@@ -93,7 +119,31 @@ export default function RegistreForm() {
           );
         }
       });
+    }
   };
+
+  const getUserInfo = async () => {
+    if(user){
+      const res = await worthDB.get(epWorth.getUser(user))
+      const basicData = {
+        name: res.data.name,
+        lastname: res.data.lastname,
+        email: res.data.email,
+      }
+
+      userData.current = {
+        ...basicData, 
+        phone: res.data.phone, 
+        isPremium: res.data.isPremium
+      }
+
+      reset({...basicData})
+    }
+  }
+  
+  useEffect(() => {
+    getUserInfo()
+  }, [])
 
   return (
     <View>
@@ -105,47 +155,9 @@ export default function RegistreForm() {
           }}
           render={({ field: { onChange, value } }) => (
             <InputGroup>
-              <Label>Nombre Completo</Label>
-              <Input
-                placeholder="useless placeholder"
-                value={value}
-                onChangeText={onChange}
-              />
-            </InputGroup>
-          )}
-          name="fullName"
-        />
-        {errors.fullName && <Text>Este campo es requerido.</Text>}
-
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, value } }) => (
-            <InputGroup>
-              <Label>Apellido Completo</Label>
-              <Input
-                placeholder="useless placeholder"
-                value={value}
-                onChangeText={onChange}
-              />
-            </InputGroup>
-          )}
-          name="fullLastName"
-        />
-        {errors.fullLastName && <Text>Este campo es requerido.</Text>}
-
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, value } }) => (
-            <InputGroup>
               <Label>Correo</Label>
               <Input
-                placeholder="useless placeholder"
+                placeholder="Correo"
                 keyboardType="email-address"
                 value={value}
                 onChangeText={onChange}
@@ -163,9 +175,46 @@ export default function RegistreForm() {
           }}
           render={({ field: { onChange, value } }) => (
             <InputGroup>
+              <Label>Nombre Completo</Label>
+              <Input
+                placeholder="Nombre Completo"
+                value={value}
+                onChangeText={onChange}
+              />
+            </InputGroup>
+          )}
+          name="name"
+        />
+        {errors.name && <Text>Este campo es requerido.</Text>}
+
+        <Controller
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, value } }) => (
+            <InputGroup>
+              <Label>Apellido Completo</Label>
+              <Input
+                placeholder="Apellido Completo"
+                value={value}
+                onChangeText={onChange}
+              />
+            </InputGroup>
+          )}
+          name="lastname"
+        />
+        {errors.lastname && <Text>Este campo es requerido.</Text>}
+        
+        {user ? <></> : <Controller
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, value } }) => (
+            <InputGroup>
               <Label>Teléfono</Label>
               <PhoneInput
-                ref={phoneInput}
                 defaultValue={value}
                 defaultCode="PA"
                 layout="first"
@@ -173,7 +222,7 @@ export default function RegistreForm() {
                 withDarkTheme
                 disableArrowIcon
                 keyboardType="phone-pad"
-                placeholder="useless placeholder"
+                placeholder="Teléfono"
                 textContainerStyle={{
                   backgroundColor: "#202226",
                   borderRadius: 8,
@@ -197,10 +246,11 @@ export default function RegistreForm() {
             </InputGroup>
           )}
           name="phone"
-        />
+        />}
         {errors.phone && <Text>Este campo es requerido.</Text>}
-
-        <Controller
+        
+        
+        {user ? <></> : <Controller
           control={control}
           rules={{
             required: true,
@@ -210,7 +260,7 @@ export default function RegistreForm() {
             <InputGroup>
               <Label>Contraseña</Label>
               <Input
-                placeholder="useless placeholder"
+                placeholder="Contraseña"
                 value={value}
                 secureTextEntry={true}
                 onChangeText={onChange}
@@ -218,12 +268,14 @@ export default function RegistreForm() {
             </InputGroup>
           )}
           name="password"
-        />
+        />}
+        
         {errors.password && <Text>Este campo es requerido.</Text>}
+
         <InputGroup>
           <ButtonLogin onPress={handleSubmit(onSubmit)}>
             <Text style={{ color: "black", textAlign: "center", fontSize: 16 }}>
-              Crear cuenta
+              {user ? 'Guardar cambios' : 'Crear cuenta'}
             </Text>
           </ButtonLogin>
         </InputGroup>

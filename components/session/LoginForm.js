@@ -22,7 +22,7 @@ export default function LoginForm(props) {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      password: "",
+      password: "qwertyuiop",
       email: "luis.sanchez@esferasoluciones.com",
     },
   });
@@ -44,15 +44,17 @@ export default function LoginForm(props) {
             password: data.password,
           })
           .then(async (res) => {
-            await AsyncStorage.setItem("@token", res.data.access_token);
-
             const user = await worthDB.get(epWorth.getUser(data.email));
-            
-            userContext.user = {
+            const contextLoginData = {
               token: res.data.access_token,
               email: data.email,
-              isPremium: user.data.isPremium
+              isPremium: user.data.isPremium,
+              isSMSValidated: user.data.SMSCode.length === 0,
+              isEmailValidated: user.data.emailCode.length === 0
             };
+            await AsyncStorage.setItem("@worthapp", JSON.stringify(contextLoginData));
+            
+            userContext.user = contextLoginData;
             if (Platform.OS === "ios") {
               Toast.show(successLoginText, {
                 duration: Toast.durations.LONG,
@@ -107,7 +109,7 @@ export default function LoginForm(props) {
             <InputGroup>
               <Label>Correo</Label>
               <Input
-                placeholder="useless placeholder"
+                placeholder="Correo"
                 value={value}
                 keyboardType="email-address"
                 onChangeText={onChange}
@@ -127,7 +129,7 @@ export default function LoginForm(props) {
             <InputGroup>
               <Label>Contraseña</Label>
               <Input
-                placeholder="useless placeholder"
+                placeholder="Contraseña"
                 value={value}
                 secureTextEntry={true}
                 onChangeText={onChange}

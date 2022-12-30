@@ -9,8 +9,7 @@ import ListMedia from "../components/list/ListMedia";
 import HeadSection from "../components/HeadSection";
 import VideoContext from "../context/VideoContext";
 import ListNews from "../components/list/ListNews";
-import { ScrollView, View } from "react-native";
-import { getStorageItem } from "../utils";
+import { ScrollView, View } from "react-native";  
 import jwt_decode from "jwt-decode";
 
 export default function NewsScreen() {

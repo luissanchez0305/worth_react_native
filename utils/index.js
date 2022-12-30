@@ -83,7 +83,7 @@ export const getStorageItem = async (data) => {
 }
 
 export const removeUserTokenStorage = async () => {
-    await AsyncStorage.removeItem('@token');
+    await AsyncStorage.removeItem('@worthapp');
 }
 
 export const useComponentDidMount = handler => {

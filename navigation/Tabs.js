@@ -76,6 +76,7 @@ export default function Tabs() {
                 }}
               />
             ),
+            unmountOnBlur: true,
           }}
           component={SignalsScreen}
         />

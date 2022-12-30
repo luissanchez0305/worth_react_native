@@ -10,14 +10,16 @@ import UserContext from "../context/UserContext";
 
 export default function SignalsScreen({ navigation }) {
   const userContext = useContext(UserContext);
-  const [userToken, setUserToken] = useState();
+  const [userToken, setUserToken] = useState(null);
   const [userIsPremium, setUserIsPremium] = useState(false)
   const [signals, setSignals] = useState([]);
 
   const token = async () => {
-    const data = await getStorageItem("@token");
-    
-    setUserToken(data);
+    const dataString = await getStorageItem("@worthapp");
+    if(dataString){
+      const data = JSON.parse(dataString)
+      setUserToken(data.token);
+    }
   };
 
   const getSignals = async () => {
@@ -25,6 +27,9 @@ export default function SignalsScreen({ navigation }) {
     setSignals(res.data);
   };
 
+  const isUserValidated = () => {
+    return userContext.user.isEmailValidated && userContext.user.isSMSValidated;
+  }
   useEffect(() => {
 
     getSignals();
@@ -47,14 +52,19 @@ export default function SignalsScreen({ navigation }) {
           <Layout>
             <SafeAreaView>
               <CardContainer style={{ height: "100%" }}>
-              {userContext.user.isPremium ? 
+              {
+                userContext.user.isPremium && 
+                isUserValidated() ? 
                   signals.length ? (
                     <ListSignals signals={signals}/>
                   ) : (
                     <Text>Cargando...</Text>
                   )
                 :
-                <TextStatus>Usuario no es premium</TextStatus>}
+                <TextStatus>
+                  {
+                    !isUserValidated() ? 'Por favor validar su email y celular' : 'Usuario no es premium'
+                  }</TextStatus>}
               </CardContainer>
             </SafeAreaView>
           </Layout>
@@ -72,8 +82,4 @@ export default function SignalsScreen({ navigation }) {
       </GradientBackground>
     );
   }
-}
-
-function Login() {
-  return <LoginForm />;
 }

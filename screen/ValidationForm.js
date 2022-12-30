@@ -2,40 +2,93 @@ import styled from "styled-components/native";
 import React, { useContext, useState } from "react";
 import worthDB, { endpoints as epWorth } from "../api/localDB";
 import UserContext from "../context/UserContext";
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, Button as SignoutButton, TouchableOpacity } from "react-native";
 import HeadDetail from "../components/HeadDetail";
-import { useRoute } from "@react-navigation/native";
+import { Link, useNavigation, useRoute } from "@react-navigation/native";
 import Toast from "react-native-root-toast";
 import { GradientBackground } from "../components/GradientBackground";
 import { CardContainer, Layout } from "../globalStyle";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export const ValidationForm = (props) => {
+  const navigation = useNavigation();
+  const cellphoneValidatedText = "Celular validado";
+  const emailValidatedText = "Email validado";
+  const codeNotValidText = "Codigo no valido";
+  const sendAgainText = 'Enviar otro vez'
   const userContext = useContext(UserContext);
   const [emailCode, setEmailCode] = useState("");
   const [smsCode, setSMSCode] = useState("");
+  
   const [emailValidButtonText, setEmailValidButtonText] =
-    useState("Validar email");
-  const [enabledEmailValidateButton, setEnabledEmailValidateButton] =
-    useState(true);
-  const [smsValidButtonText, setSMSValidButtonText] =
-    useState("Validar celular");
-  const [enabledSMSValidateButton, setEnabledSMSValidateButton] =
-    useState(true);
-  const codeNotValidText = "Codigo no valido";
+    useState(userContext.user.isEmailValidated ? emailValidatedText : "Validar email");
 
-  const route = useRoute();
-  const { email } = route.params;
+  const [enabledEmailValidateButton, setEnabledEmailValidateButton] =
+    useState(!userContext.user.isEmailValidated);
+
+  const [smsValidButtonText, setSMSValidButtonText] =
+    useState(userContext.user.isSMSValidated ? cellphoneValidatedText : "Validar celular");
+
+  const [enabledSMSValidateButton, setEnabledSMSValidateButton] =
+    useState(!userContext.user.isSMSValidated);
+
+  const [sendEmailAgainText, setSendEmailAgainText] = useState(sendAgainText)
+  const [sendEmailAgainEnabled, setSendEmailAgainEnabled] = useState(true)
+  const [sendSMSAgainText, setSendSMSAgainText] = useState(sendAgainText)
+  const [sendSMSAgainEnabled, setSendSMSAgainEnabled] = useState(true)
+  
+
+  const sendCodeAgain = async (type) => {
+    switch(type){
+      case 'email':
+        try{
+          const resEmail = await worthDB.post(epWorth.sendEmailCode, {
+            email: userContext.user.email,
+          })
+
+          console.log('resEmail', resEmail, userContext.user.email)
+    
+          setSendEmailAgainText('Correo enviado...')
+          setSendEmailAgainEnabled(false)
+          setTimeout(() => {
+            setSendEmailAgainText(sendAgainText)
+            setSendEmailAgainEnabled(true)
+          }, 300000)
+        } catch(e) {
+          setSendEmailAgainText('Error. Intente mas tarde')
+          setSendEmailAgainEnabled(false)
+        }
+        break;
+      case 'sms':
+        try{
+          await worthDB.post(epWorth.sendSMSCode, {
+            email: userContext.user.email,
+          })
+    
+          setSendSMSAgainText('SMS enviado...')
+          setSendSMSAgainEnabled(false)
+          setTimeout(() => {
+            setSendSMSAgainText(sendAgainText)
+            setSendSMSAgainEnabled(true)
+          }, 300000)
+        } catch(e) {
+          setSendSMSAgainText(`Error. Intente mas tarde. ${e}`)
+          setSendSMSAgainEnabled(false)
+        }
+        break;
+    }
+  }
 
   const submitCode = async (type) => {
     switch (type) {
       case "email":
-        const resEmail = await worthDB.post(epWorth.sendEmailCode, {
-          email,
+        const resEmail = await worthDB.post(epWorth.validateEmailCode, {
+          email: userContext.user.email,
           code: emailCode,
         });
         if (resEmail.data.valid) {
-          setEmailValidButtonText("Email validado");
+          userContext.user.isEmailValidated = true
+          setEmailValidButtonText(emailValidatedText);
           setEnabledEmailValidateButton(false);
         } else {
           Toast.show(codeNotValidText, {
@@ -45,18 +98,23 @@ export const ValidationForm = (props) => {
         }
         break;
       case "sms":
-        const resSMS = await worthDB.post(epWorth.sendSMSCode, {
-          email,
-          code: smsCode,
-        });
-        if (resSMS.data.valid) {
-          setSMSValidButtonText("Celular validado");
-          setEnabledSMSValidateButton(false);
-        } else {
-          Toast.show(codeNotValidText, {
-            duration: Toast.durations.LONG,
-            position: Toast.positions.CENTER,
+        try{
+          const resSMS = await worthDB.post(epWorth.validateSMSCode, {
+            email: userContext.user.email,
+            code: smsCode,
           });
+          if (resSMS.data.valid) {
+            userContext.user.isSMSValidated = true
+            setSMSValidButtonText(cellphoneValidatedText);
+            setEnabledSMSValidateButton(false);
+          } else {
+            Toast.show(codeNotValidText, {
+              duration: Toast.durations.LONG,
+              position: Toast.positions.CENTER,
+            });
+          }
+        } catch(e) {
+          console.log('error', e)
         }
         break;
     }
@@ -72,21 +130,26 @@ export const ValidationForm = (props) => {
                 <HeadDetail
                   title={"Validación de contactos"}
                   detail={
-                    "Valida tu correo y número de teléfono. Al presionar en 'Enviar', recibirás un mensaje con un codigo que debes usar aquí"
+                    "Valida tu correo y número de teléfono. Pronto recibirás un mensaje con un código que debes usar aquí"
                   }
                 />
               </ContainerForm>
+              <SignoutButton title="Logout" onPress={async () => await props.signout()} />
               <CardContainer style={{ height: "100%" }}>
                 <InputGroup>
                   {enabledEmailValidateButton ? (
-                    <Label>Código enviado al email</Label>
-                  ) : null}
-                  {enabledEmailValidateButton ? (
-                    <Input
-                      placeholder="useless placeholder"
-                      value={emailCode}
-                      onChangeText={(emaiValue) => setEmailCode(emaiValue)}
-                    />
+                    <>
+                      <Label>Código enviado al email</Label>
+                      <ContainerCleanButton onPress={() => sendCodeAgain('email')} disabled={!sendEmailAgainEnabled}>
+                        <CleanButton>{sendEmailAgainText}</CleanButton>
+                      </ContainerCleanButton>
+                      <Input
+                        keyboardType='numeric'
+                        placeholder="Codigo enviado al email"
+                        value={emailCode}
+                        onChangeText={(emaiValue) => setEmailCode(emaiValue)}
+                      />
+                    </>
                   ) : null}
                   <Button
                     onPress={() => submitCode("email")}
@@ -110,14 +173,18 @@ export const ValidationForm = (props) => {
                 </InputGroup>
                 <InputGroup>
                   {enabledSMSValidateButton ? (
-                    <Label>Código enviado a SMS</Label>
-                  ) : null}
-                  {enabledSMSValidateButton ? (
-                    <Input
-                      placeholder="useless placeholder"
-                      value={smsCode}
-                      onChangeText={(smsValue) => setSMSCode(smsValue)}
-                    />
+                    <>
+                      <Label>Código enviado a SMS</Label>
+                      <ContainerCleanButton onPress={() => sendCodeAgain('sms')} disabled={!sendSMSAgainEnabled}>
+                        <CleanButton>{sendSMSAgainText}</CleanButton>
+                      </ContainerCleanButton>
+                      <Input
+                        keyboardType='numeric'
+                        placeholder="Codigo enviado a SMS"
+                        value={smsCode}
+                        onChangeText={(smsValue) => setSMSCode(smsValue)}
+                      />
+                    </>
                   ) : null}
                   <Button
                     onPress={() => submitCode("sms")}
@@ -139,6 +206,12 @@ export const ValidationForm = (props) => {
                     </Text>
                   </Button>
                 </InputGroup>
+                {
+                  !enabledEmailValidateButton && !enabledSMSValidateButton ? 
+                    <SignoutButton title="Home"  onPress={() => navigation.navigate("Home")}/> :
+                    null
+                }
+                
               </CardContainer>
             </View>
           </SafeAreaView>
@@ -184,4 +257,16 @@ const Button = styled.TouchableOpacity`
   border-radius: 8px;
   margin-vertical: 12px;
   margin-horizontal: 3%;
+`;
+
+
+const ContainerCleanButton = styled.TouchableOpacity`
+  flex-direction: row;
+  margin-vertical: 8px;
+`;
+
+const CleanButton = styled.Text`
+  color: #fff;
+  font-size: 17px;
+  margin-top: 8px;
 `;

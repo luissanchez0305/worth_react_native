@@ -10,10 +10,28 @@ import { StatusBar } from "react-native";
 import Tabs from "./navigation/Tabs";
 import { ValidationForm } from "./screen/ValidationForm";
 import SignalsScreen from "./screen/SignalsScreen";
+import { LogBox } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  if (__DEV__) {
+    const ignoreWarns = [
+      "Animated:",
+    ];
+  
+    const warn = console.warn;
+    console.warn = (...arg) => {
+      for (const warning of ignoreWarns) {
+        if (arg[0].startsWith(warning)) {
+          return;
+        }
+      }
+      warn(...arg);
+    };
+  
+    LogBox.ignoreLogs(ignoreWarns);
+  }
   return (
     <RootSiblingParent>
       <NavigationContainer>

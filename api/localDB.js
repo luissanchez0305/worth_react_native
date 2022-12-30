@@ -14,10 +14,13 @@ export const endpoints = {
     getUser: (email) => { return `/users/email/${email}` }, //&email=
     getAllCurrencies: "/currencies",
     createNewUser: "/users",
+    updateUser: (email) => { return `/users/${email}` },
     login: "/auth/login",
     getAllSignals: "/signals",
-    sendEmailCode: "/messages/email-code-validate", //&email=
-    sendSMSCode: "/messages/sms-code-validate", //&email=
+    validateEmailCode: "/messages/email-code-validate", //&email= &code=
+    validateSMSCode: "/messages/sms-code-validate", //&email= &code=
+    sendEmailCode: "/messages/email-code-send", //&email=
+    sendSMSCode: "/messages/sms-code-send", //&email=
     getSymbolPrice: (symbol) => { return `/websocket/price/${symbol}` },
     getSignalLogs: (signalId) => { return `/signal_logs/signal/${signalId}` }
 }

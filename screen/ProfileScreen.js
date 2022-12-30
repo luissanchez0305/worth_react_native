@@ -16,20 +16,32 @@ import { getStorageItem } from "../utils";
 import HeadDetail from "../components/HeadDetail";
 import RegistreForm from "../components/session/RegistreForm";
 import UserContext from "../context/UserContext";
+import { ValidationForm } from "./ValidationForm";
+import SignalsScreen from "./SignalsScreen";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ProfileScreen() {
+  const navigation = useNavigation()
   const userContext = useContext(UserContext);
   const [userToken, setUserToken] = useState();
+  const [userValidated, setUserValidated] = useState(false)
 
   const signout = async () => {
-    await AsyncStorage.removeItem("@token");
+    await AsyncStorage.removeItem("@worthapp");
     userContext.user = null;
     setUserToken(null);
   };
 
   const token = async () => {
-    const data = await getStorageItem("@token");
-    setUserToken(data);
+    const dataString = await getStorageItem("@worthapp");
+    const data = JSON.parse(dataString)
+    if(userContext.user){
+      setUserValidated(userContext.user.isEmailValidated && userContext.user.isSMSValidated);
+      setUserToken(data.token);
+    } else {
+      setUserValidated(false);
+      setUserToken();
+    }
   };
 
   useEffect(() => {
@@ -43,7 +55,9 @@ export default function ProfileScreen() {
           <SafeAreaView>
             <ButtonBack />
             {userToken ? (
-              <Profile signout={signout} />
+              userValidated ? 
+                <Profile signout={signout} user={userContext.user.email} setValidate={setUserValidated} /> :
+                <ValidationForm signout={signout} />
             ) : (
               <LoginForm getToken={token} />
             )}
@@ -61,7 +75,7 @@ function Profile(props) {
         <HeadDetail title={"Mi Perfil"} detail={"Actualiza tus datos aqui"} />
       </ContainerForm>
       <Button title="Logout" onPress={async () => await props.signout()} />
-      <RegistreForm />
+      <RegistreForm user={props.user} setValidate={props.setValidate} />
     </>
   );
 }
