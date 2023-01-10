@@ -22,5 +22,6 @@ export const endpoints = {
     sendEmailCode: "/messages/email-code-send", //&email=
     sendSMSCode: "/messages/sms-code-send", //&email=
     getSymbolPrice: (symbol) => { return `/websocket/price/${symbol}` },
-    getSignalLogs: (signalId) => { return `/signal_logs/signal/${signalId}` }
+    getSignalLogs: (signalId) => { return `/signal_logs/signal/${signalId}` },
+    sendDeviceData: "/users/send-device-data"
 }

@@ -76,6 +76,9 @@ export default function HomeScreen() {
       })
       .catch((ex) => {
         setPricesPromiseStatus(`Error al cargar symbolos: ${ex}`)
+      })
+      .finally(() => {
+        setPricesPromiseStatus(`finish loading`)
       });
   }
 
@@ -122,12 +125,17 @@ export default function HomeScreen() {
     getVideos();
 
     const today = getTodayDateString()
-    const events = await getEvents(today);
-    if(events.length > 0){
-      setEventsData(events);
-      setLoadingEvents(false);
-    } else {
-      setEventsPromiseStatus('No hay eventos para hoy')
+    try{
+      const events = await getEvents(today);
+      if(events.length > 0){
+        setEventsData(events);
+        setLoadingEvents(false);
+      } else {
+        setEventsPromiseStatus('No hay eventos para hoy')
+      }
+    }
+    catch(e){
+      console.log(e)
     }
   }
   

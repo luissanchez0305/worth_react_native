@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
-import HSNZ from 'react-native-hsnz-marquee'
+import MarqueeView from 'react-native-marquee-view';
 import MarqueeItem from './MarqueeItem.js';
  
 const NO_PER_SCREEN = 4;
@@ -10,7 +10,7 @@ const itemWidth = screenWidth / NO_PER_SCREEN;
 export default class Marquee extends Component {
   constructor(props){
     super(props);
-    this.end = this.end.bind(this);
+    // this.end = this.end.bind(this);
     const {data} = this.props;
     this.state ={
       data,
@@ -64,15 +64,13 @@ export default class Marquee extends Component {
     const {data} = this.getWrappedData();
     return (
       <View style={styles.container}>
-        <HSNZ 
+        <MarqueeView 
         style={{
           height:43,
           width:Math.floor(screenWidth)
         }}
-        onEnd = {this.end}
-        loop = {-1}
         autoPlay = {true}
-        speed={20}
+        speed={0.1}
         >
           <View style={{
             flex: 1,
@@ -85,7 +83,7 @@ export default class Marquee extends Component {
               this._renderItem(item, index)
             ))}
           </View>
-        </HSNZ>
+        </MarqueeView>
       </View>
     );
   }
