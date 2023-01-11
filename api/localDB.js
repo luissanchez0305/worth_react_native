@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { Platform } from 'react-native';
-import { IOS_API_URL, ANDROID_API_URL } from '@env';
+import { IOS_API_URL, ANDROID_API_URL, API_URL } from '@env';
+import * as Device from 'expo-device';
 
 const worthDB = axios.create({
-    baseURL: Platform.OS == "android" ? ANDROID_API_URL : IOS_API_URL
+    baseURL: Device.deviceName === 'sdk_gphone64_x86_64' ? 
+    (Platform.OS == "android" ? ANDROID_API_URL : IOS_API_URL) : API_URL
 })
 export default worthDB;
 

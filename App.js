@@ -15,6 +15,7 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { useEffect, useRef } from "react";
 import worthDB, { endpoints as epWorth } from "./api/localDB";
+import { getStorageItem } from "./utils";
 
 const Stack = createNativeStackNavigator();
 
@@ -61,11 +62,19 @@ export default function App() {
         return;
       }
       token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log('Device.deviceId', Device.deviceId)
-      await worthDB.post(epWorth.sendDeviceData,
+
+      const dataString = await getStorageItem("@worthapp");
+      let userEmail = '';
+      if(dataString){
+        const data = JSON.parse(dataString);
+        userEmail = data.email;
+      }
+      await worthDB.post(epWorth.sendDeviceData, 
         {
-          deviceId: 'Device.deviceId',
+          deviceId: Device.osBuildId,
           deviceName: Device.deviceName,
+          userEmail,
+          token
         });
     } else {
       alert('Must use physical device for Push Notifications');
@@ -86,8 +95,12 @@ export default function App() {
   useEffect(() => {
     registerForPushNotificationsAsync();
     return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current);
-      Notifications.removeNotificationSubscription(responseListener.current);
+      if (notificationListener.current) {
+        Notifications.removeNotificationSubscription(notificationListener.current);
+      }
+      if(responseListener.current) {
+        Notifications.removeNotificationSubscription(responseListener.current);
+      }
     };
   }, []);
 
