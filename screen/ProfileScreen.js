@@ -35,7 +35,7 @@ export default function ProfileScreen() {
   const token = async () => {
     const dataString = await getStorageItem("@worthapp");
     const data = JSON.parse(dataString)
-    if(userContext.user){
+    if(userContext.user && data){
       setUserValidated(userContext.user.isEmailValidated && userContext.user.isSMSValidated);
       setUserToken(data.token);
     } else {

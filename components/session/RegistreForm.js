@@ -16,11 +16,13 @@ import UserContext from "../../context/UserContext";
 
 import { useForm, Controller } from "react-hook-form";
 import { CardContainer } from "../../globalStyle";
+import { raiseToast } from "../../utils";
 
 export default function RegistreForm({user,setValidate}) {
   const userContext = useContext(UserContext);
   const navigation = useNavigation();
   const successRegisterText = "¡Usuario registrado exitosamente!";
+  const successUpdateText = "¡Usuario actualizado exitosamente!";
   const failRegisterText = "¡Error, Usuario no ha sido registrado!";
   const userData = useRef();
 
@@ -52,18 +54,7 @@ export default function RegistreForm({user,setValidate}) {
         userContext.user = { ...userContext.user }
         userContext.user.email= data.email;
 
-        if (Platform.OS === "ios") {
-          Toast.show(successRegisterText, {
-            duration: Toast.durations.LONG,
-            position: Toast.positions.CENTER,
-          });
-        } else {
-          ToastAndroid.showWithGravity(
-            successRegisterText,
-            ToastAndroid.LONG,
-            ToastAndroid.CENTER
-          );
-        }
+        raiseToast(successUpdateText)
 
         if(data.email !== userData.current.email){
           userContext.user.isEmailValidated = false
@@ -82,49 +73,31 @@ export default function RegistreForm({user,setValidate}) {
         password: data.password,
         phone: data.phone,
       })
-      .then((data) => {
-        if (Platform.OS === "ios") {
-          Toast.show(successRegisterText, {
-            duration: Toast.durations.LONG,
-            position: Toast.positions.CENTER,
-          });
-          userContext.user = { email: data.email, isEmailValidated: false, isSMSValidated: false };
-          navigation.navigate("ValidationForm", {
-            email: data.email,
-          });
-        } else {
-          ToastAndroid.showWithGravity(
-            successRegisterText,
-            ToastAndroid.LONG,
-            ToastAndroid.CENTER
-          );
-          userContext.user = { email: data.email, isEmailValidated: false, isSMSValidated: false };
-          navigation.navigate("ValidationForm", {
-            email: data.email,
-          });
+      .then(async (data) => {
+        raiseToast(successRegisterText)
+        userContext.user = { email: data.email, isEmailValidated: false, isSMSValidated: false };
+        navigation.navigate("ValidationForm", {
+          email: data.email,
+        });
+
+        const dData = await AsyncStorage.getItem("@worthapp.device")
+
+        if(dData){
+          const deviceData = JSON.parse(dData);
+          await worthDB.put(epWorth.deleteOrphanDevice(deviceData.deviceId));
+
         }
       })
       .catch((error) => {
+        raiseToast(failRegisterText)
         console.log("error", error);
-        if (Platform.OS === "ios") {
-          Toast.show(failRegisterText, {
-            duration: Toast.durations.LONG,
-            position: Toast.positions.CENTER,
-          });
-        } else {
-          ToastAndroid.showWithGravity(
-            failRegisterText,
-            ToastAndroid.LONG,
-            ToastAndroid.CENTER
-          );
-        }
       });
     }
   };
 
   const getUserInfo = async () => {
     if(user){
-      const res = await worthDB.get(epWorth.getUser(user))
+      const res = await worthDB.get(epWorth.getUserByEmail(user))
       const basicData = {
         name: res.data.name,
         lastname: res.data.lastname,

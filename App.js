@@ -16,6 +16,7 @@ import * as Notifications from 'expo-notifications';
 import { useEffect, useRef } from "react";
 import worthDB, { endpoints as epWorth } from "./api/localDB";
 import { getStorageItem } from "./utils";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Stack = createNativeStackNavigator();
 
@@ -69,13 +70,16 @@ export default function App() {
         const data = JSON.parse(dataString);
         userEmail = data.email;
       }
-      await worthDB.post(epWorth.sendDeviceData, 
-        {
-          deviceId: Device.osBuildId,
-          deviceName: Device.deviceName,
-          userEmail,
-          token
-        });
+      const deviceData = 
+      {
+        deviceId: Device.osBuildId,
+        deviceName: Device.deviceName,
+        userEmail,
+        token
+      };
+
+      await worthDB.patch(epWorth.sendDeviceData, deviceData);
+      await AsyncStorage.setItem("@worthapp.device", JSON.stringify(deviceData));
     } else {
       alert('Must use physical device for Push Notifications');
     }

@@ -13,10 +13,11 @@ export const endpoints = {
     getAllSymbols: "/symbols",
     getAllActiveSymbols: "/symbols/active",
     getAllUsers: "/users",
-    getUser: (email) => { return `/users/email/${email}` }, //&email=
+    getUserByEmail: (email) => { return `/users/email/${email}` }, //&email=
     getAllCurrencies: "/currencies",
     createNewUser: "/users",
     updateUser: (email) => { return `/users/${email}` },
+    updateDeviceUser: (email) => { return `/users/device/${email}` },
     login: "/auth/login",
     getAllSignals: "/signals",
     validateEmailCode: "/messages/email-code-validate", //&email= &code=
@@ -25,5 +26,6 @@ export const endpoints = {
     sendSMSCode: "/messages/sms-code-send", //&email=
     getSymbolPrice: (symbol) => { return `/websocket/price/${symbol}` },
     getSignalLogs: (signalId) => { return `/signal_logs/signal/${signalId}` },
-    sendDeviceData: "/users/send-device-data"
+    sendDeviceData: "/orphan-device/send-device-data",
+    deleteOrphanDevice: (email) => {return `/orphan-device/${email}`}
 }

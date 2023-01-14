@@ -10,12 +10,14 @@ import HeadDetail from "../HeadDetail";
 
 import { useForm, Controller } from "react-hook-form";
 import { CardContainer } from "../../globalStyle";
+import { raiseToast } from "../../utils";
 
 export default function LoginForm(props) {
   const userContext = useContext(UserContext);
   const navigation = useNavigation();
   const successLoginText = "¡Ha iniciado sesión exitosamente!";
   const failLoginText = "Usuario o contraseña invalida";
+  const validateLoginText = "Ha iniciado sesión desde otro dispositivo. Por favor validar!";
   const {
     control,
     handleSubmit,
@@ -44,7 +46,7 @@ export default function LoginForm(props) {
             password: data.password,
           })
           .then(async (res) => {
-            const user = await worthDB.get(epWorth.getUser(data.email));
+            const user = await worthDB.get(epWorth.getUserByEmail(data.email));
             const contextLoginData = {
               token: res.data.access_token,
               email: data.email,
@@ -54,36 +56,35 @@ export default function LoginForm(props) {
             };
             await AsyncStorage.setItem("@worthapp", JSON.stringify(contextLoginData));
             
-            userContext.user = contextLoginData;
-            if (Platform.OS === "ios") {
-              Toast.show(successLoginText, {
-                duration: Toast.durations.LONG,
-                position: Toast.positions.CENTER,
-              });
-              props.getToken();
-            } else {
-              ToastAndroid.showWithGravity(
-                successLoginText,
-                ToastAndroid.LONG,
-                ToastAndroid.CENTER
-              );
-              props.getToken();
+            // Verificar si el usuario tiene registrado el mismo dispositivo
+            const dData = await AsyncStorage.getItem("@worthapp.device")
+            if(dData){
+              const deviceData = JSON.parse(dData);
+              await worthDB.put(epWorth.deleteOrphanDevice(deviceData.deviceId));
+              if(user.deviceId !== deviceData.deviceId){
+                await worthDB.post(epWorth.sendSMSCode, {
+                  email: data.email,
+                })
+                user.data.deviceId = deviceData.deviceId;
+                await worthDB.put(epWorth.updateDeviceUser(data.email), {
+                  ...user.data,
+                })
+                contextLoginData.isSMSValidated = false
+                userContext.user = contextLoginData;
+                raiseToast(validateLoginText)
+                navigation.navigate("ValidationForm", {
+                  email: data.email,
+                });
+              }
             }
+
+            userContext.user = contextLoginData;
+            raiseToast(successLoginText)
+            props.getToken();
           })
           .catch((error) => {
             console.log("Error login ", error);
-            if (Platform.OS === "ios") {
-              Toast.show(failLoginText, {
-                duration: Toast.durations.LONG,
-                position: Toast.positions.CENTER,
-              });
-            } else {
-              ToastAndroid.showWithGravity(
-                failLoginText,
-                ToastAndroid.LONG,
-                ToastAndroid.CENTER
-              );
-            }
+            raiseToast(failLoginText)
           });
       }
     } catch (error) {

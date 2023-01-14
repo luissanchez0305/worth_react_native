@@ -2,6 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import finnhubDB, { endpoints as epFinnhub } from "../api/finnhubDB";
 import {FINNHUB_KEY} from '@env'
 import { useEffect, useRef } from "react";
+import Toast from "react-native-root-toast";
+import { Platform, ToastAndroid } from "react-native";
 
 export const getEvents = async (date) => {
     const finnhubRes = await finnhubDB
@@ -107,3 +109,18 @@ export const useComponentDidUpdate = (handler, deps) => {
 export const useComponentWillUnmount = handler => {
     return useEffect(() => handler, []);
 };
+
+export const raiseToast = (message) => {
+    if (Platform.OS === "ios") {
+        Toast.show(message, {
+            duration: Toast.durations.LONG,
+            position: Toast.positions.CENTER,
+        });
+      } else {
+        ToastAndroid.showWithGravity(
+            message,
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER
+        );
+      }
+}
