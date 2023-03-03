@@ -57,6 +57,8 @@ export default function SignalsScreen({ navigation }) {
                 isUserValidated() ? 
                   signals.length ? (
                     <ListSignals signals={signals}/>
+                  ) : !signals.length ? (
+                    <Text>No hay señales</Text>
                   ) : (
                     <Text>Cargando...</Text>
                   )

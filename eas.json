@@ -1,18 +1,29 @@
 {
-  "cli": {
-    "version": ">= 3.1.1"
-  },
-  "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
-    },
-    "preview": {
-      "distribution": "internal"
-    },
-    "production": {}
-  },
-  "submit": {
-    "production": {}
+    "build": {
+      "preview": {
+        "android": {
+          "buildType": "apk"
+        },
+        "env": {
+          "ALPHAADVANTAGE_KEY":"CHXCWSWAQNCYMAWR",
+          "FINNHUB_SANDBOX_KEY":"sandbox_cbaqv02ad3i91bfqaesg",
+          "FINNHUB_KEY":"cbaqv02ad3i91bfqaes0",
+          "POLYGON_KEY":"7j0RZ9nn9dd8tp13fXYMMeH6EN1vyhQG",
+          "YOUTUBE_KEY":"AIzaSyBXYtvK1nGLzR3OSejuKd3fpvHvwVp_b0o",  
+          "TRADINGVIEW_URL":"165.227.117.108:8181",
+          "IOS_API_URL":"http://localhost:3003",
+          "ANDROID_API_URL":"http://10.0.2.2:3003",
+          "API_URL":"https://worth-be.herokuapp.com"
+        }
+      },
+      "preview2": {
+        "android": {
+          "gradleCommand": ":app:assembleRelease"
+        }
+      },
+      "preview3": {
+        "developmentClient": true
+      },
+      "production": {}
+    }
   }
-}

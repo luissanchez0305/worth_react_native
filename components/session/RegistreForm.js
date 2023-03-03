@@ -17,6 +17,7 @@ import UserContext from "../../context/UserContext";
 import { useForm, Controller } from "react-hook-form";
 import { CardContainer } from "../../globalStyle";
 import { raiseToast } from "../../utils";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function RegistreForm({user,setValidate}) {
   const userContext = useContext(UserContext);
@@ -43,7 +44,7 @@ export default function RegistreForm({user,setValidate}) {
     defaultValues: initialState,
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if(user) {
       worthDB.put(epWorth.updateUser(userData.current.email), {
         ...data,
@@ -65,28 +66,28 @@ export default function RegistreForm({user,setValidate}) {
         }
       })
     } else {
+      const dData = await AsyncStorage.getItem("@worthapp.device")
+      let deviceId = '';
+      if(dData){
+        const deviceData = JSON.parse(dData);
+        deviceId = deviceData.deviceId
+
+        data = {...data, deviceId, oneSignal_id: deviceData.token }
+      }
     worthDB
       .post(epWorth.createNewUser, {
-        email: data.email,
-        name: data.name,
-        lastname: data.lastname,
-        password: data.password,
-        phone: data.phone,
+        ...data
       })
       .then(async (data) => {
+        if(deviceId.length){
+          await worthDB.put(epWorth.deleteOrphanDevice(deviceId));
+        }
         raiseToast(successRegisterText)
         userContext.user = { email: data.email, isEmailValidated: false, isSMSValidated: false };
         navigation.navigate("ValidationForm", {
           email: data.email,
         });
 
-        const dData = await AsyncStorage.getItem("@worthapp.device")
-
-        if(dData){
-          const deviceData = JSON.parse(dData);
-          await worthDB.put(epWorth.deleteOrphanDevice(deviceData.deviceId));
-
-        }
       })
       .catch((error) => {
         raiseToast(failRegisterText)
