@@ -99,7 +99,7 @@ const SignalButton = styled.TouchableOpacity`
   padding: 8px;
   border-radius: 8px;
   font-weight: 700;
-  background-color: #cda434;
+  background-color: #cdcdcd;
   margin-vertical: 15px;
   margin-horizontal: 3%;
 `;

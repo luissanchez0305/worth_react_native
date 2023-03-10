@@ -137,11 +137,11 @@ export const ValidationForm = (props) => {
               {/* <SignoutButton title="Logout" onPress={async () => await props.signout()} style={styles.signout}>
               </SignoutButton> */}
 
-              <SignoutButtonTest onPress={async () => await props.signout()}>
+              <SignoutButton1 onPress={async () => await props.signout()}>
                 <Text style={{ color: "black", textAlign: "center", fontSize: 14 }}>
                   LOGOUT
                 </Text>
-              </SignoutButtonTest>
+              </SignoutButton1>
               <CardContainer style={{ height: "100%" }}>
                 <InputGroup>
                   {enabledEmailValidateButton ? (
@@ -219,7 +219,11 @@ export const ValidationForm = (props) => {
                 </InputGroup>
                 {
                   !enabledEmailValidateButton && !enabledSMSValidateButton ?
-                    <SignoutButton title="Home" onPress={() => navigation.navigate("Home")} /> :
+                    <HomeButton title="Home" onPress={() => navigation.navigate("Home")}>
+                      <Text style={{ color: "black", textAlign: "center", fontSize: 14 }}>
+                        HOME
+                      </Text>
+                    </HomeButton> :
                     null
                 }
 
@@ -306,7 +310,15 @@ const CleanButton = styled.Text`
   font-size: 14px;
 `;
 
-const SignoutButtonTest = styled.TouchableOpacity`
+const SignoutButton1 = styled.TouchableOpacity`
+  font-weight: 700;
+  padding-vertical: 14px;
+  background-color: #cdcdcd;
+  border-radius: 8px;
+  margin-vertical: 12px;
+  margin-horizontal: 3%;
+`
+const HomeButton = styled.TouchableOpacity`
   font-weight: 700;
   padding-vertical: 14px;
   background-color: #cda434;
