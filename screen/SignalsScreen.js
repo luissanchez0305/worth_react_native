@@ -1,6 +1,6 @@
 import { Layout, CardContainer, TextStatus } from "../globalStyle";
 import { GradientBackground } from "../components/GradientBackground";
-import { Text, SafeAreaView } from "react-native";
+import { Text, SafeAreaView, StyleSheet } from "react-native";
 import LoginForm from "../components/session/LoginForm";
 import { useContext, useEffect, useState } from "react";
 import worthDB, { endpoints as worthEndpoints } from "../api/localDB";
@@ -63,7 +63,7 @@ export default function SignalsScreen({ navigation }) {
                     <Text>Cargando...</Text>
                   )
                 :
-                <TextStatus>
+                <TextStatus style={styles.text}>
                   {
                     !isUserValidated() ? 'Por favor validar su email y celular' : 'Usuario no es premium'
                   }</TextStatus>}
@@ -85,3 +85,16 @@ export default function SignalsScreen({ navigation }) {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  text: {
+    textAlign: 'center',
+    backgroundColor: '#cda434',
+    color: '#000000',
+    padding: 8,
+    marginVertical: 12,
+    marginHorizontal: 20,
+    borderRadius: 8,
+    fontSize: 14
+  }
+});

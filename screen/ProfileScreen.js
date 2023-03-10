@@ -6,6 +6,7 @@ import React, {
   useContext,
 } from "react";
 import { GradientBackground } from "../components/GradientBackground";
+import styled from "styled-components/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LoginForm from "../components/session/LoginForm";
@@ -35,7 +36,7 @@ export default function ProfileScreen() {
   const token = async () => {
     const dataString = await getStorageItem("@worthapp");
     const data = JSON.parse(dataString)
-    if(userContext.user && data){
+    if (userContext.user && data) {
       setUserValidated(userContext.user.isEmailValidated && userContext.user.isSMSValidated);
       setUserToken(data.token);
     } else {
@@ -55,7 +56,7 @@ export default function ProfileScreen() {
           <SafeAreaView>
             <ButtonBack />
             {userToken ? (
-              userValidated ? 
+              userValidated ?
                 <Profile signout={signout} user={userContext.user.email} setValidate={setUserValidated} /> :
                 <ValidationForm signout={signout} />
             ) : (
@@ -72,10 +73,33 @@ function Profile(props) {
   return (
     <>
       <ContainerForm>
-        <HeadDetail title={"Mi Perfil"} detail={"Actualiza tus datos aqui"} />
+        <ContainerHeader>
+          <HeadDetail title={"Mi Perfil"} detail={"Actualiza tus datos aquí"} />
+          {/* <Button title="Logout" onPress={async () => await props.signout()} /> */}
+          <SignalButton onPress={async () => await props.signout()}>
+                <Text style={{ color: "black", textAlign: "center", fontSize: 14 }}>
+                  LOGOUT
+                </Text>
+              </SignalButton>
+        </ContainerHeader>
       </ContainerForm>
-      <Button title="Logout" onPress={async () => await props.signout()} />
       <RegistreForm user={props.user} setValidate={props.setValidate} />
     </>
   );
 }
+
+const ContainerHeader = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-content: flex-start;
+`;
+
+const SignalButton = styled.TouchableOpacity`
+  align-items: center;
+  padding: 8px;
+  border-radius: 8px;
+  font-weight: 700;
+  background-color: #cda434;
+  margin-vertical: 15px;
+  margin-horizontal: 3%;
+`;

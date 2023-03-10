@@ -2,7 +2,7 @@ import styled from "styled-components/native";
 import React, { useContext, useState } from "react";
 import worthDB, { endpoints as epWorth } from "../api/localDB";
 import UserContext from "../context/UserContext";
-import { View, Text, ScrollView, Button as SignoutButton, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, Button as SignoutButton, TouchableOpacity, StyleSheet } from "react-native";
 import HeadDetail from "../components/HeadDetail";
 import { Link, useNavigation, useRoute } from "@react-navigation/native";
 import Toast from "react-native-root-toast";
@@ -14,12 +14,12 @@ export const ValidationForm = (props) => {
   const navigation = useNavigation();
   const cellphoneValidatedText = "Celular validado";
   const emailValidatedText = "Email validado";
-  const codeNotValidText = "Codigo no valido";
-  const sendAgainText = 'Enviar otro vez'
+  const codeNotValidText = "Código no valido";
+  const sendAgainText = 'Enviar otro vez';
   const userContext = useContext(UserContext);
   const [emailCode, setEmailCode] = useState("");
   const [smsCode, setSMSCode] = useState("");
-  
+
   const [emailValidButtonText, setEmailValidButtonText] =
     useState(userContext.user.isEmailValidated ? emailValidatedText : "Validar email");
 
@@ -36,42 +36,42 @@ export const ValidationForm = (props) => {
   const [sendEmailAgainEnabled, setSendEmailAgainEnabled] = useState(true)
   const [sendSMSAgainText, setSendSMSAgainText] = useState(sendAgainText)
   const [sendSMSAgainEnabled, setSendSMSAgainEnabled] = useState(true)
-  
+
 
   const sendCodeAgain = async (type) => {
-    switch(type){
+    switch (type) {
       case 'email':
-        try{
+        try {
           const resEmail = await worthDB.post(epWorth.sendEmailCode, {
             email: userContext.user.email,
           })
 
           console.log('resEmail', resEmail, userContext.user.email)
-    
+
           setSendEmailAgainText('Correo enviado...')
           setSendEmailAgainEnabled(false)
           setTimeout(() => {
             setSendEmailAgainText(sendAgainText)
             setSendEmailAgainEnabled(true)
           }, 300000)
-        } catch(e) {
+        } catch (e) {
           setSendEmailAgainText('Error. Intente mas tarde')
           setSendEmailAgainEnabled(false)
         }
         break;
       case 'sms':
-        try{
+        try {
           await worthDB.post(epWorth.sendSMSCode, {
             email: userContext.user.email,
           })
-    
+
           setSendSMSAgainText('SMS enviado...')
           setSendSMSAgainEnabled(false)
           setTimeout(() => {
             setSendSMSAgainText(sendAgainText)
             setSendSMSAgainEnabled(true)
           }, 300000)
-        } catch(e) {
+        } catch (e) {
           setSendSMSAgainText(`Error. Intente mas tarde. ${e}`)
           setSendSMSAgainEnabled(false)
         }
@@ -98,7 +98,7 @@ export const ValidationForm = (props) => {
         }
         break;
       case "sms":
-        try{
+        try {
           const resSMS = await worthDB.post(epWorth.validateSMSCode, {
             email: userContext.user.email,
             code: smsCode,
@@ -113,7 +113,7 @@ export const ValidationForm = (props) => {
               position: Toast.positions.CENTER,
             });
           }
-        } catch(e) {
+        } catch (e) {
           console.log('error', e)
         }
         break;
@@ -134,18 +134,27 @@ export const ValidationForm = (props) => {
                   }
                 />
               </ContainerForm>
-              <SignoutButton title="Logout" onPress={async () => await props.signout()} />
+              {/* <SignoutButton title="Logout" onPress={async () => await props.signout()} style={styles.signout}>
+              </SignoutButton> */}
+
+              <SignoutButtonTest onPress={async () => await props.signout()}>
+                <Text style={{ color: "black", textAlign: "center", fontSize: 14 }}>
+                  LOGOUT
+                </Text>
+              </SignoutButtonTest>
               <CardContainer style={{ height: "100%" }}>
                 <InputGroup>
                   {enabledEmailValidateButton ? (
                     <>
-                      <Label>Código enviado al email</Label>
-                      <ContainerCleanButton onPress={() => sendCodeAgain('email')} disabled={!sendEmailAgainEnabled}>
-                        <CleanButton>{sendEmailAgainText}</CleanButton>
-                      </ContainerCleanButton>
+                      <Box>
+                        <Label>Introducir código enviado al email</Label>
+                        <ContainerCleanButton onPress={() => sendCodeAgain('email')} disabled={!sendEmailAgainEnabled}>
+                          <CleanButton>{sendEmailAgainText}</CleanButton>
+                        </ContainerCleanButton>
+                      </Box>
                       <Input
                         keyboardType='numeric'
-                        placeholder="Codigo enviado al email"
+                        placeholder="Código enviado al email"
                         value={emailCode}
                         onChangeText={(emaiValue) => setEmailCode(emaiValue)}
                       />
@@ -174,13 +183,15 @@ export const ValidationForm = (props) => {
                 <InputGroup>
                   {enabledSMSValidateButton ? (
                     <>
-                      <Label>Código enviado a SMS</Label>
-                      <ContainerCleanButton onPress={() => sendCodeAgain('sms')} disabled={!sendSMSAgainEnabled}>
-                        <CleanButton>{sendSMSAgainText}</CleanButton>
-                      </ContainerCleanButton>
+                      <Box>
+                        <Label>Introducir código enviado a SMS</Label>
+                        <ContainerCleanButton onPress={() => sendCodeAgain('sms')} disabled={!sendSMSAgainEnabled}>
+                          <CleanButton>{sendSMSAgainText}</CleanButton>
+                        </ContainerCleanButton>
+                      </Box>
                       <Input
                         keyboardType='numeric'
-                        placeholder="Codigo enviado a SMS"
+                        placeholder="Código enviado a SMS"
                         value={smsCode}
                         onChangeText={(smsValue) => setSMSCode(smsValue)}
                       />
@@ -207,11 +218,11 @@ export const ValidationForm = (props) => {
                   </Button>
                 </InputGroup>
                 {
-                  !enabledEmailValidateButton && !enabledSMSValidateButton ? 
-                    <SignoutButton title="Home"  onPress={() => navigation.navigate("Home")}/> :
+                  !enabledEmailValidateButton && !enabledSMSValidateButton ?
+                    <SignoutButton title="Home" onPress={() => navigation.navigate("Home")} /> :
                     null
                 }
-                
+
               </CardContainer>
             </View>
           </SafeAreaView>
@@ -220,9 +231,28 @@ export const ValidationForm = (props) => {
     </GradientBackground>
   );
 };
+
+const styles = StyleSheet.create({
+  signout: {
+    alignItems: 'center',
+    padding: 8,
+    borderRadius: 8,
+    fontWeight: 700,
+    backgroundColor: '#cda434',
+    marginVertical: 10
+  }
+});
+
 const ContainerForm = styled.View`
   margin-horizontal: 16px;
   margin-vertical: 16px;
+`;
+
+const Box = styled.View`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around; 
+  align-items: center;
 `;
 
 const Label = styled.Text`
@@ -262,11 +292,25 @@ const Button = styled.TouchableOpacity`
 
 const ContainerCleanButton = styled.TouchableOpacity`
   flex-direction: row;
-  margin-vertical: 8px;
+  align-items: center;
+  padding: 8px;
+  border-radius: 8px;
+  font-weight: 700;
+  background-color: #3A5998;
+  margin-vertical: 10px;
+  margin-rigth: 6px;
 `;
 
 const CleanButton = styled.Text`
   color: #fff;
-  font-size: 17px;
-  margin-top: 8px;
+  font-size: 14px;
 `;
+
+const SignoutButtonTest = styled.TouchableOpacity`
+  font-weight: 700;
+  padding-vertical: 14px;
+  background-color: #cda434;
+  border-radius: 8px;
+  margin-vertical: 12px;
+  margin-horizontal: 3%;
+`
