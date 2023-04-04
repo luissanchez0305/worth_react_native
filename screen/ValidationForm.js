@@ -9,6 +9,7 @@ import Toast from "react-native-root-toast";
 import { GradientBackground } from "../components/GradientBackground";
 import { CardContainer, Layout } from "../globalStyle";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ButtonBack from "../components/ButtonBack";
 
 export const ValidationForm = (props) => {
   const navigation = useNavigation();
@@ -125,6 +126,7 @@ export const ValidationForm = (props) => {
       <Layout>
         <ScrollView>
           <SafeAreaView>
+          {/* <ButtonBack /> */}
             <View>
               <ContainerForm>
                 <HeadDetail
@@ -137,11 +139,11 @@ export const ValidationForm = (props) => {
               {/* <SignoutButton title="Logout" onPress={async () => await props.signout()} style={styles.signout}>
               </SignoutButton> */}
 
-              <SignoutButton1 onPress={async () => await props.signout()}>
+              {/* <SignoutButton1 onPress={async () => await props.signout()}>
                 <Text style={{ color: "black", textAlign: "center", fontSize: 14 }}>
                   LOGOUT
                 </Text>
-              </SignoutButton1>
+              </SignoutButton1> */}
               <CardContainer style={{ height: "100%" }}>
                 <InputGroup>
                   {enabledEmailValidateButton ? (

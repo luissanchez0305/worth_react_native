@@ -54,7 +54,18 @@ export default function ProfileScreen() {
       <Layout>
         <ScrollView>
           <SafeAreaView>
-            <ButtonBack />
+            <ContainerTest>
+              <ButtonBack />
+              {userToken ? (
+                <SignalButton onPress={async () => await signout()}>
+                  <Text style={{ color: "black", textAlign: "center", fontSize: 14 }}>
+                    LOGOUT
+                  </Text>
+                </SignalButton>
+              ) : (
+                <ContainerTest></ContainerTest>
+              )}
+            </ContainerTest>
             {userToken ? (
               userValidated ?
                 <Profile signout={signout} user={userContext.user.email} setValidate={setUserValidated} /> :
@@ -76,11 +87,6 @@ function Profile(props) {
         <ContainerHeader>
           <HeadDetail title={"Mi Perfil"} detail={"Actualiza tus datos aquí"} />
           {/* <Button title="Logout" onPress={async () => await props.signout()} /> */}
-          <SignalButton onPress={async () => await props.signout()}>
-                <Text style={{ color: "black", textAlign: "center", fontSize: 14 }}>
-                  LOGOUT
-                </Text>
-              </SignalButton>
         </ContainerHeader>
       </ContainerForm>
       <RegistreForm user={props.user} setValidate={props.setValidate} />
@@ -102,4 +108,10 @@ const SignalButton = styled.TouchableOpacity`
   background-color: #cdcdcd;
   margin-vertical: 15px;
   margin-horizontal: 3%;
+`;
+
+const ContainerTest = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-content: flex-start;
 `;
