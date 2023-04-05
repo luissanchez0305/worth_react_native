@@ -1,5 +1,6 @@
 import { Layout, CardContainer, TextStatus } from "../globalStyle";
 import { GradientBackground } from "../components/GradientBackground";
+import { useNavigation } from "@react-navigation/native";
 import { Text, SafeAreaView, StyleSheet } from "react-native";
 import LoginForm from "../components/session/LoginForm";
 import { useContext, useEffect, useState } from "react";
@@ -13,25 +14,27 @@ export default function SignalsScreen({ navigation }) {
   const [userToken, setUserToken] = useState(null);
   const [userIsPremium, setUserIsPremium] = useState(false)
   const [signals, setSignals] = useState([]);
+  const Navigation = useNavigation();
 
   const token = async () => {
     const dataString = await getStorageItem("@worthapp");
-    if(dataString){
+    if (dataString) {
       const data = JSON.parse(dataString)
       setUserToken(data.token);
     }
   };
 
   const getSignals = async () => {
-    const res = await worthDB.get(worthEndpoints.getAllSignals);
+    const res = await worthDB.get(worthEndpoints.getAllSignals).catch((error) => {
+    })
     setSignals(res.data);
   };
 
   const isUserValidated = () => {
     return userContext.user.isEmailValidated && userContext.user.isSMSValidated;
   }
-  useEffect(() => {
 
+  useEffect(() => {
     getSignals();
     const unsubscribe = navigation.addListener('focus', () => {
       token()
@@ -42,37 +45,41 @@ export default function SignalsScreen({ navigation }) {
   }, [userToken]);
 
   if (userToken) {
-      return (
-        <GradientBackground
-          colors={["#111D2E", "#1D242F", "#102F49"]}
-          start={{ x: 0.4, y: 0.6 }}
-          end={{ x: 0.5, y: 0.9 }}  
-        >
-        
-          <Layout>
-            <SafeAreaView>
-              <CardContainer style={{ height: "100%" }}>
+    return (
+      <GradientBackground
+        colors={["#111D2E", "#1D242F", "#102F49"]}
+        start={{ x: 0.4, y: 0.6 }}
+        end={{ x: 0.5, y: 0.9 }}
+      >
+
+        <Layout>
+          <SafeAreaView>
+            <CardContainer style={{ height: "100%", justifyContent: 'center' }}>
               {
-                userContext.user.isPremium && 
-                isUserValidated() ? 
+                userContext.user.isPremium &&
+                  isUserValidated() ?
                   signals.length ? (
-                    <ListSignals signals={signals}/>
+                    <ListSignals signals={signals} />
                   ) : !signals.length ? (
                     <Text>No hay señales</Text>
                   ) : (
                     <Text>Cargando...</Text>
                   )
-                :
-                <TextStatus style={styles.text}>
-                  {
-                    !isUserValidated() ? 'Por favor validar su email y celular' : 'Usuario no es premium'
-                  }</TextStatus>}
-              </CardContainer>
-            </SafeAreaView>
-          </Layout>
-        
-        </GradientBackground>
-      );
+                  :
+                  <TextStatus style={styles.text} onPress={() => {
+                    Navigation.navigate("ValidationForm", {
+                      email: userContext.user.email,
+                    });
+                  }}>
+                    {
+                      !isUserValidated() ? 'Por favor validar su email y celular' : 'Usuario no es premium'
+                    }</TextStatus>}
+            </CardContainer>
+          </SafeAreaView>
+        </Layout>
+
+      </GradientBackground>
+    );
   } else {
     return (
       <GradientBackground>

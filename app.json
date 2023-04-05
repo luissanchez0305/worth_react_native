@@ -20,7 +20,7 @@
       ]
     ],
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/worth-home.png",
       "resizeMode": "contain",
       "backgroundColor": "#1D242F"
     },
