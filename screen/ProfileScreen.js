@@ -54,24 +54,15 @@ export default function ProfileScreen() {
       <Layout>
         <ScrollView>
           <SafeAreaView>
-            <ContainerTest>
-              <ButtonBack />
-              {userToken ? (
-                <SignalButton onPress={async () => await signout()}>
-                  <Text style={{ color: "black", textAlign: "center", fontSize: 14 }}>
-                    LOGOUT
-                  </Text>
-                </SignalButton>
-              ) : (
-                <ContainerTest></ContainerTest>
-              )}
-            </ContainerTest>
             {userToken ? (
               userValidated ?
-                <Profile signout={signout} user={userContext.user.email} setValidate={setUserValidated} /> :
+                <Profile userToken={userToken} signout={signout} user={userContext.user.email} setValidate={setUserValidated} /> :
                 <ValidationForm signout={signout} />
             ) : (
-              <LoginForm getToken={token} />
+              <>
+                <ButtonBack />
+                <LoginForm getToken={token} />
+              </>
             )}
           </SafeAreaView>
         </ScrollView>
@@ -83,10 +74,17 @@ export default function ProfileScreen() {
 function Profile(props) {
   return (
     <>
+      <ContainerTest>
+        <ButtonBack />
+        <SignalButton onPress={async () => await props.signout()}>
+          <Text style={{ color: "black", textAlign: "center", fontSize: 14 }}>
+            LOGOUT
+          </Text>
+        </SignalButton>
+      </ContainerTest>
       <ContainerForm>
         <ContainerHeader>
           <HeadDetail title={"Mi Perfil"} detail={"Actualiza tus datos aquí"} />
-          {/* <Button title="Logout" onPress={async () => await props.signout()} /> */}
         </ContainerHeader>
       </ContainerForm>
       <RegistreForm user={props.user} setValidate={props.setValidate} />

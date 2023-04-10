@@ -9,6 +9,7 @@ import Toast from "react-native-root-toast";
 import { GradientBackground } from "../components/GradientBackground";
 import { CardContainer, Layout } from "../globalStyle";
 import { SafeAreaView } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import ButtonBack from "../components/ButtonBack";
 
 export const ValidationForm = (props) => {
@@ -121,12 +122,31 @@ export const ValidationForm = (props) => {
     }
   };
 
+  const signout = async () => {
+    await AsyncStorage.removeItem("@worthapp");
+    userContext.user = null;
+    navigation.navigate("Home")
+  };
+
   return (
     <GradientBackground>
       <Layout>
         <ScrollView>
           <SafeAreaView>
-          {/* <ButtonBack /> */}
+            <ContainerTest>
+              <ButtonBack />
+              <SignoutButton1 onPress={async () => {
+                if (props.signout === undefined) {
+                  await signout()
+                } else {
+                  await props.signout()
+                }
+              }}>
+                <Text style={{ color: "black", textAlign: "center", fontSize: 14 }}>
+                  LOGOUT
+                </Text>
+              </SignoutButton1>
+            </ContainerTest>
             <View>
               <ContainerForm>
                 <HeadDetail
@@ -139,11 +159,6 @@ export const ValidationForm = (props) => {
               {/* <SignoutButton title="Logout" onPress={async () => await props.signout()} style={styles.signout}>
               </SignoutButton> */}
 
-              {/* <SignoutButton1 onPress={async () => await props.signout()}>
-                <Text style={{ color: "black", textAlign: "center", fontSize: 14 }}>
-                  LOGOUT
-                </Text>
-              </SignoutButton1> */}
               <CardContainer style={{ height: "100%" }}>
                 <InputGroup>
                   {enabledEmailValidateButton ? (
@@ -313,11 +328,12 @@ const CleanButton = styled.Text`
 `;
 
 const SignoutButton1 = styled.TouchableOpacity`
-  font-weight: 700;
-  padding-vertical: 14px;
-  background-color: #cdcdcd;
+  align-items: center;
+  padding: 8px;
   border-radius: 8px;
-  margin-vertical: 12px;
+  font-weight: 700;
+  background-color: #cdcdcd;
+  margin-vertical: 15px;
   margin-horizontal: 3%;
 `
 const HomeButton = styled.TouchableOpacity`
@@ -328,3 +344,9 @@ const HomeButton = styled.TouchableOpacity`
   margin-vertical: 12px;
   margin-horizontal: 3%;
 `
+
+const ContainerTest = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-content: flex-start;
+`;

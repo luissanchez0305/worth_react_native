@@ -91,7 +91,9 @@ export default function RegistreForm({user,setValidate}) {
       })
       .catch((error) => {
         raiseToast(failRegisterText)
-        console.log("error", error);
+        if (error.response) {
+          console.log("error", error.response.data.message);
+        } 
       });
     }
   };
