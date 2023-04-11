@@ -67,9 +67,11 @@ export default function SignalsScreen({ navigation }) {
                   )
                   :
                   <TextStatus style={styles.text} onPress={() => {
-                    Navigation.navigate("ValidationForm", {
-                      email: userContext.user.email,
-                    });
+                    if (!isUserValidated()){
+                      Navigation.navigate("ValidationForm", {
+                        email: userContext.user.email,
+                      });
+                    }
                   }}>
                     {
                       !isUserValidated() ? 'Por favor validar su email y celular' : 'Usuario no es premium'

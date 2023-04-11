@@ -4,6 +4,7 @@ import { View, Text, Platform } from "react-native";
 import React, { useEffect } from "react";
 import HeadSection from "./HeadSection";
 import { TRADINGVIEW_URL } from '@env';
+console.log("🚀 ~ file: ContainerView.js:7 ~ TRADINGVIEW_URL:", TRADINGVIEW_URL)
 
 function ContainerView() {
     useEffect(() => {});
@@ -56,6 +57,7 @@ function ContainerView() {
                     source={{uri: TRADINGVIEW_URL}}
                     //   onLoadEnd={(e) => console.log(e)}r
                     injectedJavaScript={INJECTED_JAVASCRIPT}
+                    originWhitelist={['*']}
                     javaScriptEnabled={true}
                     onMessage={({ nativeEvent }) => console.log(nativeEvent.data)}
                 />
