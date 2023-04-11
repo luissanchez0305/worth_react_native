@@ -57,7 +57,7 @@ export default function ProfileScreen() {
             {userToken ? (
               userValidated ?
                 <Profile userToken={userToken} signout={signout} user={userContext.user.email} setValidate={setUserValidated} /> :
-                <ValidationForm signout={signout} />
+                <ValidationForm signOut={signout} />
             ) : (
               <>
                 <ButtonBack />

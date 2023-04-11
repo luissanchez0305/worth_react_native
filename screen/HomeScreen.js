@@ -43,7 +43,7 @@ export default function HomeScreen() {
     
     var today = new Date();
     var yesterday = new Date();
-    yesterday.setDate(today.getDate() - 2);
+    yesterday.setDate(today.getDate() - 1);
 
     today = getDateFormat(today);
     yesterday = getDateFormat(yesterday);
@@ -52,10 +52,12 @@ export default function HomeScreen() {
       .then(async (res) => {
         setPricesPromiseStatus('Cargando valores...');
         const _data = res.data;
+
         _data.forEach(element => {
           const url = element.type === 'crypto' ? 
             `${epPolygon.openCloseCrypto}/${element.from}/${element.to}/${today}` :
             `${epPolygon.ticker}/${element.from}/range/1/day/${yesterday}/${yesterday}`;
+          
           promises.push(
             polygonDB
               .get(url)

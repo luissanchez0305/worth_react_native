@@ -17,7 +17,6 @@ export default function LoginForm(props) {
   const navigation = useNavigation();
   const successLoginText = "¡Ha iniciado sesión exitosamente!";
   const failLoginText = "Usuario o contraseña invalida";
-  const validateLoginText = "Ha iniciado sesión desde otro dispositivo. Por favor validar!";
   const {
     control,
     handleSubmit,
@@ -61,19 +60,16 @@ export default function LoginForm(props) {
             if(dData){
               const deviceData = JSON.parse(dData);
               await worthDB.put(epWorth.deleteOrphanDevice(deviceData.deviceId));
-              if(user.deviceId !== deviceData.deviceId){
-                await worthDB.post(epWorth.sendSMSCode, {
-                  email: data.email,
-                })
-                user.data.deviceId = deviceData.deviceId;
-                await worthDB.put(epWorth.updateDeviceUser(data.email), {
-                  ...user.data,
-                })
+              if(user.data.deviceId !== deviceData.deviceId){
                 contextLoginData.isSMSValidated = false
                 userContext.user = contextLoginData;
-                raiseToast(validateLoginText)
-                navigation.navigate("ValidationForm", {
-                  email: data.email,
+                navigation.navigate({ 
+                  name: "ValidationForm", 
+                  params: {
+                    email: data.email,
+                    otherDevice: true,
+                    deviceId: deviceData.deviceId
+                  }
                 });
               }
             }

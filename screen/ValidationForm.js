@@ -1,5 +1,5 @@
 import styled from "styled-components/native";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import worthDB, { endpoints as epWorth } from "../api/localDB";
 import UserContext from "../context/UserContext";
 import { View, Text, ScrollView, Button as SignoutButton, TouchableOpacity, StyleSheet } from "react-native";
@@ -13,11 +13,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import ButtonBack from "../components/ButtonBack";
 
 export const ValidationForm = (props) => {
+  const {otherDevice, email, deviceId} = useRoute().params;
   const navigation = useNavigation();
   const cellphoneValidatedText = "Celular validado";
   const emailValidatedText = "Email validado";
   const codeNotValidText = "Código no valido";
   const sendAgainText = 'Enviar otro vez';
+  const validateLoginText1 = "Ha iniciado sesión desde otro dispositivo";
+  const validateLoginText2 = "Por favor enviar un nuevo SMS para validarlo!";
   const userContext = useContext(UserContext);
   const [emailCode, setEmailCode] = useState("");
   const [smsCode, setSMSCode] = useState("");
@@ -38,7 +41,6 @@ export const ValidationForm = (props) => {
   const [sendEmailAgainEnabled, setSendEmailAgainEnabled] = useState(true)
   const [sendSMSAgainText, setSendSMSAgainText] = useState(sendAgainText)
   const [sendSMSAgainEnabled, setSendSMSAgainEnabled] = useState(true)
-
 
   const sendCodeAgain = async (type) => {
     switch (type) {
@@ -92,6 +94,13 @@ export const ValidationForm = (props) => {
           userContext.user.isEmailValidated = true
           setEmailValidButtonText(emailValidatedText);
           setEnabledEmailValidateButton(false);
+          if(otherDevice){
+            const user = await worthDB.get(epWorth.getUserByEmail(email));
+            user.data.deviceId = deviceId;
+            await worthDB.put(epWorth.updateDeviceUser(data.email), {
+              ...user.data,
+            })
+          }
         } else {
           Toast.show(codeNotValidText, {
             duration: Toast.durations.LONG,
@@ -136,10 +145,10 @@ export const ValidationForm = (props) => {
             <ContainerTest>
               <ButtonBack />
               <SignoutButton1 onPress={async () => {
-                if (props.signout === undefined) {
+                if (props.signOut === undefined) {
                   await signout()
                 } else {
-                  await props.signout()
+                  await props.signOut()
                 }
               }}>
                 <Text style={{ color: "black", textAlign: "center", fontSize: 14 }}>
@@ -200,6 +209,11 @@ export const ValidationForm = (props) => {
                 <InputGroup>
                   {enabledSMSValidateButton ? (
                     <>
+                      {otherDevice ? (
+                      <Box2>
+                        <LabelError>{validateLoginText1}</LabelError>
+                        <LabelError>{validateLoginText2}</LabelError>
+                      </Box2>) : null}
                       <Box>
                         <Label>Introducir código enviado a SMS</Label>
                         <ContainerCleanButton onPress={() => sendCodeAgain('sms')} disabled={!sendSMSAgainEnabled}>
@@ -276,12 +290,26 @@ const Box = styled.View`
   align-items: center;
 `;
 
+const Box2 = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
+const LabelError = styled.Text`
+  color: red;
+  font-size: 14px;
+  margin-top: 8px;
+  font-weight: 700;
+  margin-horizontal: 3%;
+`;
+
 const Label = styled.Text`
   color: white;
   font-size: 14px;
   margin-top: 8px;
   font-weight: 700;
   margin-horizontal: 3%;
+  text-align: center;
 `;
 
 const InputGroup = styled.View`
