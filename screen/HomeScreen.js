@@ -56,7 +56,7 @@ export default function HomeScreen() {
         _data.forEach(element => {
           const url = element.type === 'crypto' ? 
             `${epPolygon.openCloseCrypto}/${element.from}/${element.to}/${today}` :
-            `${epPolygon.ticker}/${element.from}/range/1/day/${yesterday}/${yesterday}`;
+            `${epPolygon.ticker}/C:${element.from}${element.to}/range/1/day/${yesterday}/${yesterday}`;
           
           promises.push(
             polygonDB
