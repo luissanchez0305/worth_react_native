@@ -223,6 +223,7 @@ export const ValidationForm = (props) => {
                       <Input
                         keyboardType='numeric'
                         placeholder="Código enviado a SMS"
+                        disabled={sendSMSAgainEnabled === true}
                         value={smsCode}
                         onChangeText={(smsValue) => setSMSCode(smsValue)}
                       />
@@ -291,8 +292,8 @@ const Box = styled.View`
 `;
 
 const Box2 = styled.View`
-  flex-direction: row;
   align-items: center;
+  margin-bottom: 8px;
 `;
 
 const LabelError = styled.Text`

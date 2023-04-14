@@ -4,7 +4,7 @@ import { View, Text, Platform } from "react-native";
 import React, { useEffect } from "react";
 import HeadSection from "./HeadSection";
 import { TRADINGVIEW_URL } from '@env';
-// console.log("🚀 ~ file: ContainerView.js:7 ~ TRADINGVIEW_URL:", TRADINGVIEW_URL)
+console.log("🚀 ~ file: ContainerView.js:7 ~ TRADINGVIEW_URL:", TRADINGVIEW_URL)
 
 function ContainerView() {
     useEffect(() => {});
