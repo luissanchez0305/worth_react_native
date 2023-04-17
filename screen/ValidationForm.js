@@ -223,7 +223,6 @@ export const ValidationForm = (props) => {
                       <Input
                         keyboardType='numeric'
                         placeholder="Código enviado a SMS"
-                        disabled={sendSMSAgainEnabled === true}
                         value={smsCode}
                         onChangeText={(smsValue) => setSMSCode(smsValue)}
                       />
@@ -231,9 +230,9 @@ export const ValidationForm = (props) => {
                   ) : null}
                   <Button
                     onPress={() => submitCode("sms")}
-                    disabled={!enabledSMSValidateButton}
+                    disabled={!enabledSMSValidateButton || sendSMSAgainEnabled}
                     style={{
-                      backgroundColor: enabledSMSValidateButton
+                      backgroundColor: enabledSMSValidateButton || !sendSMSAgainEnabled
                         ? "#cda434"
                         : "#f1f1f1",
                     }}
