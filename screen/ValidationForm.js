@@ -230,9 +230,9 @@ export const ValidationForm = (props) => {
                   ) : null}
                   <Button
                     onPress={() => submitCode("sms")}
-                    disabled={!enabledSMSValidateButton}
+                    disabled={!enabledSMSValidateButton || sendSMSAgainEnabled}
                     style={{
-                      backgroundColor: enabledSMSValidateButton
+                      backgroundColor: enabledSMSValidateButton || !sendSMSAgainEnabled
                         ? "#cda434"
                         : "#f1f1f1",
                     }}
@@ -291,8 +291,8 @@ const Box = styled.View`
 `;
 
 const Box2 = styled.View`
-  flex-direction: row;
   align-items: center;
+  margin-bottom: 8px;
 `;
 
 const LabelError = styled.Text`
