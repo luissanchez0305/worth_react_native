@@ -94,13 +94,6 @@ export const ValidationForm = (props) => {
           userContext.user.isEmailValidated = true
           setEmailValidButtonText(emailValidatedText);
           setEnabledEmailValidateButton(false);
-          if(otherDevice){
-            const user = await worthDB.get(epWorth.getUserByEmail(email));
-            user.data.deviceId = deviceId;
-            await worthDB.put(epWorth.updateDeviceUser(data.email), {
-              ...user.data,
-            })
-          }
         } else {
           Toast.show(codeNotValidText, {
             duration: Toast.durations.LONG,
@@ -118,6 +111,13 @@ export const ValidationForm = (props) => {
             userContext.user.isSMSValidated = true
             setSMSValidButtonText(cellphoneValidatedText);
             setEnabledSMSValidateButton(false);
+            if(otherDevice){
+              const user = await worthDB.get(epWorth.getUserByEmail(email));
+              user.data.deviceId = deviceId;
+              await worthDB.put(epWorth.updateDeviceUser(email), {
+                ...user.data,
+              })
+            }
           } else {
             Toast.show(codeNotValidText, {
               duration: Toast.durations.LONG,

@@ -62,6 +62,11 @@ export default function LoginForm(props) {
               await worthDB.put(epWorth.deleteOrphanDevice(deviceData.deviceId));
               if(user.data.deviceId !== deviceData.deviceId){
                 contextLoginData.isSMSValidated = false
+                user.data.SMSCode = '123456'
+                user.data.isValidated = false
+                await worthDB.put(epWorth.updateDeviceUser(data.email), {
+                  ...user.data,
+                })
                 userContext.user = contextLoginData;
                 navigation.navigate({ 
                   name: "ValidationForm", 
