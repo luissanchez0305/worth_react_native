@@ -143,5 +143,6 @@ const headSection = {
 const SignalButton = styled.TouchableOpacity`
   background-color: #3f3f3f;
   padding: 7px;
-  margin-left: 5px
+  margin-left: 5px;
+  margin-bottom: 10px;
 `;
