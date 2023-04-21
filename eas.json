@@ -24,6 +24,15 @@
       "preview3": {
         "developmentClient": true
       },
-      "production": {}
+      "production": {
+        "env": {
+          "ALPHAADVANTAGE_KEY":"CHXCWSWAQNCYMAWR",
+          "FINNHUB_SANDBOX_KEY":"sandbox_cbaqv02ad3i91bfqaesg",
+          "FINNHUB_KEY":"cbaqv02ad3i91bfqaes0",
+          "POLYGON_KEY":"7j0RZ9nn9dd8tp13fXYMMeH6EN1vyhQG",
+          "YOUTUBE_KEY":"AIzaSyBXYtvK1nGLzR3OSejuKd3fpvHvwVp_b0o",  
+          "TRADINGVIEW_URL":"165.227.117.108:8181",
+          "API_URL":"https://worth-be.herokuapp.com"
+        }}
     }
   }

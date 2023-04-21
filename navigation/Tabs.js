@@ -48,7 +48,7 @@ export default function Tabs() {
           options={{
             tabBarIcon: ({ focused }) => (
               <Image
-                source={require("../assets/tabsIcons/charts.png")}
+                source={require("../assets/tabsIcons/charts-up.png")}
                 resizeMode="contain"
                 style={{
                   width: 26,
@@ -66,7 +66,7 @@ export default function Tabs() {
           options={{
             tabBarIcon: ({ focused }) => (
               <Image
-                source={require("../assets/tabsIcons/charts.png")}
+                source={require("../assets/tabsIcons/wifi.png")}
                 resizeMode="contain"
                 style={{
                   width: 26,
