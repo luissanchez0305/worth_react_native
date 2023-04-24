@@ -56,6 +56,14 @@ export const cleanPrice = (data) => {
             }
         }
         else {
+            if(data.closingTrades.length === 0 || data.openTrades.length === 0){
+                return {
+                    title: String(data.symbol).replace('-',''),
+                    price: 0,
+                    change: 0,
+                    isGain: false,
+                }
+            }
             const change = parseFloat((1 - data.closingTrades[0].p / data.openTrades[0].p)*100).toFixed(2);
             return {
                 title: String(data.symbol).replace('-',''),

@@ -70,7 +70,10 @@ export default function HomeScreen() {
   
         const data = [];
         responses.forEach((res) => {
-          data.push(cleanPrice(res.data));
+          const item = cleanPrice(res.data);
+          if(item.price > 0){
+            data.push(item);
+          }
         })
         
         setData(data)
