@@ -39,7 +39,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.esrocapital.worthapp",
-      "versionCode": 2,
+      "versionCode": 3,
       "googleServicesFile": "./google-services.json"
     },
     "web": {

@@ -1,6 +1,6 @@
 {
   "name": "esroworth",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -30,7 +30,7 @@
     "react-native": "0.68.2",
     "react-native-country-flag": "^1.1.6",
     "react-native-dotenv": "^3.3.1",
-    "react-native-dropdown-picker": "^5.4.2",
+    "react-native-dropdown-picker": "^5.4.6",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-marquee-view": "^1.0.5",
     "react-native-phone-number-input": "^2.1.0",

@@ -4,9 +4,11 @@ import styled from "styled-components/native";
 import { CardContainer } from "../../globalStyle";
 import DropDownPicker from "react-native-dropdown-picker";
 import worthDB, { endpoints as epWorth } from "../../api/localDB";
+import finnhubDB, { endpoints as epFinnhub } from "../../api/finnhubDB";
 import alphaAdvantageDB, {
   endpoints as epAlphaAdvantage,
 } from "../../api/alphaAdvantageDB";
+import {FINNHUB_KEY} from '@env'
 
 export default function CalculatorForm() {
   const [lots, setLots] = useState("--");
@@ -29,48 +31,58 @@ export default function CalculatorForm() {
   const [loadingSymbols, setLoadingSymbols] = useState(false);
   const [promiseStatus, setPromiseStatus] = useState("Obteniendo los datos...");
   const [symbols, setSymbols] = useState([]);
-  const [currencies, setCurrencies] = useState([]);
+  const [currencies, setCurrencies] = useState([
+    {label:'USD', value: 'USD'}, 
+    {label:'EUR', value: 'EUR'},
+    {label:'GBP', value: 'GBP'},
+    {label:'JPY', value: 'JPY'},
+    {label:'CHF', value: 'CHF'},
+    {label:'AUD', value: 'AUD'},
+    {label:'CAD', value: 'CAD'},
+    {label:'NZD', value: 'NZD'},
+    {label:'ZAR', value: 'ZAR'},
+    {label:'MXN', value: 'MXN'},
+    {label:'CNY', value: 'CNY'},
+    {label:'HKD', value: 'HKD'},
+    {label:'SGD', value: 'SGD'},
+    {label:'NOK', value: 'NOK'},
+    {label:'SEK', value: 'SEK'},
+    {label:'TRY', value: 'TRY'},
+    {label:'RUB', value: 'RUB'},
+    {label:'INR', value: 'INR'},
+    {label:'BRL', value: 'BRL'}
+  ]);
 
-  const promises = [];
-  let responses = [];
   const getData = async () => {
-    promises.push(worthDB.get(epWorth.getAllSymbols));
-    promises.push(worthDB.get(epWorth.getAllCurrencies));
+    const response = await finnhubDB.get(epFinnhub.symbols(FINNHUB_KEY));
+    
+    const _items = response.data.map((symbol) => ({
+      label: symbol.displaySymbol,
+      value: symbol.symbol,
+    }));
+    setSymbols(_items);
+    setLoadingSymbols(true);
+  };
 
-    try {
-      responses = await Promise.all(promises);
-    } catch (ex) {
-      setPromiseStatus(`Error al cargar datos: ${ex}`);
-      return;
-    }
+  const setSymbolVal = async (obj) => {
+    setLots("--");
+    setUnits("--");
+    setRiskMoney("--");
+    if (currencyId) {
+      const instrumentArray = obj.split(":")[1].split("_");
+      const currencyFrom = currencyId;
+      setCurrencyResultText(currencyFrom);
+      const instrumentFrom = instrumentArray[0];
+      const to = instrumentArray[1];
+      if (currencyFrom.toLowerCase() === to.toLowerCase()) {
+        setPrice("1");
+      } else {
+        const type = instrumentArray[3];
 
-    for (let i = 0; i < responses.length; i++) {
-      const response = responses[i];
-      switch (i) {
-        case 0:
-          const _resSymbols = response.data;
-          const _items = [];
-          _resSymbols.forEach((element) => {
-            _items.push({
-              label: `${element.from}${element.to}`,
-              value: `${element.id}:${element.from}:${element.to}:${element.type}`,
-            });
-          });
-          setSymbols(_items);
-          break;
-        case 1:
-          const _resCurrencies = response.data;
-          const _currencies = [];
-          _resCurrencies.forEach((element) => {
-            _currencies.push({
-              label: element.name,
-              value: `${element.id}:${element.name}:${element.type}`,
-            });
-          });
-          setCurrencies(_currencies);
-          break;
+        getPrice(type, currencyFrom, to);
       }
-      setLoadingSymbols(true);
+      setInstrumentText(`${instrumentFrom}${to}`);
+      setCurrencyText(`${currencyFrom}${to}`);
     }
   };
 
@@ -81,38 +93,15 @@ export default function CalculatorForm() {
     setCurrencyId(obj);
 
     if (instrumentId) {
-      const instrumentArray = instrumentId.split(":");
-      const currencyArray = obj.split(":");
-      const from = currencyArray[1];
-      setCurrencyResultText(from);
-      const to = instrumentArray[2];
-      const type = currencyArray[2];
-      if (from.toLowerCase() === to.toLowerCase()) {
-        setPrice(1);
-      } else {
-        getPrice(type, from, to);
-      }
-      setCurrencyText(`${from}${to}`);
-      setInstrumentText(`${instrumentArray[1]}${to}`);
-    }
-  };
-
-  const setSymbolVal = async (obj) => {
-    setLots("--");
-    setUnits("--");
-    setRiskMoney("--");
-    if (currencyId) {
-      const instrumentArray = obj.split(":");
-      const currencyArray = currencyId.split(":");
-      const currencyFrom = currencyArray[1];
+      const instrumentArray = instrumentId.split(":")[1].split("_");
+      const instrumentFrom = instrumentArray[0];
+      const currencyFrom = obj;
       setCurrencyResultText(currencyFrom);
-      const instrumentFrom = instrumentArray[1];
-      const to = instrumentArray[2];
+      const to = instrumentArray[1];
+      const type = 'forex';
       if (currencyFrom.toLowerCase() === to.toLowerCase()) {
-        setPrice(1);
+        setPrice("1");
       } else {
-        const type = instrumentArray[3];
-
         getPrice(type, currencyFrom, to);
       }
       setInstrumentText(`${instrumentFrom}${to}`);
@@ -169,6 +158,10 @@ export default function CalculatorForm() {
   }, []);
 
   const calculate = () => {
+    if(accountSize === 0 || stopLostPips === 0 || risk === 0 || price === 0 || contractSize === 0 || pipSize === 0) {
+      return;
+    }
+
     const _risk = parseFloat(accountSize * (risk / 100));
     setRiskMoney(_risk);
     const _units = parseFloat((_risk / (stopLostPips * pipSize)) * price);
@@ -194,6 +187,7 @@ export default function CalculatorForm() {
                   searchable={true}
                   onChangeValue={(obj) => setSymbolVal(obj)}
                   loading={loadingSymbols}
+                  theme="DARK"
                 />
               }
             </DropDownInfoGroup>
@@ -211,6 +205,7 @@ export default function CalculatorForm() {
                     searchable={true}
                     onChangeValue={(obj) => setCurrencyVal(obj)}
                     loading={loadingSymbols}
+                    theme="DARK"
                   />
                 }
               </InputGroup>
@@ -220,7 +215,6 @@ export default function CalculatorForm() {
             <InputGroup>
               <Label>Saldo de la cuenta</Label>
               <Input
-                placeholder="useless placeholder"
                 keyboardType="numeric"
                 onChangeText={(text) => setAccountSize(Number(text))}
               />
@@ -228,8 +222,8 @@ export default function CalculatorForm() {
             <InfoGroup>
               <Label>Precio ({currencyText})</Label>
               <Input
-                placeholder="useless placeholder"
                 keyboardType="numeric"
+                editable={false}
                 value={price}
                 onChangeText={(text) => setPrice(Number(text))}
               />
@@ -239,7 +233,6 @@ export default function CalculatorForm() {
             <InputGroup>
               <Label>Stop loss (en PIPs)</Label>
               <Input
-                placeholder="useless placeholder"
                 keyboardType="numeric"
                 onChangeText={(text) => setStopLostPips(Number(text))}
               />
@@ -247,7 +240,6 @@ export default function CalculatorForm() {
             <InputGroup>
               <Label>Tamaño del contrato</Label>
               <Input
-                placeholder="useless placeholder"
                 keyboardType="numeric"
                 onChangeText={(text) => setContractSize(Number(text))}
               />
@@ -258,7 +250,6 @@ export default function CalculatorForm() {
             <InputGroup>
               <Label>Tamaño de PIP ({instrumentText})</Label>
               <Input
-                placeholder="useless placeholder"
                 keyboardType="numeric"
                 onChangeText={(text) => setPipSize(Number(text))}
               />
@@ -266,7 +257,6 @@ export default function CalculatorForm() {
             <InputGroup>
               <Label>Riesgo (%)</Label>
               <Input
-                placeholder="useless placeholder"
                 keyboardType="numeric"
                 onChangeText={(text) => setRisk(text)}
               />
