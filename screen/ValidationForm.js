@@ -51,8 +51,6 @@ export const ValidationForm = (props) => {
             email: userContext.user.email,
           })
 
-          console.log('resEmail', resEmail, userContext.user.email)
-
           setSendEmailAgainText('Correo enviado...')
           setSendEmailAgainEnabled(false)
           setTimeout(() => {
@@ -131,7 +129,7 @@ export const ValidationForm = (props) => {
           }
         } catch (e) {
           raiseToast(e);
-          console.log('error', e)
+          console.log('error validation sms', e)
         }
         break;
     }
