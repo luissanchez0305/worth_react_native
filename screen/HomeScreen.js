@@ -80,7 +80,7 @@ export default function HomeScreen() {
         setLoadingMarquee(false);
       })
       .catch((ex) => {
-        setPricesPromiseStatus(`Error al cargar symbolos: ${ex}`)
+        setPricesPromiseStatus(`Error al cargar symbols: ${ex}`)
       })
       .finally(() => {
         setPricesPromiseStatus(`finish loading`)
@@ -141,6 +141,7 @@ export default function HomeScreen() {
     }
     catch(e){
       console.log(e)
+      setEventsPromiseStatus(e)
     }
   }
   

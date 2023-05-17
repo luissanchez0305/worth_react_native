@@ -8,7 +8,6 @@ import finnhubDB, { endpoints as epFinnhub } from "../../api/finnhubDB";
 import alphaAdvantageDB, {
   endpoints as epAlphaAdvantage,
 } from "../../api/alphaAdvantageDB";
-import {FINNHUB_KEY} from '@env'
 
 export default function CalculatorForm() {
   const [lots, setLots] = useState("--");
@@ -54,7 +53,7 @@ export default function CalculatorForm() {
   ]);
 
   const getData = async () => {
-    const response = await finnhubDB.get(epFinnhub.symbols(FINNHUB_KEY));
+    const response = await finnhubDB.get(epFinnhub.symbols);
     
     const _items = response.data.map((symbol) => ({
       label: symbol.displaySymbol,

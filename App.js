@@ -59,8 +59,7 @@ export default function App() {
         finalStatus = status;
       }
       if (finalStatus !== 'granted') {
-        alert('Failed to get push token for push notification!');
-        return;
+        alert(`Failed to get push token for push notification! Status ${finalStatus}`);
       }
       token = (await Notifications.getExpoPushTokenAsync()).data;
 

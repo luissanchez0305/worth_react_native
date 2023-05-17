@@ -50,5 +50,8 @@
     "@types/react-native": "~0.67.6",
     "typescript": "~4.3.5"
   },
-  "private": true
+  "private": true,
+  "volta": {
+    "node": "16.20.0"
+  }
 }

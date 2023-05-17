@@ -23,8 +23,8 @@ export default function LoginForm(props) {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      password: "qwertyuiop",
-      email: "luis.sanchez@esferasoluciones.com",
+      password: "",
+      email: "",
     },
   });
 

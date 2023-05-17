@@ -28,11 +28,11 @@ export default function RegistreForm({user,setValidate}) {
   const userData = useRef();
 
   const initialState = {
-    name: "",
-    lastname: "",
-    email: "",
-    phone: "",
-    password: "",
+    name: "fasfdsafaf",
+    lastname: "fasdfafdadf",
+    email: "test23@acccount.com",
+    phone: "643525445",
+    password: "fsadfadfsafdsafsafda",
     isPremium: false
   }
   const {
@@ -74,27 +74,48 @@ export default function RegistreForm({user,setValidate}) {
 
         data = {...data, deviceId, oneSignal_id: deviceData.token }
       }
-    worthDB
-      .post(epWorth.createNewUser, {
-        ...data
-      })
-      .then(async (data) => {
-        if(deviceId.length){
+      try{
+      const registerData = await worthDB
+        .post(epWorth.createNewUser, {
+          ...data
+        })
+      
+        /* if(deviceId.length){
           await worthDB.put(epWorth.deleteOrphanDevice(deviceId));
+        } */
+        if(registerData.data.code && registerData.data.code === 'ER_DUP_ENTRY'){
+          raiseToast('¡Error, el correo ya existe. Por favor, ingrese otro!')
+          return;
         }
-        raiseToast(successRegisterText)
-        userContext.user = { email: data.email, isEmailValidated: false, isSMSValidated: false };
-        navigation.navigate("ValidationForm", {
-          email: data.email,
-        });
+        worthDB
+          .post(epWorth.login, {
+            username: data.email,
+            password: data.password,
+          })
+          .then(async (res) => {
+            const contextLoginData = {
+              token: res.data.access_token,
+              email: registerData.data.email,
+              isPremium: false,
+              isSMSValidated: false,
+              isEmailValidated: false
+            };
+            await AsyncStorage.setItem("@worthapp", JSON.stringify(contextLoginData));
 
-      })
-      .catch((error) => {
-        raiseToast(failRegisterText)
-        if (error.response) {
-          console.log("error", error.response.data.message);
-        } 
-      });
+            raiseToast(successRegisterText)
+            userContext.user = { email: data.email, isEmailValidated: false, isSMSValidated: false };
+            navigation.navigate("ValidationForm", {
+              email: data.email,
+            });
+          });
+      } catch (error) {
+        if(error.response && error.response.data.message[0].indexOf('minimum length') > -1){
+          raiseToast('¡Error, la contraseña debe tener al menos 10 caracteres!')
+        } else {
+          raiseToast(`¡Error, ${error}!`)
+        }
+        console.log("error register", error);
+      }
     }
   };
 

@@ -17,12 +17,9 @@ import { getStorageItem } from "../utils";
 import HeadDetail from "../components/HeadDetail";
 import RegistreForm from "../components/session/RegistreForm";
 import UserContext from "../context/UserContext";
-import { ValidationForm } from "./ValidationForm";
-import SignalsScreen from "./SignalsScreen";
-import { useNavigation } from "@react-navigation/native";
+import { ValidationForm } from "./ValidationForm";  
 
 export default function ProfileScreen() {
-  const navigation = useNavigation()
   const userContext = useContext(UserContext);
   const [userToken, setUserToken] = useState();
   const [userValidated, setUserValidated] = useState(false)
@@ -56,7 +53,7 @@ export default function ProfileScreen() {
           <SafeAreaView>
             {userToken ? (
               userValidated ?
-                <Profile userToken={userToken} signout={signout} user={userContext.user.email} setValidate={setUserValidated} /> :
+                <Profile getToken={token} userToken={userToken} signout={signout} user={userContext.user.email} setValidate={setUserValidated} /> :
                 <ValidationForm signOut={signout} />
             ) : (
               <>
@@ -87,7 +84,7 @@ function Profile(props) {
           <HeadDetail title={"Mi Perfil"} detail={"Actualiza tus datos aquí"} />
         </ContainerHeader>
       </ContainerForm>
-      <RegistreForm user={props.user} setValidate={props.setValidate} />
+      <RegistreForm user={props.user} setValidate={props.setValidate} getToken={props.getToken} />
     </>
   );
 }

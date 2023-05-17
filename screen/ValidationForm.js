@@ -11,6 +11,7 @@ import { CardContainer, Layout } from "../globalStyle";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ButtonBack from "../components/ButtonBack";
+import { raiseToast } from "../utils";
 
 export const ValidationForm = (props) => {
   const {otherDevice, email, deviceId} = useRoute().params;
@@ -86,19 +87,23 @@ export const ValidationForm = (props) => {
   const submitCode = async (type) => {
     switch (type) {
       case "email":
-        const resEmail = await worthDB.post(epWorth.validateEmailCode, {
-          email: userContext.user.email,
-          code: emailCode,
-        });
-        if (resEmail.data.valid) {
-          userContext.user.isEmailValidated = true
-          setEmailValidButtonText(emailValidatedText);
-          setEnabledEmailValidateButton(false);
-        } else {
-          Toast.show(codeNotValidText, {
-            duration: Toast.durations.LONG,
-            position: Toast.positions.CENTER,
+        try {
+          const resEmail = await worthDB.post(epWorth.validateEmailCode, {
+            email: userContext.user.email,
+            code: emailCode,
           });
+          if (resEmail.data.valid) {
+            userContext.user.isEmailValidated = true
+            setEmailValidButtonText(emailValidatedText);
+            setEnabledEmailValidateButton(false);
+          } else {
+            Toast.show(codeNotValidText, {
+              duration: Toast.durations.LONG,
+              position: Toast.positions.CENTER,
+            });
+          }
+        } catch (e) {
+          console.log('error validation email', e)
         }
         break;
       case "sms":
@@ -125,6 +130,7 @@ export const ValidationForm = (props) => {
             });
           }
         } catch (e) {
+          raiseToast(e);
           console.log('error', e)
         }
         break;
