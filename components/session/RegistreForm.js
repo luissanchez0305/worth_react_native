@@ -28,11 +28,11 @@ export default function RegistreForm({user,setValidate}) {
   const userData = useRef();
 
   const initialState = {
-    name: "fasfdsafaf",
-    lastname: "fasdfafdadf",
-    email: "test23@acccount.com",
-    phone: "643525445",
-    password: "fsadfadfsafdsafsafda",
+    name: "",
+    lastname: "",
+    email: "",
+    phone: "",
+    password: "",
     isPremium: false
   }
   const {

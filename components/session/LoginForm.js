@@ -39,6 +39,7 @@ export default function LoginForm(props) {
           email: data.email.toLowerCase(),
           password: data.password,
         };
+        console.log("data", data);
         worthDB
           .post(epWorth.login, {
             username: data.email,
