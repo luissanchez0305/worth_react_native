@@ -65,6 +65,9 @@ export default function LoginForm(props) {
                 contextLoginData.isSMSValidated = false
                 user.data.SMSCode = '123456'
                 user.data.isValidated = false
+                user.data.oneSignal_id = deviceData.token
+                user.data.deviceId = deviceData.deviceId
+
                 await worthDB.put(epWorth.updateDeviceUser(data.email), {
                   ...user.data,
                 })
@@ -78,6 +81,12 @@ export default function LoginForm(props) {
                   }
                 });
               }
+              else {
+                worthDB.put(epWorth.updateUser(user.data.email), {
+                  ...data,
+                  oneSignal_id: deviceData.token,
+                })
+              }
             }
 
             userContext.user = contextLoginData;
@@ -87,6 +96,7 @@ export default function LoginForm(props) {
           .catch((error) => {
             console.log("Error login ", error);
             raiseToast(failLoginText)
+            // raiseToast(error.message)
           });
       }
     } catch (error) {
