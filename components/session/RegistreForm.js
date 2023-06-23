@@ -5,6 +5,8 @@ import {
   ToastAndroid,
   Platform,
   TouchableOpacity,
+  Pressable,
+  StyleSheet,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import PhoneInput from "react-native-phone-number-input";
@@ -18,8 +20,25 @@ import { useForm, Controller } from "react-hook-form";
 import { CardContainer } from "../../globalStyle";
 import { raiseToast } from "../../utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+const Styles = StyleSheet.create({
+  agreementContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    color: "#ffffff",
+    width: "100%",
+  },
+  verifyButton: {
+    position: 'absolute',
+    alignSelf: 'center',
+    right: 18,
+  },
+});
 
 export default function RegistreForm({user,setValidate}) {
+  const [showPassword, setShowPassword] = React.useState(false);
   const userContext = useContext(UserContext);
   const navigation = useNavigation();
   const successRegisterText = "¡Usuario registrado exitosamente!";
@@ -256,12 +275,17 @@ export default function RegistreForm({user,setValidate}) {
           render={({ field: { onChange, value } }) => (
             <InputGroup>
               <Label>Contraseña</Label>
-              <Input
-                placeholder="Contraseña"
-                value={value}
-                secureTextEntry={true}
-                onChangeText={onChange}
-              />
+              <View style={Styles.agreementContainer}>
+                <Input
+                  placeholder="Contraseña"
+                  value={value}
+                  secureTextEntry={!showPassword}
+                  onChangeText={onChange}
+                />
+                <Pressable onPress={() => setShowPassword(!showPassword)} style={Styles.verifyButton}>
+                  <Icon name="eye" size={22} color="#dadada" />
+                </Pressable>
+              </View>
             </InputGroup>
           )}
           name="password"
@@ -328,4 +352,5 @@ const Input = styled.TextInput`
   margin-horizontal: 3%;
   margin-bottom: 6px;
   min-width: 43%;
+  width: 94%;
 `;

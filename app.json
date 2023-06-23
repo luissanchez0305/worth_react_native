@@ -2,7 +2,7 @@
   "expo": {
     "name": "Esro Worth",
     "slug": "worth",
-    "version": "1.0.2",
+    "version": "1.0.5",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -36,10 +36,10 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#000000"
       },
       "package": "com.esrocapital.worthapp",
-      "versionCode": 8,
+      "versionCode": 11,
       "googleServicesFile": "./google-services.json"
     },
     "web": {

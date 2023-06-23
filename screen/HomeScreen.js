@@ -63,7 +63,7 @@ export default function HomeScreen() {
               .get(url)
               .catch((ex) => {
                 setPricesPromiseStatus(`Error al cargar datos: ${ex}`)
-              }))  
+              }))
         });
   
         const responses = await Promise.all(promises);
@@ -156,7 +156,7 @@ export default function HomeScreen() {
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
             <View>
-              <HeadImage source={require("../assets/worth-home.png")} />
+              <HeadImage source={require("../assets/worth_blanco.png")} />
               <SubHeadText>Bienvenido</SubHeadText>
             </View>
             <View
@@ -166,14 +166,14 @@ export default function HomeScreen() {
                 alignSelf: "flex-end",
               }}
             >
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 onPress={() => {
-                  /* 1. Navigate to the Details route with params */
+                  /* 1. Navigate to the Details route with params * /
                   navigation.navigate("Notification");
                 }}
               >
                 <NavIcon source={require("../assets/campana.png")} />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity
                 onPress={() => {
                   /* 1. Navigate to the Details route with params */

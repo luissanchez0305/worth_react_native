@@ -1,7 +1,7 @@
 import { useNavigation, CommonActions } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import worthDB, { endpoints as epWorth } from "../../api/localDB";
-import { View, Text, ToastAndroid, Platform } from "react-native";
+import { View, Text, ToastAndroid, Platform, TouchableOpacity, StyleSheet, Pressable } from "react-native";
 import UserContext from "../../context/UserContext";
 import React, { useContext, useEffect } from "react";
 import styled from "styled-components/native";
@@ -11,8 +11,25 @@ import HeadDetail from "../HeadDetail";
 import { useForm, Controller } from "react-hook-form";
 import { CardContainer } from "../../globalStyle";
 import { raiseToast } from "../../utils";
+import { Container } from "../HeadSection";
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+const Styles = StyleSheet.create({
+  agreementContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    color: "#ffffff",
+  },
+  verifyButton: {
+    position: 'absolute',
+    alignSelf: 'center',
+    right: 15,
+  },
+});
 
 export default function LoginForm(props) {
+  const [showPassword, setShowPassword] = React.useState(false);
   const userContext = useContext(UserContext);
   const navigation = useNavigation();
   const successLoginText = "¡Ha iniciado sesión exitosamente!";
@@ -141,12 +158,17 @@ export default function LoginForm(props) {
           render={({ field: { onChange, value } }) => (
             <InputGroup>
               <Label>Contraseña</Label>
-              <Input
-                placeholder="Contraseña"
-                value={value}
-                secureTextEntry={true}
-                onChangeText={onChange}
-              />
+              <View style={Styles.agreementContainer}>
+                <Input
+                  placeholder="Contraseña"
+                  value={value}
+                  secureTextEntry={!showPassword}
+                  onChangeText={onChange}
+                />
+                <Pressable onPress={() => setShowPassword(!showPassword)} style={Styles.verifyButton}>
+                  <Icon name="eye" size={22} color="#dadada" />
+                </Pressable>
+              </View>
             </InputGroup>
           )}
           name="password"
@@ -183,6 +205,7 @@ const Label = styled.Text`
 `;
 
 const ButtonLogin = styled.TouchableOpacity`
+  width: 95%;
   font-weight: 700;
   padding-vertical: 14px;
   background-color: #cda434;
@@ -192,6 +215,7 @@ const ButtonLogin = styled.TouchableOpacity`
 `;
 
 const ButtonRegistre = styled.TouchableOpacity`
+  width: 95%;
   font-weight: 700;
   padding-vertical: 14px;
   background-color: #2d2d2d;
@@ -205,6 +229,7 @@ const InputGroup = styled.View`
 `;
 
 const Input = styled.TextInput`
+  width: 95%;
   height: 48px;
   margin-top: 8px;
   border-width: 1px;

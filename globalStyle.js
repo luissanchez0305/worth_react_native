@@ -13,10 +13,10 @@ export const HeadText = styled.Text`
 `;
 
 export const HeadImage = styled.Image`
-  width: 120px;
-  height: 45px;
+  width: 170px;
+  height: 60px;
   margin-top: 16px;
-  margin-right: 8px;
+  margin-left: 14px;
   margin-bottom: 10px;
 `;
 
