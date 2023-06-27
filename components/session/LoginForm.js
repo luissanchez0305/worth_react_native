@@ -139,7 +139,6 @@ export default function LoginForm(props) {
             <InputGroup>
               <Label>Correo</Label>
               <Input
-                placeholder="Correo"
                 value={value}
                 keyboardType="email-address"
                 onChangeText={onChange}
@@ -160,7 +159,6 @@ export default function LoginForm(props) {
               <Label>Contraseña</Label>
               <View style={Styles.agreementContainer}>
                 <Input
-                  placeholder="Contraseña"
                   value={value}
                   secureTextEntry={!showPassword}
                   onChangeText={onChange}

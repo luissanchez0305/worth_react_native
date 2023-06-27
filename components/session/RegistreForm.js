@@ -173,7 +173,6 @@ export default function RegistreForm({user,setValidate}) {
             <InputGroup>
               <Label>Correo</Label>
               <Input
-                placeholder="Correo"
                 keyboardType="email-address"
                 value={value}
                 onChangeText={onChange}
@@ -193,7 +192,6 @@ export default function RegistreForm({user,setValidate}) {
             <InputGroup>
               <Label>Nombre Completo</Label>
               <Input
-                placeholder="Nombre Completo"
                 value={value}
                 onChangeText={onChange}
               />
@@ -212,7 +210,6 @@ export default function RegistreForm({user,setValidate}) {
             <InputGroup>
               <Label>Apellido Completo</Label>
               <Input
-                placeholder="Apellido Completo"
                 value={value}
                 onChangeText={onChange}
               />
@@ -238,7 +235,6 @@ export default function RegistreForm({user,setValidate}) {
                 withDarkTheme
                 disableArrowIcon
                 keyboardType="phone-pad"
-                placeholder="Teléfono"
                 textContainerStyle={{
                   backgroundColor: "#202226",
                   borderRadius: 8,
@@ -277,7 +273,6 @@ export default function RegistreForm({user,setValidate}) {
               <Label>Contraseña</Label>
               <View style={Styles.agreementContainer}>
                 <Input
-                  placeholder="Contraseña"
                   value={value}
                   secureTextEntry={!showPassword}
                   onChangeText={onChange}

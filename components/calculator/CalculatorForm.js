@@ -13,6 +13,8 @@ export default function CalculatorForm() {
   const [lots, setLots] = useState("--");
   const [units, setUnits] = useState("--");
   const [riskMoney, setRiskMoney] = useState("--");
+  const pipSize = 0.01;
+  const contractSize = 100000;
 
   const [instrumentId, setInstrumentId] = useState(null);
   const [instrumentText, setInstrumentText] = useState("");
@@ -21,8 +23,6 @@ export default function CalculatorForm() {
   const [currencyResultText, setCurrencyResultText] = useState("");
   const [stopLostPips, setStopLostPips] = useState(0);
   const [accountSize, setAccountSize] = useState(0);
-  const [pipSize, setPipSize] = useState(0);
-  const [contractSize, setContractSize] = useState(0);
   const [risk, setRisk] = useState(0);
   const [price, setPrice] = useState("");
   const [currencyOpen, setCurrencyOpen] = useState(false);
@@ -175,7 +175,7 @@ export default function CalculatorForm() {
           <Row>
             <DropDownInfoGroup>
               <Label>Instrumento</Label>
-              {
+              <InputGroup>
                 <DropDownPicker
                   open={symbolOpen}
                   value={instrumentId}
@@ -186,14 +186,15 @@ export default function CalculatorForm() {
                   searchable={true}
                   onChangeValue={(obj) => setSymbolVal(obj)}
                   loading={loadingSymbols}
+                  placeholder="Intrumentos"
                   theme="DARK"
+                  listMode="SCROLLVIEW"
                 />
-              }
+              </InputGroup>
             </DropDownInfoGroup>
             <DropDownInfoGroup>
               <Label>Moneda de cambio</Label>
               <InputGroup>
-                {
                   <DropDownPicker
                     open={currencyOpen}
                     value={currencyId}
@@ -204,9 +205,10 @@ export default function CalculatorForm() {
                     searchable={true}
                     onChangeValue={(obj) => setCurrencyVal(obj)}
                     loading={loadingSymbols}
+                    placeholder="Monedas"
                     theme="DARK"
+                    listMode="SCROLLVIEW"
                   />
-                }
               </InputGroup>
             </DropDownInfoGroup>
           </Row>
@@ -237,10 +239,10 @@ export default function CalculatorForm() {
               />
             </InputGroup>
             <InputGroup>
-              <Label>Tamaño del contrato</Label>
+              <Label>Riesgo (%)</Label>
               <Input
                 keyboardType="numeric"
-                onChangeText={(text) => setContractSize(Number(text))}
+                onChangeText={(text) => setRisk(text)}
               />
             </InputGroup>
           </Row>
@@ -249,15 +251,19 @@ export default function CalculatorForm() {
             <InputGroup>
               <Label>Tamaño de PIP ({instrumentText})</Label>
               <Input
+                style={{ color: "#a1a1a1" }}
                 keyboardType="numeric"
-                onChangeText={(text) => setPipSize(Number(text))}
+                value="0.01"
+                editable={false}
               />
             </InputGroup>
             <InputGroup>
-              <Label>Riesgo (%)</Label>
+              <Label>Tamaño del contrato</Label>
               <Input
+                style={{ color: "#a1a1a1" }}
                 keyboardType="numeric"
-                onChangeText={(text) => setRisk(text)}
+                value="100000"
+                editable={false}
               />
             </InputGroup>
           </Row>

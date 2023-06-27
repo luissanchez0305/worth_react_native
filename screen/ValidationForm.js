@@ -184,7 +184,6 @@ export const ValidationForm = (props) => {
                       </Box>
                       <Input
                         keyboardType='numeric'
-                        placeholder="Código enviado al email"
                         value={emailCode}
                         onChangeText={(emaiValue) => setEmailCode(emaiValue)}
                       />
@@ -226,7 +225,6 @@ export const ValidationForm = (props) => {
                       </Box>
                       <Input
                         keyboardType='numeric'
-                        placeholder="Código enviado a SMS"
                         value={smsCode}
                         onChangeText={(smsValue) => setSMSCode(smsValue)}
                       />
