@@ -1,7 +1,7 @@
-import { Layout, CardContainer } from "../globalStyle";
+import { Layout, CardContainer, ScrollCardContainer } from "../globalStyle";
 import { GradientBackground } from "../components/GradientBackground";
 import ChartsFilterButton from "../components/ChartsFilterButton";
-import { Button, Text, View, StyleSheet } from "react-native";
+import { ScrollView, Button, Text, View, StyleSheet, Dimensions, SafeAreaView } from "react-native";
 import ListEvents from "../components/list/ListEvents";
 import HeadSection from "../components/HeadSection";
 import { useEffect, useState } from "react";
@@ -15,6 +15,7 @@ export default function ChartsScreen() {
   const [eventFilter, setEventFilter] = useState("today");
   const [eventsLoading, setEventsLoading] = useState(true);
   const [eventsData, setEventsData] = useState([]);
+  const [screenHeight, setScreenHeight] = useState(0);
 
   const tradingview = () => {
     setScreenFilter("tradingview");
@@ -53,12 +54,13 @@ export default function ChartsScreen() {
 
   useEffect(() => {
     getInitEvents()
+    setScreenHeight(Dimensions.get('window').height)
   }, []);
   return (
     <GradientBackground>
       <Layout>
-        {/* <SafeAreaView> */}
-        <CardContainer>
+        <SafeAreaView>
+        <CardContainer style={{paddingBottom: 0}}>
           <ChartsFilterButton
             filterTradingView={tradingview}
             filterEvents={events}
@@ -68,9 +70,8 @@ export default function ChartsScreen() {
         {screenFilter === "tradingview" ? (
           <ContainerView />
         ) : (
-          <CardContainer>
             <View>
-              <View style={{ flexDirection: "row", justifyContent: 'space-between', alignItems: 'center' }}>
+              <View style={{ flexDirection: "row", justifyContent: 'space-between', alignItems: 'center', marginHorizontal: 10 }}>
                 <HeadSection
                   icon={headSection.events.icon}
                   title={headSection.events.title}
@@ -78,52 +79,62 @@ export default function ChartsScreen() {
                 <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
                   <SignalButton
                     onPress={() => setEventFilterButton("yesterday")}
+                    style={eventFilter === 'yesterday' ? { 
+                      color: "black", 
+                      backgroundColor: "white" 
+                    } : {
+                      color: "white",
+                      backgroundColor: "#3f3f3f",
+                    }}
                   >
-                    <Text style={{ color: "white", textAlign: "center", fontSize: 14 }}>
+                    <Text style={{ textAlign: "center", fontSize: 14 }}>
                       AYER
                     </Text>
                   </SignalButton>
                   <SignalButton
                     onPress={() => setEventFilterButton("today")}
+                    style={eventFilter === 'today' ? { 
+                      color: "black", 
+                      backgroundColor: "white" 
+                    } : {
+                      color: "white",
+                      backgroundColor: "#3f3f3f",
+                    }}
                   >
-                    <Text style={{ color: "white", textAlign: "center", fontSize: 14 }}>
+                    <Text style={{ textAlign: "center", fontSize: 14 }}>
                       HOY
                     </Text>
                   </SignalButton>
                   <SignalButton
                     onPress={() => setEventFilterButton("tomorrow")}
+                    style={eventFilter === 'tomorrow' ? { 
+                      color: "black", 
+                      backgroundColor: "white" 
+                    } : {
+                      color: "white",
+                      backgroundColor: "#3f3f3f",
+                    }}
                   >
-                    <Text style={{ color: "white", textAlign: "center", fontSize: 14 }}>
+                    <Text style={{ textAlign: "center", fontSize: 14 }}>
                       MAÑANA
                     </Text>
                   </SignalButton>
-                  {/* <Button
-                    title="Hoy"
-                    onPress={() => setEventFilterButton("today")}
-                    style={{
-                      backgroundColor:
-                        eventFilter === "today" ? "#3f3f3f" : "#000",
-                    }}
-                  />
-                  <Button
-                    title="Mañana"
-                    onPress={() => setEventFilterButton("tomorrow")}
-                    style={{
-                      backgroundColor:
-                        eventFilter === "tomorrow" ? "#3f3f3f" : "#000",
-                    }}
-                  /> */}
                 </View>
               </View>
-              {eventsLoading ? (
-                <Text style={{ color: "#8b8c97" }}>Cargando...</Text>
-              ) : (
-                eventsData.length > 0 ? (<ListEvents events={eventsData} />) : (<Text style={{ color: "#8b8c97" }}>No hay eventos para este dia</Text>)
-              )}
+                <ScrollCardContainer>
+                {eventsLoading ? (
+                  <Text style={{ color: "#8b8c97" }}>Cargando...</Text>
+                ) : (
+                  eventsData.length > 0 ? (
+                      <ListEvents events={eventsData} screenHeight={screenHeight} topBottomAreasHeight={212} />
+                    ) : (
+                      <Text style={{ color: "#8b8c97" }}>No hay eventos para este dia</Text>
+                    )
+                )}
+                </ScrollCardContainer>
             </View>
-          </CardContainer>
         )}
-        {/* </SafeAreaView> */}
+        </SafeAreaView>
       </Layout>
     </GradientBackground>
   );
@@ -136,7 +147,7 @@ const headSection = {
   },
   events: {
     title: "Eventos",
-    icon: require("../assets/headIcons/content.png"), //TODO: put a calendar icon
+    icon: require("../assets/headIcons/content.png"),
   },
 };
 

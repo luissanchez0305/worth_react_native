@@ -48,6 +48,19 @@ export const CardContainer = styled.View`
   margin-vertical: 10px;
 `;
 
+
+export const ScrollCardContainer = styled.View`
+  background-color: #131518;
+  border-top-width: 1px;
+  border-top-color: #384153;
+  border-bottom-width: 1px;
+  border-bottom-color: #384153;
+  padding-top: 10px;
+  padding-horizontal: 16px;
+  padding-bottom: 12px;
+  margin-top: 2px;
+`;
+
 export const ContainerForm = styled.View`
   margin-horizontal: 16px;
   margin-vertical: 16px;

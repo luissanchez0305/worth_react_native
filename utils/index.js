@@ -10,7 +10,8 @@ export const getEvents = async (date) => {
       .catch((ex) => {
         throw `Error al traer eventos: ${ex}`
       });
-    return finnhubRes.data["economicCalendar"];
+    const events = finnhubRes.data["economicCalendar"];
+    return events.filter((e) => e.impact === 'high');
   }
 
 export const getTodayDateString = () => {

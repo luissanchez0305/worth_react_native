@@ -4,14 +4,14 @@ import CountryFlag from "react-native-country-flag";
 import { formatCurrencyDecimals, getDateFormatComplete } from "../../utils";
 import { Container, ContainerText, Title } from "../../globalStyle";
 
-export default function ListEvents({ events }) {
+export default function ListEvents({ events, screenHeight, topBottomAreasHeight }) {
   const capitalizeFirstLetter = (
     [first, ...rest],
     locale = navigator.language
   ) => first.toLocaleUpperCase(locale) + rest.join("");
   const cleanUnit = (val) => (val.indexOf("Index") ? val.toUpperCase() : null);
   return (
-    <ScrollView>
+    <ScrollView style={{ height: screenHeight - topBottomAreasHeight }}>
       {events.map((data, index) => (
         <Container key={index}>
           <View style={{ paddingRight: 4, paddingTop: 4, paddingLeft: 4 }}>
@@ -20,11 +20,11 @@ export default function ListEvents({ events }) {
           <ContainerText>
             <Title>{capitalizeFirstLetter(data.event)}</Title>
             <ContainerInfo>
-              <Text style={styles.tagStyle}>Impact</Text>
+              <Text style={styles.tagStyle}>Impacto</Text>
               <Topic>{data.impact.toUpperCase()}</Topic>
               {data.estimate ? (
                 <>
-                  <Text style={styles.tagStyle}>Estimate</Text>
+                  <Text style={styles.tagStyle}>Estimado</Text>
                   <Tag>
                     {formatCurrencyDecimals(data.estimate) +
                       (cleanUnit(data.unit) ? cleanUnit(data.unit) : "")}
@@ -44,7 +44,7 @@ export default function ListEvents({ events }) {
               ) : null}
               {data.prev ? (
                 <>
-                  <Text style={styles.tagStyle}>Previous</Text>
+                  <Text style={styles.tagStyle}>Previo</Text>
                   <Tag>
                     {formatCurrencyDecimals(data.prev)}{" "}
                     {cleanUnit(data.unit) ? cleanUnit(data.unit) : ""}

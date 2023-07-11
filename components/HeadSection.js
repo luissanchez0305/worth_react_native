@@ -1,9 +1,11 @@
 import styled from "styled-components/native";
 
-export default function HeadSection({ icon, title }) {
+export default function HeadSection({ icon, title, iconColor }) {
   return (
     <Container>
-      <Icon source={icon} />
+      <Icon style={{
+        tintColor: iconColor
+      }} source={icon} />
       <Title>{title}</Title>
     </Container>
   );

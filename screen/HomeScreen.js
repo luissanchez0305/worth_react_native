@@ -1,6 +1,6 @@
 
 import React, { useContext, useEffect, useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeadSection from "../components/HeadSection";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -35,6 +35,7 @@ export default function HomeScreen() {
   const [eventsPromiseStatus, setEventsPromiseStatus] = useState('Obteniendo eventos...');
   const [data, setData] = useState([]);
   const [eventsData, setEventsData] = useState([]);
+  const [screenHeight, setScreenHeight] = useState(0);
   
   const courses = [];
   const videos = []
@@ -147,6 +148,7 @@ export default function HomeScreen() {
   
   useEffect(() => {
     init();
+    setScreenHeight(Dimensions.get('window').height)
   }, [])
   return (
     <GradientBackground>
@@ -200,7 +202,7 @@ export default function HomeScreen() {
               icon={headSection.content.icon}
               title={headSection.content.title}
             />
-              {!loadingEvents ? (<ListEvents events={eventsData} getEvents={getEvents} />) : (<Text style={{color: "#8b8c97"}}>{eventsPromiseStatus}</Text>)}
+              {!loadingEvents ? (<ListEvents events={eventsData} getEvents={getEvents} screenHeight={screenHeight} topBottomAreasHeight={320} />) : (<Text style={{color: "#8b8c97"}}>{eventsPromiseStatus}</Text>)}
           </CardContainer>
         </SafeAreaView>
       </Layout>
