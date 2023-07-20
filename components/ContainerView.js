@@ -30,7 +30,7 @@ function ContainerView() {
   }
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <>
             <View>
                 <HeadSection
                     icon={headSection.tradingview.icon}
@@ -40,7 +40,6 @@ function ContainerView() {
 
             {Platform.OS === "ios" ? (
             <WebView
-                style={{flex: 1}}
                 source={{uri: state.url}}
                 allowFileAccessFromFileURLs={true}
                 originWhitelist={["*"]}
@@ -62,7 +61,7 @@ function ContainerView() {
                     onMessage={({ nativeEvent }) => console.log(nativeEvent.data)}
                 />
             )}
-        </SafeAreaView>
+        </>
     );
 }
 

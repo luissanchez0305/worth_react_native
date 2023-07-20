@@ -59,7 +59,7 @@ export default function ChartsScreen() {
   return (
     <GradientBackground>
       <Layout>
-        <SafeAreaView>
+        <SafeAreaView style={{flex:1}}>
         <CardContainer style={{paddingBottom: 0}}>
           <ChartsFilterButton
             filterTradingView={tradingview}
