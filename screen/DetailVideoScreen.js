@@ -11,7 +11,7 @@ import { GradientBackground } from "../components/GradientBackground";
 export default function DetailVideoScreen() {
   const [playing, setPlaying] = useState(false);
   const route = useRoute();
-  const {videoId, videos} = route.params;
+  const {videoId, videos, screenHeight} = route.params;
 
   const onStateChange = useCallback((state) => {
     switch(state){
@@ -24,7 +24,7 @@ export default function DetailVideoScreen() {
     }
 
   }, []);
-
+  
   return (
     <GradientBackground>
       <Layout>
@@ -39,7 +39,7 @@ export default function DetailVideoScreen() {
               />
             </View>
           <CardContainer>
-            <ListMedia videos={videos} />
+            <ListMedia videos={videos} screenHeight={screenHeight} />
           </CardContainer>
         </SafeAreaView>
       </Layout>

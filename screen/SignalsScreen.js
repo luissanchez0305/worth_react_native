@@ -61,7 +61,7 @@ export default function SignalsScreen({ navigation }) {
                   signals.length ? (
                     <ListSignals signals={signals} />
                   ) : !signals.length ? (
-                    <Text>No hay señales</Text>
+                    <Text style={{textAlign: "center", color: "white"}}>Por el momento no se han creado señales</Text>
                   ) : (
                     <Text>Cargando...</Text>
                   )

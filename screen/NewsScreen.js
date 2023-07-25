@@ -9,11 +9,12 @@ import ListMedia from "../components/list/ListMedia";
 import HeadSection from "../components/HeadSection";
 import VideoContext from "../context/VideoContext";
 import ListNews from "../components/list/ListNews";
-import { ScrollView, View } from "react-native";  
+import { ScrollView, View, Dimensions } from "react-native";  
 import jwt_decode from "jwt-decode";
 
 export default function NewsScreen() {
   const [filter, setFilter] = useState("video");
+  const [screenHeight, setScreenHeight] = useState(0);
   const context = useContext(VideoContext);
   const videos = context.videos;
   const courses = context.courses;
@@ -25,6 +26,10 @@ export default function NewsScreen() {
   const news = () => {
     setFilter("news");
   };
+
+  useEffect(() => {
+    setScreenHeight(Dimensions.get('window').height)
+  }, [])
 
   return (
     <GradientBackground>
@@ -42,7 +47,7 @@ export default function NewsScreen() {
                   icon={headSection.video.icon}
                   title={headSection.video.title}
                 />
-                <ListMedia videos={videos} />
+                <ListMedia videos={videos} screenHeight={screenHeight} topBottomAreasHeight={212} />
               </View>
             ) : (
               <View>
@@ -50,7 +55,7 @@ export default function NewsScreen() {
                     icon={headSection.content.icon}
                     title={headSection.content.title} 
                   />
-                  <ListMedia videos={courses} />
+                  <ListMedia videos={courses} screenHeight={screenHeight} topBottomAreasHeight={212} />
               </View>
             )}
           </CardContainer>
