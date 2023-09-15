@@ -128,6 +128,7 @@ export const Topic = styled.Text`
 
 export const Channel = styled.Text`
   padding-top: 4px;
+  padding-right: 4px;
   font-size: 13px;
   font-weight: 400;
   color: #aaabb5;

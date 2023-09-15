@@ -36,9 +36,12 @@ const PanelView = ({ data = [] }) => {
         <View key={index} style={styles.box}>
           <Channel>
             <Text>Price: </Text>
-            <Text onPress={() => copyToClipboard(item.price)}>
-              {item.price} - {""}
+            <Text>
+              {item.price}
             </Text>
+          </Channel>
+          <Channel>
+            <Icon onPress={() => copyToClipboard(item.price)} name="copy" size={16} color="#e1c885" /> 
           </Channel>
           <Channel>
             <Text>Reached </Text>{" "}
@@ -51,6 +54,10 @@ const PanelView = ({ data = [] }) => {
 };
 
 export default function ListSignals({ signals }) {
+
+  const copyToClipboard = async (val) => {
+    await Clipboard.setStringAsync(val);
+  };
   const navigation = useNavigation();
   const [signalList, setSignalList] = useState([]);
   let signalInterval;
@@ -139,9 +146,11 @@ export default function ListSignals({ signals }) {
               <View style={styles.text}>
                 <Channel>
                   <Text>Entry Price: </Text>
-                  <Datas>{data.entryPrice} {" "}</Datas>
+                  <Datas>{data.entryPrice}</Datas>
                 </Channel>
-
+                <Channel>
+                  <Icon onPress={() => copyToClipboard(data.entryPrice)} name="copy" size={16} color="#e1c885" /> 
+                </Channel>
                 <Channel>
                   <Text>Risk: </Text>
                   <Datas>{data.risk}</Datas>
@@ -151,7 +160,10 @@ export default function ListSignals({ signals }) {
               <View style={styles.text}>
                 <Channel>
                   <Text>Stop Lost: </Text>
-                  <Datas>{data.stopLost}   {" "}</Datas>
+                  <Datas>{data.stopLost}</Datas>
+                </Channel>
+                <Channel>
+                  <Icon onPress={() => copyToClipboard(data.stopLost)} name="copy" size={16} color="#e1c885" /> 
                 </Channel>
                 <Channel>
                   <Text>Price: </Text>

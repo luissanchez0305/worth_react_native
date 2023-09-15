@@ -13,7 +13,7 @@ export default function CalculatorForm() {
   const [lots, setLots] = useState("--");
   const [units, setUnits] = useState("--");
   const [riskMoney, setRiskMoney] = useState("--");
-  const pipSize = 0.01;
+  const pipSize = 0.0001;
   const contractSize = 100000;
 
   const [instrumentId, setInstrumentId] = useState(null);
@@ -186,9 +186,12 @@ export default function CalculatorForm() {
                   searchable={true}
                   onChangeValue={(obj) => setSymbolVal(obj)}
                   loading={loadingSymbols}
-                  placeholder="Intrumentos"
+                  placeholder="Instrumentos"
                   theme="DARK"
                   listMode="SCROLLVIEW"
+                  translation={{
+                    SEARCH_PLACEHOLDER: "Ej. EUR/USD"
+                  }}
                 />
               </InputGroup>
             </DropDownInfoGroup>
@@ -208,6 +211,9 @@ export default function CalculatorForm() {
                     placeholder="Monedas"
                     theme="DARK"
                     listMode="SCROLLVIEW"
+                    translation={{
+                      SEARCH_PLACEHOLDER: "Ej. USD"
+                    }}
                   />
               </InputGroup>
             </DropDownInfoGroup>
@@ -221,7 +227,7 @@ export default function CalculatorForm() {
               />
             </InputGroup>
             <InfoGroup>
-              <Label>Precio ({currencyText})</Label>
+              <Label>Precio {currencyText ? `(${currencyText})` : ""}</Label>
               <Input
                 keyboardType="numeric"
                 editable={false}
@@ -246,27 +252,6 @@ export default function CalculatorForm() {
               />
             </InputGroup>
           </Row>
-          <Row></Row>
-          <Row>
-            <InputGroup>
-              <Label>Tamaño de PIP ({instrumentText})</Label>
-              <Input
-                style={{ color: "#a1a1a1" }}
-                keyboardType="numeric"
-                value="0.01"
-                editable={false}
-              />
-            </InputGroup>
-            <InputGroup>
-              <Label>Tamaño del contrato</Label>
-              <Input
-                style={{ color: "#a1a1a1" }}
-                keyboardType="numeric"
-                value="100000"
-                editable={false}
-              />
-            </InputGroup>
-          </Row>
         </ContainerForm>
         <ContainerForm>
           <Row>
@@ -279,8 +264,6 @@ export default function CalculatorForm() {
             </ButtonInput>
           </Row>
         </ContainerForm>
-      </CardContainer>
-      <CardContainer>
         <View style={{ marginVertical: 16 }}>
           <RowLine>
             <InfoGroup>

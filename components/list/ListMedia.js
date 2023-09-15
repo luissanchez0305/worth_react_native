@@ -3,7 +3,7 @@ import styled from "styled-components/native";
 import { useNavigation } from "@react-navigation/native";
 import { SimpleContainer, ContainerText, Title, Channel } from "../../globalStyle";
 
-export default function ListMedia({ videos, screenHeight, topBottomAreasHeight = 372 }) {
+export default function ListMedia({ videos }) {
   const navigation = useNavigation();
   
   const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
@@ -24,18 +24,16 @@ export default function ListMedia({ videos, screenHeight, topBottomAreasHeight =
         }
       }}
       scrollEventThrottle={400}
-      style={{ height: screenHeight - topBottomAreasHeight }}
+      style={{marginBottom: 70}}
     >
       {videos.map((data, index) => {
         const uri = data.image;
         return (
         <SimpleContainer
           onPress={() => {
-            navigation.navigate("DetailVideo", {
+            navigation.navigate("DetailVideo" , {
               videoId: data.videoId,
               videos: videos,
-              screenHeight,
-              topBottomAreasHeight,
             });
           }}
           key={index}
